@@ -1,5 +1,6 @@
 grammar gramSQL;
 
+
 /*
  * Parser Rules
  */
@@ -14,12 +15,12 @@ DROP: 'drop' | 'DROP' | 'Drop';
 SHOW: 'show' | 'SHOW' | 'Show';
 USE: 'use' | 'USE' | 'use';
 CONSTRAINT: 'constraint' | 'CONSTRAINT' | 'Constraint';
-PRIMARY KEY: 'primary' | 'PRIMARY' | 'Primary';
-FOREIGN KEY: 'foreign' | 'FOREIGN' | 'Foreign';
+PRIMARY: 'primary' | 'PRIMARY' | 'Primary';
+FOREIGN: 'foreign' | 'FOREIGN' | 'Foreign';
 KEY: 'key' | 'KEY' | 'Key';
 CHECK: 'check' | 'CHECK' | 'Check';
 INT: 'int' | 'INT' | 'Int';
-FLOAT: 'float' | 'FLOAT' | 'Float'
+FLOAT: 'float' | 'FLOAT' | 'Float';
 DATE: 'date' | 'DATE' | 'Date';
 CHAR: 'char' | 'CHAR' | 'Char';
 AND: 'and' | 'AND' | 'And';
@@ -30,6 +31,7 @@ TO: 'to' | 'TO' | 'To';
 COLUMN: 'column' | 'COLUMN' | 'Column';
 ADD: 'add' | 'ADD' | 'Add';
 COLUMNS: 'columns' | 'COLUMNS' | 'Columns';
+FROM: 'from' | 'FROM' | 'From';
 REFERENCES: 'references' | 'REFERENCES' | 'References';
 WS : (' ' | '\n' | '\t'|COMMENTS)+ {skip();};
 WSOPT : (' ' | '\n' | '\t')* {skip();};
@@ -47,9 +49,7 @@ CHARACTER: '\'' ('\\\''|[ -~]|'\\"'|'\\t'|'\\n'|'\t'|'\\\\') '\'';
  * Lexer Rules
 
  QUE HACER CON LOS ;
- QUE SI TIENE UNA SOGA PARA AHORCAR
- UNA O MAS VECES
- EXISTE TIPO CHAR?
+
  */
 
 program: (expression)*;
@@ -57,15 +57,55 @@ expression: createExpression
 		   | alterExpression 
 		   | dropExpression
 		   | showExpression
-		   | useExpression;
+		   | useExpression
+		   | showColumnsExpression;
 createExpression: CREATE DATABASE ID #create_Database
-				| CREATE TABLE ID '('(declaracionColumnas)+ CONSTRAINT (cConstraint)+ ')' #create_Table;
+				| CREATE TABLE ID '('(declaracionColumnas1)+  (declaracionConstraint1)+ ')' #create_Table;
+declaracionColumnas1: declaracionColumnas2+;
+declaracionColumnas2: declaracionColumnas ',' declaracionColumnas2 #declaracionColumnas2_comita
+					  | declaracionColumnas                        #declaracionColumnas2_declaracion;
 declaracionColumnas: ID tipo;
-tipo: INT| CHAR | FLOAT | DATE
-cConstraint: ID PRIMARY KEY '(' (ID)+')' #cConstraint_primary
-			| ID FOREING KEY '(' (ID)+ ')'  REFERENCES ID '('  (ID)+ ')' #cConstraint_foreign
+declaracionConstraint1: declaracionConstraint2+;
+declaracionConstraint2: declaracionConstraint ',' declaracionConstraint2 #declaracionConstraint2_comita
+					  | declaracionConstraint                       #declaracionConstraint2_declaracion;
+declaracionConstraint: CONSTRAINT cConstraint;
+tipo: INT| CHAR '(' NUM ')' | FLOAT | DATE;
+cConstraint: ID PRIMARY KEY '(' (idComa1)+')' #cConstraint_primary
+			| ID FOREING KEY '(' (idComa1)+ ')'  REFERENCES ID '('  (idComa1)+ ')' #cConstraint_foreign
 			| ID CHECK '(' expBooleana ')' #cConstraint_check;
-alterExpression: ALTER DATABASE ID	RENAME TO ID
-				| ALTER TABLE ID RENAME TO ID
-				| ALTER TABLE accionTabla
+idComa1: idComa2+;
+idComa2: idComa ',' idComa2    #idComa2_comita
+		| idComa                #idComa2_idComa;
+idComa: ID;
+expBooleana: expBooleana OR expBooleana2     #expBooleana_or
+			| expBooleana2                  #expBooleana_expBooleana2; 
+expBooleana2: expBooleana2 AND expBooleana3   #expBooleana_and
+			|expBooleana3                    #expBooleana2_expBooleana3;
+expBooleana3: expBooleana4                  #expBooleana3_expBooleana4
+			| NOT expBooleana4              #expBooleana3_not;
+expBooleana4: expRelacion                  #expBooleana4_relacion 
+			| '(' expBooleana')'			#expBooleana4_parentesis;
+expRelacion: columnaDatos relOperator columnaDatos;
+columnaDatos: literal  #columnaDatos_literal
+			| ID       #columnaDatos_id
+			| ID'.'ID  #columnaDatos_referencia;
+relOperator: '<' | '>' | '<=' | '>=' | '<>' | '=';
+literal: int_literal | varchar_literal | date_literal | float_literal;
+int_literal: NUM;
+varchar_literal: '\'' ID '\'';
+date_literal: NUM '/' NUM '/' NUM;
+float_literal: NUM'.'NUM;
 
+alterExpression: ALTER DATABASE ID	RENAME TO ID      #alterExpression_database
+				| ALTER TABLE ID RENAME TO ID         #alterExpression_table
+				| ALTER TABLE accionTabla             #alterExpression_accion;
+accionTabla: ADD COLUMN ID TIPO declaracionConstraint1  #accionTabla_AddColumn
+			| ADD declaracionConstraint					#accionTabla_AddConstraint
+			| DROP COLUMN ID							#accionTabla_DropColumn
+			| DROP CONSTRAINT ID						#accionTabla_DropConstraint;
+dropExpression: DROP DATABASE ID                        #dropExpression_database
+			| DROP TABLE ID							#dropExpression_table;
+showExpression: SHOW DATABASES							#showExpression_Databases
+			| SHOW TABLES								#showExpression_Tables;
+useExpression: USE DATABASE ID;
+showColumnsExpression: SHOW COLUMNS FROM ID;
