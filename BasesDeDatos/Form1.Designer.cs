@@ -30,12 +30,12 @@
         {
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabEditor = new System.Windows.Forms.TabPage();
+            this.tbEditor = new System.Windows.Forms.TextBox();
             this.tabErrores = new System.Windows.Forms.TabPage();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             this.btnCargar = new System.Windows.Forms.Button();
             this.btnGuardar = new System.Windows.Forms.Button();
             this.btnEjecutar = new System.Windows.Forms.Button();
-            this.tbEditor = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tabEditor.SuspendLayout();
             this.tabErrores.SuspendLayout();
@@ -65,47 +65,6 @@
             this.tabEditor.Text = "Editor";
             this.tabEditor.UseVisualStyleBackColor = true;
             // 
-            // tabErrores
-            // 
-            this.tabErrores.Controls.Add(this.textBox1);
-            this.tabErrores.Location = new System.Drawing.Point(4, 22);
-            this.tabErrores.Name = "tabErrores";
-            this.tabErrores.Padding = new System.Windows.Forms.Padding(3);
-            this.tabErrores.Size = new System.Drawing.Size(273, 197);
-            this.tabErrores.TabIndex = 1;
-            this.tabErrores.Text = "Errores";
-            this.tabErrores.UseVisualStyleBackColor = true;
-            // 
-            // btnCargar
-            // 
-            this.btnCargar.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnCargar.Location = new System.Drawing.Point(116, 7);
-            this.btnCargar.Name = "btnCargar";
-            this.btnCargar.Size = new System.Drawing.Size(75, 23);
-            this.btnCargar.TabIndex = 0;
-            this.btnCargar.Text = "Cargar";
-            this.btnCargar.UseVisualStyleBackColor = true;
-            // 
-            // btnGuardar
-            // 
-            this.btnGuardar.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnGuardar.Location = new System.Drawing.Point(207, 7);
-            this.btnGuardar.Name = "btnGuardar";
-            this.btnGuardar.Size = new System.Drawing.Size(75, 23);
-            this.btnGuardar.TabIndex = 1;
-            this.btnGuardar.Text = "Guardar";
-            this.btnGuardar.UseVisualStyleBackColor = true;
-            // 
-            // btnEjecutar
-            // 
-            this.btnEjecutar.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnEjecutar.Location = new System.Drawing.Point(301, 7);
-            this.btnEjecutar.Name = "btnEjecutar";
-            this.btnEjecutar.Size = new System.Drawing.Size(75, 23);
-            this.btnEjecutar.TabIndex = 2;
-            this.btnEjecutar.Text = "Ejecutar";
-            this.btnEjecutar.UseVisualStyleBackColor = true;
-            // 
             // tbEditor
             // 
             this.tbEditor.AcceptsTab = true;
@@ -118,6 +77,18 @@
             this.tbEditor.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.tbEditor.Size = new System.Drawing.Size(482, 245);
             this.tbEditor.TabIndex = 3;
+            this.tbEditor.WordWrap = false;
+            // 
+            // tabErrores
+            // 
+            this.tabErrores.Controls.Add(this.textBox1);
+            this.tabErrores.Location = new System.Drawing.Point(4, 22);
+            this.tabErrores.Name = "tabErrores";
+            this.tabErrores.Padding = new System.Windows.Forms.Padding(3);
+            this.tabErrores.Size = new System.Drawing.Size(482, 245);
+            this.tabErrores.TabIndex = 1;
+            this.tabErrores.Text = "Errores";
+            this.tabErrores.UseVisualStyleBackColor = true;
             // 
             // textBox1
             // 
@@ -132,6 +103,38 @@
             this.textBox1.Size = new System.Drawing.Size(486, 249);
             this.textBox1.TabIndex = 0;
             // 
+            // btnCargar
+            // 
+            this.btnCargar.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btnCargar.Location = new System.Drawing.Point(116, 7);
+            this.btnCargar.Name = "btnCargar";
+            this.btnCargar.Size = new System.Drawing.Size(75, 23);
+            this.btnCargar.TabIndex = 0;
+            this.btnCargar.Text = "Cargar";
+            this.btnCargar.UseVisualStyleBackColor = true;
+            this.btnCargar.Click += new System.EventHandler(this.btnCargar_Click);
+            // 
+            // btnGuardar
+            // 
+            this.btnGuardar.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btnGuardar.Location = new System.Drawing.Point(207, 7);
+            this.btnGuardar.Name = "btnGuardar";
+            this.btnGuardar.Size = new System.Drawing.Size(75, 23);
+            this.btnGuardar.TabIndex = 1;
+            this.btnGuardar.Text = "Guardar";
+            this.btnGuardar.UseVisualStyleBackColor = true;
+            this.btnGuardar.Click += new System.EventHandler(this.btnGuardar_Click);
+            // 
+            // btnEjecutar
+            // 
+            this.btnEjecutar.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btnEjecutar.Location = new System.Drawing.Point(301, 7);
+            this.btnEjecutar.Name = "btnEjecutar";
+            this.btnEjecutar.Size = new System.Drawing.Size(75, 23);
+            this.btnEjecutar.TabIndex = 2;
+            this.btnEjecutar.Text = "Ejecutar";
+            this.btnEjecutar.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -142,7 +145,7 @@
             this.Controls.Add(this.btnCargar);
             this.Controls.Add(this.tabControl1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Proyecto 1";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabEditor.ResumeLayout(false);
