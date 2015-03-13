@@ -71,7 +71,7 @@
             this.tabErrores.Location = new System.Drawing.Point(4, 22);
             this.tabErrores.Name = "tabErrores";
             this.tabErrores.Padding = new System.Windows.Forms.Padding(3);
-            this.tabErrores.Size = new System.Drawing.Size(482, 245);
+            this.tabErrores.Size = new System.Drawing.Size(273, 197);
             this.tabErrores.TabIndex = 1;
             this.tabErrores.Text = "Errores";
             this.tabErrores.UseVisualStyleBackColor = true;
