@@ -4,7 +4,7 @@ grammar gramSQL;
 /*
  * Parser Rules
  */
- //Palabras Reservadas
+ //PALABRAS RESERVADAS DDL
 DATABASE: 'database' | 'DATABASE' | 'Database';
 DATABASES: 'databases' | 'DATABASES' | 'Databases';
 TABLE: 'table' | 'TABLE' | 'Table';
@@ -33,6 +33,23 @@ ADD: 'add' | 'ADD' | 'Add';
 COLUMNS: 'columns' | 'COLUMNS' | 'Columns';
 FROM: 'from' | 'FROM' | 'From';
 REFERENCES: 'references' | 'REFERENCES' | 'References';
+//PALABRAS RESERVADAS DML
+INSERT: 'insert' | 'INSERT'| 'Insert';
+INTO: 'into' | 'INTO' | 'Into';
+VALUES: 'values' | 'VALUES' | 'Values';
+NULL: 'null' | 'NULL' | 'Null';
+UPDATE: 'update' | 'UPDATE' | 'Update';
+SET: 'set' | 'SET' | 'Set';
+WHERE: 'where' | 'WHERE' | 'where';
+DELETE: 'delete' | 'DELETE' | 'Delete';
+SELECT: 'select' | 'SELECT' | 'Select';
+ORDER: 'order' | 'ORDER' | 'Order';
+BY: 'by' | 'BY' | 'By';
+ASC: 'asc' | 'ASC' | 'Asc';
+DESC: 'desc' | 'DESC' | 'Desc';
+
+
+
 WS : (' ' | '\n' | '\t'|COMMENTS)+   -> channel(HIDDEN) ;
 WSOPT : (' ' | '\n' | '\t')*   -> channel(HIDDEN);
 
@@ -52,15 +69,20 @@ CHARACTER: '\'' ('\\\''|[ -~]|'\\"'|'\\t'|'\\n'|'\t'|'\\\\') '\'';
 
  */
 
+// GRAMATICA PARTE DDL
 program: (expression)*;
 expression: createExpression
 		   | alterExpression 
 		   | dropExpression
 		   | showExpression
 		   | useExpression
-		   | showColumnsExpression;
+		   | showColumnsExpression
+		   | insertExpression
+		   | updateExpression
+		   | deleteExpression
+		   | selectExpression;
 createExpression: CREATE DATABASE ID #create_Database
-				| CREATE TABLE ID '('(declaracionColumnas1)+  (declaracionConstraint1)+ ')' #create_Table;
+				| CREATE TABLE ID '('declaracionColumnas1  declaracionConstraint1 ')' #create_Table;
 declaracionColumnas1: declaracionColumnas2+;
 declaracionColumnas2: declaracionColumnas ',' declaracionColumnas2 #declaracionColumnas2_comita
 					  | declaracionColumnas                        #declaracionColumnas2_declaracion;
@@ -70,8 +92,8 @@ declaracionConstraint2: declaracionConstraint ',' declaracionConstraint2 #declar
 					  | declaracionConstraint                       #declaracionConstraint2_declaracion;
 declaracionConstraint: CONSTRAINT cConstraint;
 tipo: INT| CHAR '(' NUM ')' | FLOAT | DATE;
-cConstraint: ID PRIMARY KEY '(' (idComa1)+')' #cConstraint_primary
-			| ID FOREING KEY '(' (idComa1)+ ')'  REFERENCES ID '('  (idComa1)+ ')' #cConstraint_foreign
+cConstraint: ID PRIMARY KEY '(' idComa1')' #cConstraint_primary
+			| ID FOREING KEY '(' idComa1 ')'  REFERENCES ID '('  idComa1 ')' #cConstraint_foreign
 			| ID CHECK '(' expBooleana ')' #cConstraint_check;
 idComa1: idComa2+;
 idComa2: idComa ',' idComa2    #idComa2_comita
@@ -93,7 +115,7 @@ relOperator: '<' | '>' | '<=' | '>=' | '<>' | '=';
 literal: int_literal | varchar_literal | date_literal | float_literal;
 int_literal: NUM;
 varchar_literal: '\'' ID '\'';
-date_literal: NUM '/' NUM '/' NUM;
+date_literal: '\'' NUM '-' NUM '-' NUM  '\'';
 float_literal: NUM'.'NUM;
 
 alterExpression: ALTER DATABASE ID	RENAME TO ID      #alterExpression_database
@@ -109,3 +131,23 @@ showExpression: SHOW DATABASES							#showExpression_Databases
 			| SHOW TABLES								#showExpression_Tables;
 useExpression: USE DATABASE ID;
 showColumnsExpression: SHOW COLUMNS FROM ID;
+
+// GRAMATICA PARTE DML
+insertExpression: INSERT TO ID '('listaColumna1 ')' VALUES '('listaValores1 ')';
+listaColumna1: listaColumna2+;
+listaColumna2: nombreColumna ',' listaColumna2        #listaColumna2_comita
+				|nombreColumna                        #listaColumna2_nombreColumna;
+nombreColumna: ID; // PUEDE QUE ID.ID TAMBIEN
+listaValores1: listaValores2+;
+listaValores2: valores ',' listaValores2			 #listaValores2_comita
+				| valores                            #listaValores2_valores;
+valores: literal; //PREGUNTAREMOS DE ESTO
+updateExpression: UPDATE ID SET ID '=' listaValores1( WHERE expBooleana); // PREGUNTAR QUE ES LA CONDICION
+deleteExpression: DELETE FROM ID (WHERE expBooleana)?;
+selectExpression: SELECT ( '*' | listaColumna1 ) FROM ID (WHERE expBooleana)? (ORDER BY '[' expresionOrden1 ']')?;
+expresionOrden1: expresionOrden2+;
+expresionOrden2: expresionOrden ',' expresionOrden2    #expresionOrden2_comita
+				| expresionOrden                       #expresionOrden2_expresionOrden;
+expresionOrden: ID (ASC|DESC);
+
+
