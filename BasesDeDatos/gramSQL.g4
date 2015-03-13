@@ -33,8 +33,8 @@ ADD: 'add' | 'ADD' | 'Add';
 COLUMNS: 'columns' | 'COLUMNS' | 'Columns';
 FROM: 'from' | 'FROM' | 'From';
 REFERENCES: 'references' | 'REFERENCES' | 'References';
-WS : (' ' | '\n' | '\t'|COMMENTS)+ {skip();};
-WSOPT : (' ' | '\n' | '\t')* {skip();};
+WS : (' ' | '\n' | '\t'|COMMENTS)+   -> channel(HIDDEN) ;
+WSOPT : (' ' | '\n' | '\t')*   -> channel(HIDDEN);
 
 fragment COMMENTS : '//' .*? '\r'? '\n';
 fragment LETTER: [A-Z] | [a-z];
