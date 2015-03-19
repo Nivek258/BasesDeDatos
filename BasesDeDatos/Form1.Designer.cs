@@ -28,85 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabEditor = new System.Windows.Forms.TabPage();
-            this.tbEditor = new System.Windows.Forms.TextBox();
-            this.tabErrores = new System.Windows.Forms.TabPage();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.btnCargar = new System.Windows.Forms.Button();
             this.btnGuardar = new System.Windows.Forms.Button();
             this.btnEjecutar = new System.Windows.Forms.Button();
-            this.tabControl1.SuspendLayout();
-            this.tabEditor.SuspendLayout();
-            this.tabErrores.SuspendLayout();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.textQuery = new System.Windows.Forms.TextBox();
+            this.gridTabla = new System.Windows.Forms.DataGridView();
+            this.textErrores = new System.Windows.Forms.TextBox();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridTabla)).BeginInit();
             this.SuspendLayout();
-            // 
-            // tabControl1
-            // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl1.Controls.Add(this.tabEditor);
-            this.tabControl1.Controls.Add(this.tabErrores);
-            this.tabControl1.Location = new System.Drawing.Point(0, 36);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(490, 271);
-            this.tabControl1.TabIndex = 0;
-            // 
-            // tabEditor
-            // 
-            this.tabEditor.Controls.Add(this.tbEditor);
-            this.tabEditor.Location = new System.Drawing.Point(4, 22);
-            this.tabEditor.Name = "tabEditor";
-            this.tabEditor.Padding = new System.Windows.Forms.Padding(3);
-            this.tabEditor.Size = new System.Drawing.Size(482, 245);
-            this.tabEditor.TabIndex = 0;
-            this.tabEditor.Text = "Editor";
-            this.tabEditor.UseVisualStyleBackColor = true;
-            // 
-            // tbEditor
-            // 
-            this.tbEditor.AcceptsTab = true;
-            this.tbEditor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbEditor.Location = new System.Drawing.Point(0, 0);
-            this.tbEditor.Multiline = true;
-            this.tbEditor.Name = "tbEditor";
-            this.tbEditor.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.tbEditor.Size = new System.Drawing.Size(482, 245);
-            this.tbEditor.TabIndex = 3;
-            this.tbEditor.WordWrap = false;
-            // 
-            // tabErrores
-            // 
-            this.tabErrores.Controls.Add(this.textBox1);
-            this.tabErrores.Location = new System.Drawing.Point(4, 22);
-            this.tabErrores.Name = "tabErrores";
-            this.tabErrores.Padding = new System.Windows.Forms.Padding(3);
-            this.tabErrores.Size = new System.Drawing.Size(482, 245);
-            this.tabErrores.TabIndex = 1;
-            this.tabErrores.Text = "Errores";
-            this.tabErrores.UseVisualStyleBackColor = true;
-            // 
-            // textBox1
-            // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Location = new System.Drawing.Point(-4, 0);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(486, 249);
-            this.textBox1.TabIndex = 0;
             // 
             // btnCargar
             // 
             this.btnCargar.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnCargar.Location = new System.Drawing.Point(116, 7);
+            this.btnCargar.Location = new System.Drawing.Point(287, 7);
             this.btnCargar.Name = "btnCargar";
             this.btnCargar.Size = new System.Drawing.Size(75, 23);
             this.btnCargar.TabIndex = 0;
@@ -117,7 +56,7 @@
             // btnGuardar
             // 
             this.btnGuardar.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnGuardar.Location = new System.Drawing.Point(207, 7);
+            this.btnGuardar.Location = new System.Drawing.Point(378, 7);
             this.btnGuardar.Name = "btnGuardar";
             this.btnGuardar.Size = new System.Drawing.Size(75, 23);
             this.btnGuardar.TabIndex = 1;
@@ -128,44 +67,103 @@
             // btnEjecutar
             // 
             this.btnEjecutar.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnEjecutar.Location = new System.Drawing.Point(301, 7);
+            this.btnEjecutar.Location = new System.Drawing.Point(472, 7);
             this.btnEjecutar.Name = "btnEjecutar";
             this.btnEjecutar.Size = new System.Drawing.Size(75, 23);
             this.btnEjecutar.TabIndex = 2;
             this.btnEjecutar.Text = "Ejecutar";
             this.btnEjecutar.UseVisualStyleBackColor = true;
             // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer1.Location = new System.Drawing.Point(39, 36);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.textQuery);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.gridTabla);
+            this.splitContainer1.Size = new System.Drawing.Size(766, 238);
+            this.splitContainer1.SplitterDistance = 379;
+            this.splitContainer1.TabIndex = 3;
+            // 
+            // textQuery
+            // 
+            this.textQuery.AcceptsTab = true;
+            this.textQuery.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textQuery.Location = new System.Drawing.Point(0, 0);
+            this.textQuery.Multiline = true;
+            this.textQuery.Name = "textQuery";
+            this.textQuery.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.textQuery.Size = new System.Drawing.Size(376, 238);
+            this.textQuery.TabIndex = 0;
+            this.textQuery.WordWrap = false;
+            // 
+            // gridTabla
+            // 
+            this.gridTabla.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.gridTabla.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gridTabla.Location = new System.Drawing.Point(-1, 0);
+            this.gridTabla.Name = "gridTabla";
+            this.gridTabla.Size = new System.Drawing.Size(384, 238);
+            this.gridTabla.TabIndex = 0;
+            // 
+            // textErrores
+            // 
+            this.textErrores.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textErrores.Location = new System.Drawing.Point(39, 289);
+            this.textErrores.Multiline = true;
+            this.textErrores.Name = "textErrores";
+            this.textErrores.ReadOnly = true;
+            this.textErrores.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.textErrores.Size = new System.Drawing.Size(766, 138);
+            this.textErrores.TabIndex = 4;
+            this.textErrores.WordWrap = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(493, 309);
+            this.ClientSize = new System.Drawing.Size(835, 439);
+            this.Controls.Add(this.textErrores);
+            this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.btnEjecutar);
             this.Controls.Add(this.btnGuardar);
             this.Controls.Add(this.btnCargar);
-            this.Controls.Add(this.tabControl1);
             this.Name = "Form1";
             this.Text = "Proyecto 1";
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.tabControl1.ResumeLayout(false);
-            this.tabEditor.ResumeLayout(false);
-            this.tabEditor.PerformLayout();
-            this.tabErrores.ResumeLayout(false);
-            this.tabErrores.PerformLayout();
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gridTabla)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabEditor;
-        private System.Windows.Forms.TabPage tabErrores;
         private System.Windows.Forms.Button btnCargar;
         private System.Windows.Forms.Button btnGuardar;
         private System.Windows.Forms.Button btnEjecutar;
-        private System.Windows.Forms.TextBox tbEditor;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.TextBox textQuery;
+        private System.Windows.Forms.DataGridView gridTabla;
+        private System.Windows.Forms.TextBox textErrores;
     }
 }
 

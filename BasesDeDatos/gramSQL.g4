@@ -60,6 +60,10 @@ fragment DIGIT: [0-9];
 ID : LETTER (LETTER | DIGIT)*;
 NUM: DIGIT (DIGIT)*;
 CHARACTER: '\'' ('\\\''|[ -~]|'\\"'|'\\t'|'\\n'|'\t'|'\\\\') '\'';
+CHARACTER2:  ('\\\''|[ -~]|'\\"'|'\\t'|'\\n'|'\t'|'\\\\');
+
+
+
 
 
 /*
@@ -70,8 +74,8 @@ CHARACTER: '\'' ('\\\''|[ -~]|'\\"'|'\\t'|'\\n'|'\t'|'\\\\') '\'';
  */
 
 // GRAMATICA PARTE DDL
-program: (expression)*;
-expression: createExpression
+program: (expression ';')+;
+expression: createExpression 
 		   | alterExpression 
 		   | dropExpression
 		   | showExpression
@@ -91,10 +95,11 @@ declaracionConstraint1: declaracionConstraint2+;
 declaracionConstraint2: declaracionConstraint ',' declaracionConstraint2 #declaracionConstraint2_comita
 					  | declaracionConstraint                       #declaracionConstraint2_declaracion;
 declaracionConstraint: CONSTRAINT cConstraint;
-tipo: INT| CHAR '(' NUM ')' | FLOAT | DATE;
 cConstraint: ID PRIMARY KEY '(' idComa1')' #cConstraint_primary
 			| ID FOREING KEY '(' idComa1 ')'  REFERENCES ID '('  idComa1 ')' #cConstraint_foreign
 			| ID CHECK '(' expBooleana ')' #cConstraint_check;
+tipo: INT| CHAR '(' NUM ')' | FLOAT | DATE;
+
 idComa1: idComa2+;
 idComa2: idComa ',' idComa2    #idComa2_comita
 		| idComa                #idComa2_idComa;
@@ -114,7 +119,7 @@ columnaDatos: literal  #columnaDatos_literal
 relOperator: '<' | '>' | '<=' | '>=' | '<>' | '=';
 literal: int_literal | varchar_literal | date_literal | float_literal;
 int_literal: NUM;
-varchar_literal: '\'' ID '\'';
+varchar_literal: '\'' CHARACTER2+ '\'';
 date_literal: '\'' NUM '-' NUM '-' NUM  '\'';
 float_literal: NUM'.'NUM;
 
@@ -137,12 +142,12 @@ insertExpression: INSERT TO ID '('listaColumna1 ')' VALUES '('listaValores1 ')';
 listaColumna1: listaColumna2+;
 listaColumna2: nombreColumna ',' listaColumna2        #listaColumna2_comita
 				|nombreColumna                        #listaColumna2_nombreColumna;
-nombreColumna: ID; // PUEDE QUE ID.ID TAMBIEN
+nombreColumna: ID;
 listaValores1: listaValores2+;
 listaValores2: valores ',' listaValores2			 #listaValores2_comita
 				| valores                            #listaValores2_valores;
-valores: literal; //PREGUNTAREMOS DE ESTO
-updateExpression: UPDATE ID SET ID '=' listaValores1( WHERE expBooleana); // PREGUNTAR QUE ES LA CONDICION
+valores: literal; 
+updateExpression: UPDATE ID SET ID '=' listaValores1( WHERE expBooleana);
 deleteExpression: DELETE FROM ID (WHERE expBooleana)?;
 selectExpression: SELECT ( '*' | listaColumna1 ) FROM ID (WHERE expBooleana)? (ORDER BY '[' expresionOrden1 ']')?;
 expresionOrden1: expresionOrden2+;

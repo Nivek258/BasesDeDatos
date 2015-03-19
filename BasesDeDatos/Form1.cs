@@ -31,6 +31,7 @@ namespace BasesDeDatos
             OpenFileDialog1.Filter = "txt files (*.txt)|*.txt";
             OpenFileDialog1.FilterIndex = 2;
             OpenFileDialog1.RestoreDirectory = true;
+            textQuery.Text = "";
 
             if (OpenFileDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -38,7 +39,7 @@ namespace BasesDeDatos
                 {
                     // Code to write the stream goes here.
                     StreamReader myWriter = new StreamReader(myStream);
-                    tbEditor.Text += myWriter.ReadToEnd();
+                    textQuery.Text += myWriter.ReadToEnd();
                     myWriter.Close();
                     myStream.Close();
                 }
@@ -60,7 +61,7 @@ namespace BasesDeDatos
                 {
                     // Code to write the stream goes here.
                     StreamWriter myWriter = new StreamWriter(myStream);
-                    myWriter.WriteLine(tbEditor.Text);
+                    myWriter.WriteLine(textQuery.Text);
                     myWriter.Close();
                     myStream.Close();
                 }
