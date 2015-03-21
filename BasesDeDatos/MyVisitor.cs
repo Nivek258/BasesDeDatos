@@ -26,7 +26,25 @@ namespace BasesDeDatos
 
         public string VisitTipo(gramSQLParser.TipoContext context)
         {
-            throw new NotImplementedException();
+            if (context.ChildCount == 1)
+            {
+                if (context.GetChild(0).Equals("int") || context.GetChild(0).Equals("Int") || context.GetChild(0).Equals("INT"))
+                {
+                    return "int";
+                }
+                if (context.GetChild(0).Equals("float") || context.GetChild(0).Equals("Float") || context.GetChild(0).Equals("FLOAT"))
+                {
+                    return "float";
+                }
+                else
+                {
+                    return "date";
+                }
+            }
+            else
+            {
+                return "char";
+            }
         }
 
         public string VisitDeclaracionColumnas(gramSQLParser.DeclaracionColumnasContext context)
@@ -156,7 +174,7 @@ namespace BasesDeDatos
 
         public string VisitVarchar_literal(gramSQLParser.Varchar_literalContext context)
         {
-            throw new NotImplementedException();
+            return "varchar";
         }
 
         public string VisitListaValores1(gramSQLParser.ListaValores1Context context)
@@ -216,7 +234,7 @@ namespace BasesDeDatos
 
         public string VisitLiteral(gramSQLParser.LiteralContext context)
         {
-            throw new NotImplementedException();
+            return Visit(context.GetChild(0));
         }
 
         public string VisitSelectExpression(gramSQLParser.SelectExpressionContext context)
@@ -246,7 +264,7 @@ namespace BasesDeDatos
 
         public string VisitFloat_literal(gramSQLParser.Float_literalContext context)
         {
-            throw new NotImplementedException();
+            return "float";
         }
 
         public string VisitExpBooleana4_parentesis(gramSQLParser.ExpBooleana4_parentesisContext context)
@@ -271,7 +289,7 @@ namespace BasesDeDatos
 
         public string VisitDate_literal(gramSQLParser.Date_literalContext context)
         {
-            throw new NotImplementedException();
+            return "date";
         }
 
         public string VisitExpression(gramSQLParser.ExpressionContext context)
