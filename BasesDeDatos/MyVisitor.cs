@@ -8,7 +8,10 @@ namespace BasesDeDatos
 {
     class MyVisitor : gramSQLBaseVisitor<String>
     {
-
+        //Variables
+        String error = "Fate Stay Night";
+        String mensajeError = "";
+        ControlDirectorios miControl = new ControlDirectorios();
         public string VisitAlterExpression_database(gramSQLParser.AlterExpression_databaseContext context)
         {
             throw new NotImplementedException();
@@ -28,11 +31,11 @@ namespace BasesDeDatos
         {
             if (context.ChildCount == 1)
             {
-                if (context.GetChild(0).Equals("int") || context.GetChild(0).Equals("Int") || context.GetChild(0).Equals("INT"))
+                if (context.GetChild(0).GetText().Equals("int") || context.GetChild(0).GetText().Equals("Int") || context.GetChild(0).GetText().Equals("INT"))
                 {
                     return "int";
                 }
-                if (context.GetChild(0).Equals("float") || context.GetChild(0).Equals("Float") || context.GetChild(0).Equals("FLOAT"))
+                if (context.GetChild(0).GetText().Equals("float") || context.GetChild(0).GetText().Equals("Float") || context.GetChild(0).GetText().Equals("FLOAT"))
                 {
                     return "float";
                 }
@@ -274,7 +277,19 @@ namespace BasesDeDatos
 
         public string VisitCreate_Database(gramSQLParser.Create_DatabaseContext context)
         {
-            throw new NotImplementedException();
+            String nombreDB = context.GetChild(2).GetText();
+            Boolean existe = miControl.existeDB(nombreDB);
+            if (!existe)
+            {
+                miControl.agregarDB(nombreDB);
+                return "void";
+            }
+            else
+            {
+                mensajeError += "Ya existe la base de datos "+nombreDB;
+                return error;
+            }
+
         }
 
         public string VisitDeclaracionColumnas2_comita(gramSQLParser.DeclaracionColumnas2_comitaContext context)
@@ -289,6 +304,19 @@ namespace BasesDeDatos
 
         public string VisitDate_literal(gramSQLParser.Date_literalContext context)
         {
+            String año = context.GetChild(1).GetText();
+            String mes = context.GetChild(3).GetText();
+            String dia = context.GetChild(5).GetText();
+            String fecha = dia + '-' + mes + '-' + año;
+            try
+            {
+                DateTime date = DateTime.ParseExact(fecha, "MM-dd-yyyy", null);
+            }
+            catch (FormatException)
+            {
+                mensajeError += "Error en la linea: " + context.Start + ", Error: La fecha: " + fecha + " no es valida";
+                return error;
+            }
             return "date";
         }
 

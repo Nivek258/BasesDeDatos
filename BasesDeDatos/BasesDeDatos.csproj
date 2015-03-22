@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ControlDirectorios.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -126,6 +127,9 @@
       <Generator>MSBuild:Compile</Generator>
       <CustomToolNamespace>BasesDeDatos</CustomToolNamespace>
     </Antlr4>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="DataDB\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Antlr4.4.3.0\build\Antlr4.targets" Condition="Exists('..\packages\Antlr4.4.3.0\build\Antlr4.targets')" />
