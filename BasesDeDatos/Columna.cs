@@ -28,7 +28,7 @@ namespace BasesDeDatos
             return this.tipo;
         }
 
-        public void setNombre(String tipo)
+        public void setTipo(String tipo)
         {
             this.tipo = tipo;
         }
