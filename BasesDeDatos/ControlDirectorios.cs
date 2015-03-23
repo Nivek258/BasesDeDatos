@@ -61,10 +61,21 @@ namespace BasesDeDatos
         {
             String textoAppend = "name: " + nombreTabla + " registros: 0 columnas: [" ;
             for(int i=0; i<datosColumnas.Count;i++){
-                textoAppend+= "[";
-                for(int j=0; j<datosColumnas)
+                textoAppend+= "[ " + datosColumnas[i].getNombre() + ", " + datosColumnas[i].getTipo() + ", ";
+                for(int j=0; j<datosColumnas[i].getRestricciones().Count;j++){
+                    textoAppend+= datosColumnas[j].getRestricciones();
+                    if(j!=datosColumnas[i].getRestricciones().Count-1){
+                        textoAppend+= ", ";
+                    }
+                }
+                textoAppend += " ]";
+                if(i!=datosColumnas.Count-1){
+                    textoAppend+= ", ";
+                }
+
             }
-            File.AppendAllText("..\\DataDB\\" + DBactual + "\\controlTablas.dat", ) ;
+            textoAppend += "]";
+            File.AppendAllText("..\\DataDB\\" + DBactual + "\\controlTablas.dat", textoAppend + Environment.NewLine);
         }
     }
 }

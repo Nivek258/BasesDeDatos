@@ -12,6 +12,7 @@ namespace BasesDeDatos
         String error = "Fate Stay Night";
         String mensajeError = "";
         ControlDirectorios miControl = new ControlDirectorios();
+        List<Columna> columnasYconstraints = new List<Columna>();
         public string VisitAlterExpression_database(gramSQLParser.AlterExpression_databaseContext context)
         {
             throw new NotImplementedException();
@@ -87,7 +88,23 @@ namespace BasesDeDatos
 
         public string VisitCreate_Table(gramSQLParser.Create_TableContext context)
         {
-            throw new NotImplementedException();
+            String nombreTabla = context.GetChild(2).GetText();
+            Visit(context.GetChild(4));
+            Visit(context.GetChild(5));
+            //Q NO SE REPITEN COLUMNAS EN UNA TABLA DE UNA DBZ
+            List<Columna>  columnasTabla = new List<Columna>();
+            columnasTabla = columnasYconstraints;
+            Boolean existe = miControl.existeTabla(nombreTabla);
+            if (!existe)
+            {
+                miControl.agregarTabla(nombreTabla, columnasTabla.Count, columnasTabla);
+                return "void";
+            }
+            else
+            {
+                mensajeError += "Ya existe la tabla " + nombreTabla;
+                return error;
+            }
         }
 
         public string VisitDeclaracionConstraint2_comita(gramSQLParser.DeclaracionConstraint2_comitaContext context)
