@@ -13,22 +13,24 @@ namespace BasesDeDatos
         String mensajeError = "";
         ControlDirectorios miControl = new ControlDirectorios();
         List<Columna> columnasYconstraints = new List<Columna>();
-        public string VisitAlterExpression_database(gramSQLParser.AlterExpression_databaseContext context)
+
+
+        public override string VisitAlterExpression_database(gramSQLParser.AlterExpression_databaseContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitDropExpression_database(gramSQLParser.DropExpression_databaseContext context)
+        public override string VisitDropExpression_database(gramSQLParser.DropExpression_databaseContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitAccionTabla_DropColumn(gramSQLParser.AccionTabla_DropColumnContext context)
+        public override string VisitAccionTabla_DropColumn(gramSQLParser.AccionTabla_DropColumnContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitTipo(gramSQLParser.TipoContext context)
+        public override string VisitTipo(gramSQLParser.TipoContext context)
         {
             if (context.ChildCount == 1)
             {
@@ -51,42 +53,42 @@ namespace BasesDeDatos
             }
         }
 
-        public string VisitDeclaracionColumnas(gramSQLParser.DeclaracionColumnasContext context)
+        public override string VisitDeclaracionColumnas(gramSQLParser.DeclaracionColumnasContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitExpresionOrden2_comita(gramSQLParser.ExpresionOrden2_comitaContext context)
+        public override string VisitExpresionOrden2_comita(gramSQLParser.ExpresionOrden2_comitaContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitProgram(gramSQLParser.ProgramContext context)
+        public override string VisitProgram(gramSQLParser.ProgramContext context)
+        {
+            return Visit(context.GetChild(0));
+        }
+
+        public override string VisitExpBooleana_expBooleana2(gramSQLParser.ExpBooleana_expBooleana2Context context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitExpBooleana_expBooleana2(gramSQLParser.ExpBooleana_expBooleana2Context context)
+        public override string VisitDeclaracionConstraint1(gramSQLParser.DeclaracionConstraint1Context context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitDeclaracionConstraint1(gramSQLParser.DeclaracionConstraint1Context context)
+        public override string VisitCConstraint_check(gramSQLParser.CConstraint_checkContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitCConstraint_check(gramSQLParser.CConstraint_checkContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string VisitInt_literal(gramSQLParser.Int_literalContext context)
+        public override string VisitInt_literal(gramSQLParser.Int_literalContext context)
         {
             return "int";
         }
 
-        public string VisitCreate_Table(gramSQLParser.Create_TableContext context)
+        public override string VisitCreate_Table(gramSQLParser.Create_TableContext context)
         {
             String nombreTabla = context.GetChild(2).GetText();
             Visit(context.GetChild(4));
@@ -107,193 +109,194 @@ namespace BasesDeDatos
             }
         }
 
-        public string VisitDeclaracionConstraint2_comita(gramSQLParser.DeclaracionConstraint2_comitaContext context)
+        public override string VisitDeclaracionConstraint2_comita(gramSQLParser.DeclaracionConstraint2_comitaContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitAccionTabla_AddColumn(gramSQLParser.AccionTabla_AddColumnContext context)
+        public override string VisitAccionTabla_AddColumn(gramSQLParser.AccionTabla_AddColumnContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitIdComa2_idComa(gramSQLParser.IdComa2_idComaContext context)
+        public override string VisitIdComa2_idComa(gramSQLParser.IdComa2_idComaContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitCConstraint_foreign(gramSQLParser.CConstraint_foreignContext context)
+        public override string VisitCConstraint_foreign(gramSQLParser.CConstraint_foreignContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitDeclaracionColumnas2_declaracion(gramSQLParser.DeclaracionColumnas2_declaracionContext context)
+        public override string VisitDeclaracionColumnas2_declaracion(gramSQLParser.DeclaracionColumnas2_declaracionContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitExpresionOrden(gramSQLParser.ExpresionOrdenContext context)
+        public override string VisitExpresionOrden(gramSQLParser.ExpresionOrdenContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitIdComa1(gramSQLParser.IdComa1Context context)
+        public override string VisitIdComa1(gramSQLParser.IdComa1Context context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitColumnaDatos_id(gramSQLParser.ColumnaDatos_idContext context)
+        public override string VisitColumnaDatos_id(gramSQLParser.ColumnaDatos_idContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitDropExpression_table(gramSQLParser.DropExpression_tableContext context)
+        public override string VisitDropExpression_table(gramSQLParser.DropExpression_tableContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitListaValores2_comita(gramSQLParser.ListaValores2_comitaContext context)
+        public override string VisitListaValores2_comita(gramSQLParser.ListaValores2_comitaContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitShowColumnsExpression(gramSQLParser.ShowColumnsExpressionContext context)
+        public override string VisitShowColumnsExpression(gramSQLParser.ShowColumnsExpressionContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitCConstraint_primary(gramSQLParser.CConstraint_primaryContext context)
+        public override string VisitCConstraint_primary(gramSQLParser.CConstraint_primaryContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitShowExpression_Tables(gramSQLParser.ShowExpression_TablesContext context)
+        public override string VisitShowExpression_Tables(gramSQLParser.ShowExpression_TablesContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitDeclaracionConstraint(gramSQLParser.DeclaracionConstraintContext context)
+        public override string VisitDeclaracionConstraint(gramSQLParser.DeclaracionConstraintContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitListaValores2_valores(gramSQLParser.ListaValores2_valoresContext context)
+        public override string VisitListaValores2_valores(gramSQLParser.ListaValores2_valoresContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitExpresionOrden2_expresionOrden(gramSQLParser.ExpresionOrden2_expresionOrdenContext context)
+        public override string VisitExpresionOrden2_expresionOrden(gramSQLParser.ExpresionOrden2_expresionOrdenContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitListaColumna1(gramSQLParser.ListaColumna1Context context)
+        public override string VisitListaColumna1(gramSQLParser.ListaColumna1Context context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitVarchar_literal(gramSQLParser.Varchar_literalContext context)
+        public override string VisitVarchar_literal(gramSQLParser.Varchar_literalContext context)
         {
             return "varchar";
         }
 
-        public string VisitListaValores1(gramSQLParser.ListaValores1Context context)
+        public override string VisitListaValores1(gramSQLParser.ListaValores1Context context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitExpBooleana3_not(gramSQLParser.ExpBooleana3_notContext context)
+        public override string VisitExpBooleana3_not(gramSQLParser.ExpBooleana3_notContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitAccionTabla_DropConstraint(gramSQLParser.AccionTabla_DropConstraintContext context)
+        public override string VisitAccionTabla_DropConstraint(gramSQLParser.AccionTabla_DropConstraintContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitExpRelacion(gramSQLParser.ExpRelacionContext context)
+        public override string VisitExpRelacion(gramSQLParser.ExpRelacionContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitShowExpression_Databases(gramSQLParser.ShowExpression_DatabasesContext context)
+        public override string VisitShowExpression_Databases(gramSQLParser.ShowExpression_DatabasesContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitNombreColumna(gramSQLParser.NombreColumnaContext context)
+        public override string VisitNombreColumna(gramSQLParser.NombreColumnaContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitValores(gramSQLParser.ValoresContext context)
+        public override string VisitValores(gramSQLParser.ValoresContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitUpdateExpression(gramSQLParser.UpdateExpressionContext context)
+        public override string VisitUpdateExpression(gramSQLParser.UpdateExpressionContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitUseExpression(gramSQLParser.UseExpressionContext context)
+        public override string VisitUseExpression(gramSQLParser.UseExpressionContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitInsertExpression(gramSQLParser.InsertExpressionContext context)
+        public override string VisitInsertExpression(gramSQLParser.InsertExpressionContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitColumnaDatos_referencia(gramSQLParser.ColumnaDatos_referenciaContext context)
+        public override string VisitColumnaDatos_referencia(gramSQLParser.ColumnaDatos_referenciaContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitLiteral(gramSQLParser.LiteralContext context)
+        public override string VisitLiteral(gramSQLParser.LiteralContext context)
         {
             return Visit(context.GetChild(0));
         }
 
-        public string VisitSelectExpression(gramSQLParser.SelectExpressionContext context)
+        public override string VisitSelectExpression(gramSQLParser.SelectExpressionContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitListaColumna2_nombreColumna(gramSQLParser.ListaColumna2_nombreColumnaContext context)
+        public override string VisitListaColumna2_nombreColumna(gramSQLParser.ListaColumna2_nombreColumnaContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitAlterExpression_table(gramSQLParser.AlterExpression_tableContext context)
+        public override string VisitAlterExpression_table(gramSQLParser.AlterExpression_tableContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitAccionTabla_AddConstraint(gramSQLParser.AccionTabla_AddConstraintContext context)
+        public override string VisitAccionTabla_AddConstraint(gramSQLParser.AccionTabla_AddConstraintContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitExpresionOrden1(gramSQLParser.ExpresionOrden1Context context)
+        public override string VisitExpresionOrden1(gramSQLParser.ExpresionOrden1Context context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitFloat_literal(gramSQLParser.Float_literalContext context)
+        public override string VisitFloat_literal(gramSQLParser.Float_literalContext context)
         {
             return "float";
         }
 
-        public string VisitExpBooleana4_parentesis(gramSQLParser.ExpBooleana4_parentesisContext context)
+        public override string VisitExpBooleana4_parentesis(gramSQLParser.ExpBooleana4_parentesisContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitCreate_Database(gramSQLParser.Create_DatabaseContext context)
+        public override string VisitCreate_Database(gramSQLParser.Create_DatabaseContext context)
         {
+            miControl.inicializar();
             String nombreDB = context.GetChild(2).GetText();
             Boolean existe = miControl.existeDB(nombreDB);
             if (!existe)
@@ -309,17 +312,17 @@ namespace BasesDeDatos
 
         }
 
-        public string VisitDeclaracionColumnas2_comita(gramSQLParser.DeclaracionColumnas2_comitaContext context)
+        public override string VisitDeclaracionColumnas2_comita(gramSQLParser.DeclaracionColumnas2_comitaContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitExpBooleana_and(gramSQLParser.ExpBooleana_andContext context)
+        public override string VisitExpBooleana_and(gramSQLParser.ExpBooleana_andContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitDate_literal(gramSQLParser.Date_literalContext context)
+        public override string VisitDate_literal(gramSQLParser.Date_literalContext context)
         {
             String año = context.GetChild(1).GetText();
             String mes = context.GetChild(3).GetText();
@@ -337,72 +340,72 @@ namespace BasesDeDatos
             return "date";
         }
 
-        public string VisitExpression(gramSQLParser.ExpressionContext context)
+        public override string VisitExpression(gramSQLParser.ExpressionContext context)
+        {
+            return Visit(context.GetChild(0));
+        }
+
+        public override string VisitRelOperator(gramSQLParser.RelOperatorContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitRelOperator(gramSQLParser.RelOperatorContext context)
+        public override string VisitListaColumna2_comita(gramSQLParser.ListaColumna2_comitaContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitListaColumna2_comita(gramSQLParser.ListaColumna2_comitaContext context)
+        public override string VisitExpBooleana3_expBooleana4(gramSQLParser.ExpBooleana3_expBooleana4Context context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitExpBooleana3_expBooleana4(gramSQLParser.ExpBooleana3_expBooleana4Context context)
+        public override string VisitDeclaracionColumnas1(gramSQLParser.DeclaracionColumnas1Context context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitDeclaracionColumnas1(gramSQLParser.DeclaracionColumnas1Context context)
+        public override string VisitExpBooleana2_expBooleana3(gramSQLParser.ExpBooleana2_expBooleana3Context context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitExpBooleana2_expBooleana3(gramSQLParser.ExpBooleana2_expBooleana3Context context)
+        public override string VisitColumnaDatos_literal(gramSQLParser.ColumnaDatos_literalContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitColumnaDatos_literal(gramSQLParser.ColumnaDatos_literalContext context)
+        public override string VisitIdComa(gramSQLParser.IdComaContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitIdComa(gramSQLParser.IdComaContext context)
+        public override string VisitIdComa2_comita(gramSQLParser.IdComa2_comitaContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitIdComa2_comita(gramSQLParser.IdComa2_comitaContext context)
+        public override string VisitDeleteExpression(gramSQLParser.DeleteExpressionContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitDeleteExpression(gramSQLParser.DeleteExpressionContext context)
+        public override string VisitExpBooleana_or(gramSQLParser.ExpBooleana_orContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitExpBooleana_or(gramSQLParser.ExpBooleana_orContext context)
+        public override string VisitAlterExpression_accion(gramSQLParser.AlterExpression_accionContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitAlterExpression_accion(gramSQLParser.AlterExpression_accionContext context)
+        public override string VisitExpBooleana4_relacion(gramSQLParser.ExpBooleana4_relacionContext context)
         {
             throw new NotImplementedException();
         }
 
-        public string VisitExpBooleana4_relacion(gramSQLParser.ExpBooleana4_relacionContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string VisitDeclaracionConstraint2_declaracion(gramSQLParser.DeclaracionConstraint2_declaracionContext context)
+        public override string VisitDeclaracionConstraint2_declaracion(gramSQLParser.DeclaracionConstraint2_declaracionContext context)
         {
             throw new NotImplementedException();
         }

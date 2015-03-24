@@ -14,7 +14,7 @@ namespace BasesDeDatos
         {
             if (File.Exists("DataDB\\archivoM.dat") == false)
             {
-                FileStream fs = File.Create("DataDB\\archivoM.dat");
+                File.Create("DataDB\\archivoM.dat").Dispose();
             }
             Console.WriteLine("paso1");
         }
@@ -22,7 +22,7 @@ namespace BasesDeDatos
         public Boolean existeDB(String nombreDB)
         {
             String contenido = "";
-            StreamReader myWriter = new StreamReader("BasesDeDatos\\DataDB\\archivoM.dat");
+            StreamReader myWriter = new StreamReader("DataDB\\archivoM.dat");
             contenido += myWriter.ReadToEnd();
             myWriter.Close();
 
@@ -38,7 +38,6 @@ namespace BasesDeDatos
 
         public void agregarDB(String nombreDB)
         {
-            inicializar();
             File.AppendAllText("DataDB\\archivoM.dat", "name: " + nombreDB + " int: 0" + Environment.NewLine);
             Directory.CreateDirectory("DataDB\\" + nombreDB);
             FileStream fs = File.Create("DataDB\\" + nombreDB + "\\controlTablas.dat");
@@ -48,7 +47,7 @@ namespace BasesDeDatos
         public Boolean existeTabla(String nombreTabla)
         {
             String contenido = "";
-            StreamReader myWriter = new StreamReader("..\\DataDB\\" + DBactual + "\\controlTablas.dat");
+            StreamReader myWriter = new StreamReader("DataDB\\" + DBactual + "\\controlTablas.dat");
             contenido += myWriter.ReadToEnd();
             myWriter.Close();
             if (contenido.Contains(nombreTabla))
@@ -78,7 +77,7 @@ namespace BasesDeDatos
 
             }
             textoAppend += "]";
-            File.AppendAllText("..\\DataDB\\" + DBactual + "\\controlTablas.dat", textoAppend + Environment.NewLine);
+            File.AppendAllText("DataDB\\" + DBactual + "\\controlTablas.dat", textoAppend + Environment.NewLine);
         }
     }
 }
