@@ -407,24 +407,24 @@ namespace BasesDeDatos
             throw new NotImplementedException();
         }
 
-        public string Visit(Antlr4.Runtime.Tree.IParseTree tree)
-        {
-            throw new NotImplementedException();
-        }
+        //public string Visit(Antlr4.Runtime.Tree.IParseTree tree)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public string VisitChildren(Antlr4.Runtime.Tree.IRuleNode node)
-        {
-            throw new NotImplementedException();
-        }
+        //public string VisitChildren(Antlr4.Runtime.Tree.IRuleNode node)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public string VisitErrorNode(Antlr4.Runtime.Tree.IErrorNode node)
-        {
-            throw new NotImplementedException();
-        }
+        //public string VisitErrorNode(Antlr4.Runtime.Tree.IErrorNode node)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
-        public string VisitTerminal(Antlr4.Runtime.Tree.ITerminalNode node)
-        {
-            throw new NotImplementedException();
-        }
+        //public string VisitTerminal(Antlr4.Runtime.Tree.ITerminalNode node)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

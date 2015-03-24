@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="Columna.cs" />
     <Compile Include="ControlDirectorios.cs" />
+    <Compile Include="ErroresANTLR.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

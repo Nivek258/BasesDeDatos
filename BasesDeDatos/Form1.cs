@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Antlr4.Runtime;
+using Antlr4.Runtime.Tree;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -66,6 +68,31 @@ namespace BasesDeDatos
                     myStream.Close();
                 }
             }
+        }
+
+        private void btnEjecutar_Click(object sender, EventArgs e)
+        {
+            MyVisitor miVisitor = new MyVisitor();
+            ErroresANTLR ea = new ErroresANTLR();
+            AntlrInputStream input = new AntlrInputStream(textQuery.Text);
+            gramSQLLexer lexer = new gramSQLLexer(input);
+            CommonTokenStream tokens = new CommonTokenStream(lexer);
+            gramSQLParser parser = new gramSQLParser(tokens);
+            parser.RemoveParseListeners();
+            parser.AddErrorListener(ea);
+            IParseTree tree = parser.program();
+            textErrores.Text = "";
+
+            if (ea.getIError() == false)
+            {
+                miVisitor.Visit(tree);
+            }
+            else
+            {
+                textErrores.Text = ea.getErrores();
+                ea.setIError(false);
+                ea.setErrores("");
+            }	
         }
     }
 }
