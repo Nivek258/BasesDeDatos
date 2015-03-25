@@ -8,7 +8,7 @@ namespace BasesDeDatos
 {
     class ControlDB
     {
-        List<DataBase> listaDB;
+        List<DataBase> listaDB = new List<DataBase>();
 
         public void agregarDataBase(DataBase nuevaDB)
         {
