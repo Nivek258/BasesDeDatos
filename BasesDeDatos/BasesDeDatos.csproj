@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Columna.cs" />
+    <Compile Include="Constraint.cs" />
     <Compile Include="ControlDB.cs" />
     <Compile Include="ControlDirectorios.cs" />
     <Compile Include="DataBase.cs" />

@@ -12,6 +12,7 @@ namespace BasesDeDatos
         String nombre = "";
         String tipo = "";
         List<String> restricciones = new List<String>();
+        List<Constraint>  
 
         public String getNombre()
         {
