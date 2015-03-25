@@ -6,15 +6,16 @@ using System.Threading.Tasks;
 
 namespace BasesDeDatos
 {
-    class DataBase
+    public class DataBase
     {
-        int numTablas;
-        String nombre;
+        public String nombre;
+        public int numTablas;
         
-        DataBase(String nombre, int numTablas){
-            this.nombre = nombre;
-            this.numTablas = numTablas;
-        }
+
+        //public DataBase(String nombre, int numTablas){
+        //    this.nombre = nombre;
+        //    this.numTablas = numTablas;
+        //}
 
         public int getNumTablas()
         {

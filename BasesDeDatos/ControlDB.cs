@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace BasesDeDatos
 {
-    class ControlDB
+    public class ControlDB
     {
-        List<DataBase> listaDB = new List<DataBase>();
+        public List<DataBase> listaDB = new List<DataBase>();
 
         public void agregarDataBase(DataBase nuevaDB)
         {

@@ -4,11 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace BasesDeDatos
 {
     class ControlDirectorios
     {
+        ControlDB basesCreadas = new ControlDB();
         String DBactual = "";
         public void inicializar()
         {
@@ -21,12 +23,21 @@ namespace BasesDeDatos
 
         public Boolean existeDB(String nombreDB)
         {
-            String contenido = "";
-            StreamReader myWriter = new StreamReader("DataDB\\archivoM.dat");
-            contenido += myWriter.ReadToEnd();
-            myWriter.Close();
+            //String contenido = "";
+            //StreamReader myWriter = new StreamReader("DataDB\\archivoM.dat");
+            //contenido += myWriter.ReadToEnd();
+            //myWriter.Close();
 
-            if (contenido.Contains(nombreDB))
+            //if (contenido.Contains(nombreDB))
+            //{
+            //    return true;
+            //}
+            //else
+            //{
+            //    return false;
+            //}
+            Boolean existe = basesCreadas.existeDataBase(nombreDB);
+            if (existe)
             {
                 return true;
             }
@@ -38,10 +49,26 @@ namespace BasesDeDatos
 
         public void agregarDB(String nombreDB)
         {
-            File.AppendAllText("DataDB\\archivoM.dat", "name: " + nombreDB + " int: 0" + Environment.NewLine);
+            String contenido;
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\archivoM.dat");
+                basesCreadas = DeSerializarDB(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            DataBase nuevaDB = new DataBase();
+            nuevaDB.setNombre(nombreDB);
+            nuevaDB.setNumTablas(0);
+            basesCreadas.agregarDataBase(nuevaDB);
+            //File.AppendAllText("DataDB\\archivoM.dat", "name: " + nombreDB + " int: 0" + Environment.NewLine);
             Directory.CreateDirectory("DataDB\\" + nombreDB);
             FileStream fs = File.Create("DataDB\\" + nombreDB + "\\controlTablas.dat");
-            Console.WriteLine("paso2");
+            //Console.WriteLine("paso2");
+            contenido = SerializarDB(basesCreadas);
+            File.WriteAllText("DataDB\\archivoM.dat", contenido);
         }
 
         public Boolean existeTabla(String nombreTabla)
@@ -78,6 +105,23 @@ namespace BasesDeDatos
             }
             textoAppend += "]";
             File.AppendAllText("DataDB\\" + DBactual + "\\controlTablas.dat", textoAppend + Environment.NewLine);
+        }
+
+        public String SerializarDB(ControlDB Obj)
+        {
+            XmlSerializer serializer = new XmlSerializer(Obj.GetType());
+            using (StringWriter writer = new StringWriter())
+            {
+                serializer.Serialize(writer, Obj);
+                return writer.ToString();
+            }
+        }
+
+        public ControlDB DeSerializarDB(String XmlText)
+        {
+            XmlSerializer x = new XmlSerializer(typeof(ControlDB));
+            ControlDB miControlTemp = (ControlDB)x.Deserialize(new StringReader(XmlText));
+            return miControlTemp;
         }
     }
 }

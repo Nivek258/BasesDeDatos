@@ -13,7 +13,7 @@ namespace BasesDeDatos
         String mensajeError = "";
         ControlDirectorios miControl = new ControlDirectorios();
         List<Columna> columnasYconstraints = new List<Columna>();
-        ControlDB basesCreadas = new ControlDB();
+        
 
         public override string VisitAlterExpression_database(gramSQLParser.AlterExpression_databaseContext context)
         {
