@@ -37,5 +37,17 @@ namespace BasesDeDatos
                 }
             }
         }
+
+        public int numRegistros(String nombreDataBase)
+        {
+            for (int i = 0; i < listaDB.Count; i++)
+            {
+                if (listaDB[i].getNombre().Equals(nombreDataBase))
+                {
+                    return listaDB[i].getNumTablas();
+                }
+            }
+            return -1;
+        }
     }
 }
