@@ -176,7 +176,8 @@ namespace BasesDeDatos
 
         public override string VisitCConstraint_primary(gramSQLParser.CConstraint_primaryContext context)
         {
-            throw new NotImplementedException();
+            String identificador = context.GetChild(0).GetText();
+            List<String> id 
         }
 
         public override string VisitShowExpression_Tables(gramSQLParser.ShowExpression_TablesContext context)
@@ -186,7 +187,8 @@ namespace BasesDeDatos
 
         public override string VisitDeclaracionConstraint(gramSQLParser.DeclaracionConstraintContext context)
         {
-            throw new NotImplementedException();
+            Visit(context.GetChild(1));
+            return null;
         }
 
         public override string VisitListaValores2_valores(gramSQLParser.ListaValores2_valoresContext context)

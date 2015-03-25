@@ -12,6 +12,7 @@ namespace BasesDeDatos
     {
         ControlDB basesCreadas = new ControlDB();
         String DBactual = "";
+        ControlTB tablasCreadas = new ControlTB();
         public void inicializar()
         {
             if (File.Exists("DataDB\\archivoM.dat") == false)
