@@ -55,7 +55,7 @@ namespace BasesDeDatos
 
         public override string VisitDeclaracionColumnas(gramSQLParser.DeclaracionColumnasContext context)
         {
-            throw new NotImplementedException();
+            return Visit(context.GetChild(1));
         }
 
         public override string VisitExpresionOrden2_comita(gramSQLParser.ExpresionOrden2_comitaContext context)
@@ -75,7 +75,8 @@ namespace BasesDeDatos
 
         public override string VisitDeclaracionConstraint1(gramSQLParser.DeclaracionConstraint1Context context)
         {
-            throw new NotImplementedException();
+            Visit(context.GetChild(0));
+            return null;
         }
 
         public override string VisitCConstraint_check(gramSQLParser.CConstraint_checkContext context)
@@ -111,7 +112,9 @@ namespace BasesDeDatos
 
         public override string VisitDeclaracionConstraint2_comita(gramSQLParser.DeclaracionConstraint2_comitaContext context)
         {
-            throw new NotImplementedException();
+            Visit(context.GetChild(0));
+            Visit(context.GetChild(2));
+            return null;
         }
 
         public override string VisitAccionTabla_AddColumn(gramSQLParser.AccionTabla_AddColumnContext context)
@@ -131,7 +134,14 @@ namespace BasesDeDatos
 
         public override string VisitDeclaracionColumnas2_declaracion(gramSQLParser.DeclaracionColumnas2_declaracionContext context)
         {
-            throw new NotImplementedException();
+            String nombreCol = context.GetChild(0).GetChild(0).GetText();
+            String tipoCol = Visit(context.GetChild(0));
+            Columna colTemp = new Columna();
+            colTemp.setNombre(nombreCol);
+            colTemp.setTipo(tipoCol);
+            columnasYconstraints.Add(colTemp);
+            return null;
+            
         }
 
         public override string VisitExpresionOrden(gramSQLParser.ExpresionOrdenContext context)
@@ -314,7 +324,14 @@ namespace BasesDeDatos
 
         public override string VisitDeclaracionColumnas2_comita(gramSQLParser.DeclaracionColumnas2_comitaContext context)
         {
-            throw new NotImplementedException();
+            String nombreCol = context.GetChild(0).GetChild(0).GetText();
+            String tipoCol = Visit(context.GetChild(0));
+            Columna colTemp = new Columna();
+            colTemp.setNombre(nombreCol);
+            colTemp.setTipo(tipoCol);
+            columnasYconstraints.Add(colTemp);
+            Visit(context.GetChild(2));
+            return null;
         }
 
         public override string VisitExpBooleana_and(gramSQLParser.ExpBooleana_andContext context)
@@ -362,7 +379,8 @@ namespace BasesDeDatos
 
         public override string VisitDeclaracionColumnas1(gramSQLParser.DeclaracionColumnas1Context context)
         {
-            throw new NotImplementedException();
+            Visit(context.GetChild(0));
+            return null;
         }
 
         public override string VisitExpBooleana2_expBooleana3(gramSQLParser.ExpBooleana2_expBooleana3Context context)
@@ -407,7 +425,8 @@ namespace BasesDeDatos
 
         public override string VisitDeclaracionConstraint2_declaracion(gramSQLParser.DeclaracionConstraint2_declaracionContext context)
         {
-            throw new NotImplementedException();
+            Visit(context.GetChild(0));
+            return null;
         }
 
         //public string Visit(Antlr4.Runtime.Tree.IParseTree tree)

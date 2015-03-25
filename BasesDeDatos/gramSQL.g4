@@ -87,11 +87,11 @@ expression: createExpression
 		   | selectExpression;
 createExpression: CREATE DATABASE ID #create_Database
 				| CREATE TABLE ID '('declaracionColumnas1  declaracionConstraint1 ')' #create_Table;
-declaracionColumnas1: declaracionColumnas2+;
+declaracionColumnas1: declaracionColumnas2;
 declaracionColumnas2: declaracionColumnas ',' declaracionColumnas2 #declaracionColumnas2_comita
 					  | declaracionColumnas                        #declaracionColumnas2_declaracion;
 declaracionColumnas: ID tipo;
-declaracionConstraint1: declaracionConstraint2+;
+declaracionConstraint1: declaracionConstraint2;
 declaracionConstraint2: declaracionConstraint ',' declaracionConstraint2 #declaracionConstraint2_comita
 					  | declaracionConstraint                       #declaracionConstraint2_declaracion;
 declaracionConstraint: CONSTRAINT cConstraint;
@@ -100,7 +100,7 @@ cConstraint: ID PRIMARY KEY '(' idComa1')' #cConstraint_primary
 			| ID CHECK '(' expBooleana ')' #cConstraint_check;
 tipo: INT| CHAR '(' NUM ')' | FLOAT | DATE;
 
-idComa1: idComa2+;
+idComa1: idComa2;
 idComa2: idComa ',' idComa2    #idComa2_comita
 		| idComa                #idComa2_idComa;
 idComa: ID;
@@ -139,18 +139,18 @@ showColumnsExpression: SHOW COLUMNS FROM ID;
 
 // GRAMATICA PARTE DML
 insertExpression: INSERT TO ID '('listaColumna1 ')' VALUES '('listaValores1 ')';
-listaColumna1: listaColumna2+;
+listaColumna1: listaColumna2;
 listaColumna2: nombreColumna ',' listaColumna2        #listaColumna2_comita
 				|nombreColumna                        #listaColumna2_nombreColumna;
 nombreColumna: ID;
-listaValores1: listaValores2+;
+listaValores1: listaValores2;
 listaValores2: valores ',' listaValores2			 #listaValores2_comita
 				| valores                            #listaValores2_valores;
 valores: literal; 
 updateExpression: UPDATE ID SET ID '=' listaValores1( WHERE expBooleana);
 deleteExpression: DELETE FROM ID (WHERE expBooleana)?;
 selectExpression: SELECT ( '*' | listaColumna1 ) FROM ID (WHERE expBooleana)? (ORDER BY '[' expresionOrden1 ']')?;
-expresionOrden1: expresionOrden2+;
+expresionOrden1: expresionOrden2;
 expresionOrden2: expresionOrden ',' expresionOrden2    #expresionOrden2_comita
 				| expresionOrden                       #expresionOrden2_expresionOrden;
 expresionOrden: ID (ASC|DESC);
