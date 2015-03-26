@@ -24,19 +24,6 @@ namespace BasesDeDatos
 
         public Boolean existeDB(String nombreDB)
         {
-            //String contenido = "";
-            //StreamReader myWriter = new StreamReader("DataDB\\archivoM.dat");
-            //contenido += myWriter.ReadToEnd();
-            //myWriter.Close();
-
-            //if (contenido.Contains(nombreDB))
-            //{
-            //    return true;
-            //}
-            //else
-            //{
-            //    return false;
-            //}
             Boolean existe = basesCreadas.existeDataBase(nombreDB);
             if (existe)
             {
@@ -74,18 +61,20 @@ namespace BasesDeDatos
 
         public Boolean existeTabla(String nombreTabla)
         {
-            String contenido = "";
-            StreamReader myWriter = new StreamReader("DataDB\\" + DBactual + "\\controlTablas.dat");
-            contenido += myWriter.ReadToEnd();
-            myWriter.Close();
-            if (contenido.Contains(nombreTabla))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }            
+            //String contenido = "";
+            //StreamReader myWriter = new StreamReader("DataDB\\" + DBactual + "\\controlTablas.dat");
+            //contenido += myWriter.ReadToEnd();
+            //myWriter.Close();
+            //if (contenido.Contains(nombreTabla))
+            //{
+            //    return true;
+            //}
+            //else
+            //{
+            //    return false;
+            //}   
+            return tablasCreadas.existeTabla(nombreTabla);
+         
         }
         public void agregarTabla(String nombreTabla, int cantidadRegs, List<Columna> datosColumnas)
         {

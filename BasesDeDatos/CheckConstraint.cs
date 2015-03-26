@@ -11,5 +11,10 @@ namespace BasesDeDatos
         public String chNombre = "";
 
 
+        public String getChNombre()
+        {
+            return chNombre;
+        }
+
     }
 }

@@ -12,8 +12,11 @@ namespace BasesDeDatos
         String error = "Fate Stay Night";
         String mensajeError = "";
         ControlDirectorios miControl = new ControlDirectorios();
-        List<Columna> columnasYconstraints = new List<Columna>();
-        
+        Tabla tablaNueva = new Tabla();
+        PrimaryConstraint tempPC = new PrimaryConstraint();
+        ForeignConstraint tempFC = new ForeignConstraint();
+        CheckConstraint tempCC = new CheckConstraint();
+        int TipoConstraint = 0;
 
         public override string VisitAlterExpression_database(gramSQLParser.AlterExpression_databaseContext context)
         {
@@ -75,8 +78,8 @@ namespace BasesDeDatos
 
         public override string VisitDeclaracionConstraint1(gramSQLParser.DeclaracionConstraint1Context context)
         {
-            Visit(context.GetChild(0));
-            return null;
+            return Visit(context.GetChild(0));
+            
         }
 
         public override string VisitCConstraint_check(gramSQLParser.CConstraint_checkContext context)
@@ -92,29 +95,33 @@ namespace BasesDeDatos
         public override string VisitCreate_Table(gramSQLParser.Create_TableContext context)
         {
             String nombreTabla = context.GetChild(2).GetText();
+            Boolean existeTabla = miControl.existeTabla(nombreTabla);
+            if (existeTabla)
+            {
+                mensajeError += "Ya existe la tabla "+nombreTabla+" en la base de datos actual.";
+                return error; 
+            }
+            tablaNueva = new Tabla();
+            tablaNueva.setNombre(nombreTabla);
             Visit(context.GetChild(4));
             Visit(context.GetChild(5));
-            //Q NO SE REPITEN COLUMNAS EN UNA TABLA DE UNA DBZ
-            List<Columna>  columnasTabla = new List<Columna>();
-            columnasTabla = columnasYconstraints;
-            Boolean existe = miControl.existeTabla(nombreTabla);
-            if (!existe)
-            {
-                miControl.agregarTabla(nombreTabla, columnasTabla.Count, columnasTabla);
-                return "void";
-            }
-            else
-            {
-                mensajeError += "Ya existe la tabla " + nombreTabla;
-                return error;
-            }
+
+            return "";
         }
 
         public override string VisitDeclaracionConstraint2_comita(gramSQLParser.DeclaracionConstraint2_comitaContext context)
         {
-            Visit(context.GetChild(0));
-            Visit(context.GetChild(2));
-            return null;
+            String retorno1 = Visit(context.GetChild(0));
+            if (retorno1.Equals(error))
+            {
+                return error;
+            }
+            String retorno2 = Visit(context.GetChild(2));
+            if (retorno2.Equals(error))
+            {
+                return error;
+            }
+            return "void";
         }
 
         public override string VisitAccionTabla_AddColumn(gramSQLParser.AccionTabla_AddColumnContext context)
@@ -134,13 +141,23 @@ namespace BasesDeDatos
 
         public override string VisitDeclaracionColumnas2_declaracion(gramSQLParser.DeclaracionColumnas2_declaracionContext context)
         {
+            
             String nombreCol = context.GetChild(0).GetChild(0).GetText();
             String tipoCol = Visit(context.GetChild(0));
             Columna colTemp = new Columna();
             colTemp.setNombre(nombreCol);
             colTemp.setTipo(tipoCol);
-            columnasYconstraints.Add(colTemp);
-            return null;
+
+            Boolean existeCol = tablaNueva.existeColumna(nombreCol);
+            if (existeCol)
+            {
+                mensajeError += "La columna " + nombreCol + " ya ha sido especificada.";
+                return error;
+            }
+
+            tablaNueva.agregarColumna(colTemp);
+            return "void";
+
             
         }
 
@@ -151,7 +168,7 @@ namespace BasesDeDatos
 
         public override string VisitIdComa1(gramSQLParser.IdComa1Context context)
         {
-            throw new NotImplementedException();
+            return Visit(context.GetChild(0));
         }
 
         public override string VisitColumnaDatos_id(gramSQLParser.ColumnaDatos_idContext context)
@@ -176,8 +193,24 @@ namespace BasesDeDatos
 
         public override string VisitCConstraint_primary(gramSQLParser.CConstraint_primaryContext context)
         {
-            String identificador = context.GetChild(0).GetText();
-            List<String> id 
+            if (tablaNueva.pConstraint.Count() == 1)
+            {
+                mensajeError += "No se permiten multiples llaves primarias";
+                return error;
+            }
+            
+            String nombrePK = context.GetChild(0).GetText();
+            Boolean existeConstraint = tablaNueva.existeIdConstraint(nombrePK);
+            if (existeConstraint)
+            {
+                mensajeError += "La restriccion " + nombrePK + " ya existe";
+                return error;
+            } 
+            tempPC = new PrimaryConstraint();
+            tempPC.setPkNombre(nombrePK);
+            TipoConstraint = 1;
+            
+            return Visit(context.GetChild(4));
         }
 
         public override string VisitShowExpression_Tables(gramSQLParser.ShowExpression_TablesContext context)
@@ -187,8 +220,8 @@ namespace BasesDeDatos
 
         public override string VisitDeclaracionConstraint(gramSQLParser.DeclaracionConstraintContext context)
         {
-            Visit(context.GetChild(1));
-            return null;
+            return Visit(context.GetChild(1));
+            
         }
 
         public override string VisitListaValores2_valores(gramSQLParser.ListaValores2_valoresContext context)
@@ -331,9 +364,24 @@ namespace BasesDeDatos
             Columna colTemp = new Columna();
             colTemp.setNombre(nombreCol);
             colTemp.setTipo(tipoCol);
-            columnasYconstraints.Add(colTemp);
-            Visit(context.GetChild(2));
-            return null;
+
+            Boolean existeCol = tablaNueva.existeColumna(nombreCol);
+            if (existeCol)
+            {
+                mensajeError += "La columna " + nombreCol + " ya ha sido especificada.";
+                return error;
+            }
+
+            tablaNueva.agregarColumna(colTemp);
+
+            
+            String regreso = Visit(context.GetChild(2));
+            if (regreso.Equals(error))
+            {
+                return error;
+            }
+
+            return "void";
         }
 
         public override string VisitExpBooleana_and(gramSQLParser.ExpBooleana_andContext context)
@@ -381,8 +429,8 @@ namespace BasesDeDatos
 
         public override string VisitDeclaracionColumnas1(gramSQLParser.DeclaracionColumnas1Context context)
         {
-            Visit(context.GetChild(0));
-            return null;
+            return Visit(context.GetChild(0));
+            
         }
 
         public override string VisitExpBooleana2_expBooleana3(gramSQLParser.ExpBooleana2_expBooleana3Context context)
@@ -427,8 +475,8 @@ namespace BasesDeDatos
 
         public override string VisitDeclaracionConstraint2_declaracion(gramSQLParser.DeclaracionConstraint2_declaracionContext context)
         {
-            Visit(context.GetChild(0));
-            return null;
+            return Visit(context.GetChild(0));
+            
         }
 
         //public string Visit(Antlr4.Runtime.Tree.IParseTree tree)

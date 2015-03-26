@@ -44,10 +44,15 @@ namespace BasesDeDatos
             {
                 if (listaTB[i].getNombre().Equals(nombreTabla))
                 {
-                    return listaTB[i].getNumTablas();
+                    return listaTB[i].getNumColumnas();
                 }
             }
             return -1;
+        }
+
+        public Boolean existeColumna(String nombreCol)
+        {
+
         }
     }
 }

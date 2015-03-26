@@ -12,5 +12,10 @@ namespace BasesDeDatos
         public List<String> idCol = new List<String>();
         public String nombreTabla = "";
         public List<String> refCol = new List<String>();
+
+        public String getFkNombre()
+        {
+            return fkNombre;
+        }
     }
 }
