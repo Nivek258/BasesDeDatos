@@ -113,5 +113,11 @@ namespace BasesDeDatos
             ControlDB miControlTemp = (ControlDB)x.Deserialize(new StringReader(XmlText));
             return miControlTemp;
         }
+
+        public Boolean existeColumna(String nombreTabl, String nombreCol)
+        {
+            Boolean respuesta = tablasCreadas.existeColumna(nombreTabl, nombreCol);
+            return respuesta;
+        }
     }
 }

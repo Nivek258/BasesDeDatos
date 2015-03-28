@@ -16,6 +16,7 @@ namespace BasesDeDatos
         PrimaryConstraint tempPC = new PrimaryConstraint();
         ForeignConstraint tempFC = new ForeignConstraint();
         CheckConstraint tempCC = new CheckConstraint();
+        String refNombreTabla = "";
         int TipoConstraint = 0;
 
         public override string VisitAlterExpression_database(gramSQLParser.AlterExpression_databaseContext context)
@@ -98,7 +99,7 @@ namespace BasesDeDatos
             Boolean existeTabla = miControl.existeTabla(nombreTabla);
             if (existeTabla)
             {
-                mensajeError += "Ya existe la tabla "+nombreTabla+" en la base de datos actual.";
+                mensajeError += "Ya existe la tabla " + nombreTabla + " en la base de datos actual.\n";
                 return error; 
             }
             tablaNueva = new Tabla();
@@ -146,19 +147,66 @@ namespace BasesDeDatos
                     }
                     else
                     {
-                        mensajeError += "La columna " + idNombre + " no existe en la tabla actual.";
+                        mensajeError += "La columna " + idNombre + " no existe en la tabla actual.\n";
                         return error;
                     }
                 }
                 else
                 {
-                    mensajeError += "El id " + idNombre + " se repite en la llave primaria.";
+                    mensajeError += "El id " + idNombre + " se repite en la llave primaria.\n";
                     return error;
                 }
 
             }
             //Mas else if
+            else if (TipoConstraint == 2)
+            {
+                idRepetido = tempFC.existeIdCol(idNombre);
+                if (!idRepetido)
+                {
+                    columnaExiste = tablaNueva.existeColumna(idNombre);
+                    if (columnaExiste)
+                    {
+                        tempFC.agregarFK(idNombre);
+                    }
+                    else
+                    {
+                        mensajeError += "La columna " + idNombre + " no existe en la tabla actual.\n";
+                        return error;
+                    }
+                }
+                else
+                {
+                    mensajeError += "El id " + idNombre + " se repite en la llave foranea.\n";
+                    return error;
+                }
 
+            }
+
+            else if (TipoConstraint == 3)
+            {
+                idRepetido = tempFC.existeRefCol(idNombre);
+                if (!idRepetido)
+                {
+
+                    columnaExiste = miControl.existeColumna(refNombreTabla, idNombre);
+                    if (columnaExiste)
+                    {
+                        tempFC.agregarRefCol(idNombre);
+                    }
+                    else
+                    {
+                        mensajeError += "La columna " + idNombre + " no existe en la tabla " + refNombreTabla + ".\n";
+                        return error;
+                    }
+                }
+                else
+                {
+                    mensajeError += "El id " + idNombre + " se repite en las referencias.\n";
+                    return error;
+                }
+
+            }
 
             return "void";
         }
@@ -169,7 +217,7 @@ namespace BasesDeDatos
             Boolean existeConstraint = tablaNueva.existeIdConstraint(nombreFK);
             if (existeConstraint)
             {
-                mensajeError += "La restriccion " + nombreFK + " ya existe";
+                mensajeError += "La restriccion " + nombreFK + " ya existe.\n";
                 return error;
             }
             tempFC = new ForeignConstraint();
@@ -183,15 +231,29 @@ namespace BasesDeDatos
                 return error;
             }
 
-            String retorno2 = Visit(context.GetChild(4));
+            String nombreTabla = context.GetChild(7).GetText();
+            Boolean existeTabla = miControl.existeTabla(nombreTabla);
+            if (!existeTabla)
+            {
+                mensajeError += "No existe la tabla " + nombreTabla + ".\n";
+                return error;
+            }
+            refNombreTabla = nombreTabla;
+            TipoConstraint = 3;
+            String retorno2 = Visit(context.GetChild(9));
             TipoConstraint = 0;
-            if (retorno.Equals(error))
+            if (retorno2.Equals(error))
             {
                 return error;
             }
 
+            if (tempFC.idCol.Count() != tempFC.refCol.Count())
+            {
+                mensajeError += "No coincide el numero de columnas referenciadas en las llaves foraneas con el numero de las referencias. \n";
+                return error;
+            }
 
-            tablaNueva.pConstraint.Add(tempPC);
+            tablaNueva.fConstraint.Add(tempFC);
             return "void";
         }
 
@@ -207,7 +269,7 @@ namespace BasesDeDatos
             Boolean existeCol = tablaNueva.existeColumna(nombreCol);
             if (existeCol)
             {
-                mensajeError += "La columna " + nombreCol + " ya ha sido especificada.";
+                mensajeError += "La columna " + nombreCol + " ya ha sido especificada.\n";
                 return error;
             }
 
@@ -251,7 +313,7 @@ namespace BasesDeDatos
         {
             if (tablaNueva.pConstraint.Count() == 1)
             {
-                mensajeError += "No se permiten multiples llaves primarias";
+                mensajeError += "No se permiten multiples llaves primarias.\n";
                 return error;
             }
             
@@ -259,7 +321,7 @@ namespace BasesDeDatos
             Boolean existeConstraint = tablaNueva.existeIdConstraint(nombrePK);
             if (existeConstraint)
             {
-                mensajeError += "La restriccion " + nombrePK + " ya existe";
+                mensajeError += "La restriccion " + nombrePK + " ya existe.\n";
                 return error;
             } 
             tempPC = new PrimaryConstraint();
@@ -414,7 +476,7 @@ namespace BasesDeDatos
             }
             else
             {
-                mensajeError += "Ya existe la base de datos "+nombreDB;
+                mensajeError += "Ya existe la base de datos " + nombreDB + ".\n";
                 return error;
             }
 
@@ -431,7 +493,7 @@ namespace BasesDeDatos
             Boolean existeCol = tablaNueva.existeColumna(nombreCol);
             if (existeCol)
             {
-                mensajeError += "La columna " + nombreCol + " ya ha sido especificada.";
+                mensajeError += "La columna " + nombreCol + " ya ha sido especificada.\n";
                 return error;
             }
 
@@ -464,7 +526,7 @@ namespace BasesDeDatos
             }
             catch (FormatException)
             {
-                mensajeError += "Error en la linea: " + context.Start + ", Error: La fecha: " + fecha + " no es valida";
+                mensajeError += "Error en la linea: " + context.Start + ", Error: La fecha: " + fecha + " no es valida.\n";
                 return error;
             }
             return "date";
@@ -528,14 +590,63 @@ namespace BasesDeDatos
                     }
                     else
                     {
-                        mensajeError += "La columna " + idNombre + " no existe en la tabla actual.";
+                        mensajeError += "La columna " + idNombre + " no existe en la llave.\n";
                         return error;
                     }
                     
                 }
                 else
                 {
-                    mensajeError += "El id "+idNombre+" se repite en la llave primaria.";
+                    mensajeError += "El id " + idNombre + " se repite en la llave primaria.\n";
+                    return error;
+                }
+
+            }
+
+            else if (TipoConstraint == 2)
+            {
+                idRepetido = tempFC.existeIdCol(idNombre);
+                if (!idRepetido)
+                {
+                    columnaExiste = tablaNueva.existeColumna(idNombre);
+                    if (columnaExiste)
+                    {
+                        tempFC.agregarFK(idNombre);
+                    }
+                    else
+                    {
+                        mensajeError += "La columna " + idNombre + " no existe en la tabla actual.\n";
+                        return error;
+                    }
+                }
+                else
+                {
+                    mensajeError += "El id " + idNombre + " se repite en la llave foranea.\n";
+                    return error;
+                }
+
+            }
+
+            else if (TipoConstraint == 3)
+            {
+                idRepetido = tempFC.existeRefCol(idNombre);
+                if (!idRepetido)
+                {
+
+                    columnaExiste = miControl.existeColumna(refNombreTabla, idNombre);
+                    if (columnaExiste)
+                    {
+                        tempFC.agregarRefCol(idNombre);
+                    }
+                    else
+                    {
+                        mensajeError += "La columna " + idNombre + " no existe en la tabla "+refNombreTabla+".\n";
+                        return error;
+                    }
+                }
+                else
+                {
+                    mensajeError += "El id " + idNombre + " se repite en las referencias.\n";
                     return error;
                 }
 

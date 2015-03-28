@@ -50,9 +50,16 @@ namespace BasesDeDatos
             return -1;
         }
 
-        public Boolean existeColumna(String nombreCol)
+        public Boolean existeColumna(String nombreTabl, String nombreCol)
         {
-
+            for (int i = 0; i < listaTB.Count(); i++)
+            {
+                if (nombreTabl.Equals(listaTB[i].getNombre()))
+                {
+                    return listaTB[i].existeColumna(nombreCol);
+                }
+            }
+            return false;
         }
     }
 }
