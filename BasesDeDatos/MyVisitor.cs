@@ -63,7 +63,7 @@ namespace BasesDeDatos
 
         public override string VisitExpresionOrden2_comita(gramSQLParser.ExpresionOrden2_comitaContext context)
         {
-            throw new NotImplementedException();
+            return ""; //aqui habia pegado algo que no era 
         }
 
         public override string VisitProgram(gramSQLParser.ProgramContext context)
@@ -131,12 +131,68 @@ namespace BasesDeDatos
 
         public override string VisitIdComa2_idComa(gramSQLParser.IdComa2_idComaContext context)
         {
-            throw new NotImplementedException();
+            String idNombre = context.GetChild(0).GetText();
+            Boolean idRepetido = false;
+            Boolean columnaExiste = false;
+            if (TipoConstraint == 1)
+            {
+                idRepetido = tempPC.existeIdCol(idNombre);
+                if (!idRepetido)
+                {
+                    columnaExiste = tablaNueva.existeColumna(idNombre);
+                    if (columnaExiste)
+                    {
+                        tempPC.agregarPK(idNombre);
+                    }
+                    else
+                    {
+                        mensajeError += "La columna " + idNombre + " no existe en la tabla actual.";
+                        return error;
+                    }
+                }
+                else
+                {
+                    mensajeError += "El id " + idNombre + " se repite en la llave primaria.";
+                    return error;
+                }
+
+            }
+            //Mas else if
+
+
+            return "void";
         }
 
         public override string VisitCConstraint_foreign(gramSQLParser.CConstraint_foreignContext context)
         {
-            throw new NotImplementedException();
+            String nombreFK = context.GetChild(0).GetText();
+            Boolean existeConstraint = tablaNueva.existeIdConstraint(nombreFK);
+            if (existeConstraint)
+            {
+                mensajeError += "La restriccion " + nombreFK + " ya existe";
+                return error;
+            }
+            tempFC = new ForeignConstraint();
+            tempFC.setFkNombre(nombreFK);
+            TipoConstraint = 2;
+
+            String retorno = Visit(context.GetChild(4));
+            TipoConstraint = 0;
+            if (retorno.Equals(error))
+            {
+                return error;
+            }
+
+            String retorno2 = Visit(context.GetChild(4));
+            TipoConstraint = 0;
+            if (retorno.Equals(error))
+            {
+                return error;
+            }
+
+
+            tablaNueva.pConstraint.Add(tempPC);
+            return "void";
         }
 
         public override string VisitDeclaracionColumnas2_declaracion(gramSQLParser.DeclaracionColumnas2_declaracionContext context)
@@ -210,7 +266,14 @@ namespace BasesDeDatos
             tempPC.setPkNombre(nombrePK);
             TipoConstraint = 1;
             
-            return Visit(context.GetChild(4));
+            String retorno = Visit(context.GetChild(4));
+            TipoConstraint = 0;
+            if (retorno.Equals(error))
+            {
+                return error;
+            }
+            tablaNueva.pConstraint.Add(tempPC);
+            return "void";
         }
 
         public override string VisitShowExpression_Tables(gramSQLParser.ShowExpression_TablesContext context)
@@ -450,7 +513,42 @@ namespace BasesDeDatos
 
         public override string VisitIdComa2_comita(gramSQLParser.IdComa2_comitaContext context)
         {
-            throw new NotImplementedException();
+            String idNombre = context.GetChild(0).GetText();
+            Boolean idRepetido = false;
+            Boolean columnaExiste = false;
+            if (TipoConstraint == 1)
+            {
+                idRepetido = tempPC.existeIdCol(idNombre);
+                if (!idRepetido)
+                {
+                    columnaExiste = tablaNueva.existeColumna(idNombre);
+                    if (columnaExiste)
+                    {
+                        tempPC.agregarPK(idNombre);
+                    }
+                    else
+                    {
+                        mensajeError += "La columna " + idNombre + " no existe en la tabla actual.";
+                        return error;
+                    }
+                    
+                }
+                else
+                {
+                    mensajeError += "El id "+idNombre+" se repite en la llave primaria.";
+                    return error;
+                }
+
+            }
+
+            String regreso = Visit(context.GetChild(2));
+            if (regreso.Equals(error))
+            {
+                return error;
+            }
+
+            return "void";
+            
         }
 
         public override string VisitDeleteExpression(gramSQLParser.DeleteExpressionContext context)
