@@ -7,11 +7,10 @@ using System.Threading.Tasks;
 
 namespace BasesDeDatos
 {
-    class Columna
+    public class Columna
     {
-        String nombre = "";
-        String tipo = "";
-        List<String> restricciones = new List<String>();
+        public String nombre = "";
+        public String tipo = "";
 
         public String getNombre()
         {
@@ -32,18 +31,6 @@ namespace BasesDeDatos
         {
             this.tipo = tipo;
         }
-        public List<String> getRestricciones()
-        {
-            return this.restricciones;
-        }
-
-        public void setNombre(List<String> restricciones)
-        {
-            this.restricciones = restricciones;
-        }
-
-
-
 
     }
 }

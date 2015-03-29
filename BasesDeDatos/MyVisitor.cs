@@ -71,7 +71,27 @@ namespace BasesDeDatos
 
         public override string VisitProgram(gramSQLParser.ProgramContext context)
         {
-            return Visit(context.GetChild(0));
+            Boolean terminar = false;
+            int hijo = 0;
+            String retorno = "";
+            while (!terminar)
+            {
+                retorno = Visit(context.GetChild(hijo));
+                if (retorno.Equals(error))
+                {
+                    return error;
+                }
+               
+                if ((hijo + 2) == context.ChildCount)
+                {
+                    terminar = true;
+                }
+                else
+                {
+                    hijo = hijo + 2;
+                }
+            }
+            return "void";
         }
 
         public override string VisitExpBooleana_expBooleana2(gramSQLParser.ExpBooleana_expBooleana2Context context)
@@ -98,7 +118,7 @@ namespace BasesDeDatos
             tempCC.setChNombre(nombreCC);
             expConstraint = true;
 
-            String retorno = Visit(context.GetChild(4));
+            String retorno = Visit(context.GetChild(3));
             expConstraint =  false;
             if (retorno.Equals(error))
             {
@@ -121,6 +141,12 @@ namespace BasesDeDatos
 
         public override string VisitCreate_Table(gramSQLParser.Create_TableContext context)
         {
+            Console.WriteLine(miControl.getDBActual());
+            if (miControl.getDBActual().Equals(""))
+            {
+                mensajeError += "No se ha especificado la base de datos a usar. \n";
+                return error;
+            }
             String nombreTabla = context.GetChild(2).GetText();
             Boolean existeTabla = miControl.existeTabla(nombreTabla);
             if (existeTabla)
@@ -130,9 +156,13 @@ namespace BasesDeDatos
             }
             tablaNueva = new Tabla();
             tablaNueva.setNombre(nombreTabla);
-            Visit(context.GetChild(4));
-            Visit(context.GetChild(5));
-
+            String retorno = Visit(context.GetChild(4));
+            String retorno2 = Visit(context.GetChild(5));
+            if (retorno.Equals(error) || retorno2.Equals(error))
+            {
+                return error;
+            }
+            miControl.agregarTabla(tablaNueva);
             return "";
         }
 
@@ -472,7 +502,18 @@ namespace BasesDeDatos
 
         public override string VisitUseExpression(gramSQLParser.UseExpressionContext context)
         {
-            throw new NotImplementedException();
+            String nombreDataBase = context.GetChild(2).GetText();
+            Boolean existeDB = miControl.existeDB(nombreDataBase);
+            if (!existeDB)
+            {
+                mensajeError += "No existe la base de datos " + nombreDataBase + ". \n";
+                return error;
+            }
+            miControl.setDBActual(nombreDataBase);
+            Console.WriteLine(nombreDataBase);
+            Console.WriteLine(miControl.getDBActual());
+            return "void";
+
         }
 
         public override string VisitInsertExpression(gramSQLParser.InsertExpressionContext context)
@@ -627,7 +668,9 @@ namespace BasesDeDatos
 
         public override string VisitExpression(gramSQLParser.ExpressionContext context)
         {
-            return Visit(context.GetChild(0));
+            String retorno = Visit(context.GetChild(0));
+            Console.WriteLine(retorno+" "+mensajeError);
+            return retorno;
         }
 
         public override string VisitRelOperator(gramSQLParser.RelOperatorContext context)
