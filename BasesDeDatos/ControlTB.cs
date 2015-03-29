@@ -61,5 +61,17 @@ namespace BasesDeDatos
             }
             return false;
         }
+
+        public String tipoColumna(String nombreTabl, String nombreCol)
+        {
+            for (int i = 0; i < listaTB.Count(); i++)
+            {
+                if (nombreTabl.Equals(listaTB[i].getNombre()))
+                {
+                    return listaTB[i].tipoColumna(nombreCol);
+                }
+            }
+            return "";
+        }
     }
 }

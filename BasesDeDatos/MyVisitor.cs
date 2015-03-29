@@ -18,6 +18,8 @@ namespace BasesDeDatos
         CheckConstraint tempCC = new CheckConstraint();
         String refNombreTabla = "";
         int TipoConstraint = 0;
+        Boolean expConstraint = false;
+        String expBooleanPostfix = "";
 
         public override string VisitAlterExpression_database(gramSQLParser.AlterExpression_databaseContext context)
         {
@@ -74,7 +76,7 @@ namespace BasesDeDatos
 
         public override string VisitExpBooleana_expBooleana2(gramSQLParser.ExpBooleana_expBooleana2Context context)
         {
-            throw new NotImplementedException();
+            return Visit(context.GetChild(0));
         }
 
         public override string VisitDeclaracionConstraint1(gramSQLParser.DeclaracionConstraint1Context context)
@@ -85,7 +87,31 @@ namespace BasesDeDatos
 
         public override string VisitCConstraint_check(gramSQLParser.CConstraint_checkContext context)
         {
-            throw new NotImplementedException();
+            String nombreCC = context.GetChild(0).GetText();
+            Boolean existeConstraint = tablaNueva.existeIdConstraint(nombreCC);
+            if (existeConstraint)
+            {
+                mensajeError += "La restriccion " + nombreCC + " ya existe.\n";
+                return error;
+            }
+            tempCC = new CheckConstraint();
+            tempCC.setChNombre(nombreCC);
+            expConstraint = true;
+
+            String retorno = Visit(context.GetChild(4));
+            expConstraint =  false;
+            if (retorno.Equals(error))
+            {
+                return error;
+            }
+            tempCC.setRestriccionExp(expBooleanPostfix);
+            tablaNueva.chConstraint.Add(tempCC);
+            return "void";
+
+
+            //return "void";
+
+
         }
 
         public override string VisitInt_literal(gramSQLParser.Int_literalContext context)
@@ -291,7 +317,15 @@ namespace BasesDeDatos
 
         public override string VisitColumnaDatos_id(gramSQLParser.ColumnaDatos_idContext context)
         {
-            throw new NotImplementedException();
+            String nombreCol = context.GetChild(0).GetText();
+            Boolean existeCol = tablaNueva.existeColumna(nombreCol);
+            if (!existeCol)
+            {
+                mensajeError += "no existe la columna " + nombreCol + ". \n";
+                return error;
+            }
+            String tipoCol = tablaNueva.tipoColumna(nombreCol);
+            return tipoCol;
         }
 
         public override string VisitDropExpression_table(gramSQLParser.DropExpression_tableContext context)
@@ -376,7 +410,12 @@ namespace BasesDeDatos
 
         public override string VisitExpBooleana3_not(gramSQLParser.ExpBooleana3_notContext context)
         {
-            throw new NotImplementedException();
+            String retorno = Visit(context.GetChild(0));
+            if (retorno.Equals(error))
+            {
+                return error;
+            }
+            return  retorno + " NOT";
         }
 
         public override string VisitAccionTabla_DropConstraint(gramSQLParser.AccionTabla_DropConstraintContext context)
@@ -386,7 +425,29 @@ namespace BasesDeDatos
 
         public override string VisitExpRelacion(gramSQLParser.ExpRelacionContext context)
         {
-            throw new NotImplementedException();
+            String retorno1 = context.GetChild(0).GetText();
+            String retorno2 = context.GetChild(2).GetText();
+            String opSimb = context.GetChild(1).GetText();
+            String type1 = Visit(context.GetChild(0));
+            String type2 = Visit(context.GetChild(2));
+            if (opSimb.Equals("<") || opSimb.Equals(">") || opSimb.Equals("<=") || opSimb.Equals(">="))
+            {
+                if (!((type1.Equals("int") || type1.Equals("float")) && (type2.Equals("int") || type1.Equals("float"))))
+                {
+                    mensajeError += "No se puede comparar un " + type1 + " con un " + type2 + " usando el operador " + opSimb;
+                    return error;
+                }
+            }
+            else if (!(type1.Equals(type2)))
+            {
+                if (!((type1.Equals("int") || type1.Equals("float")) && (type2.Equals("int") || type1.Equals("float"))))
+                {
+                    mensajeError += "No se puede relacionar un " + type1 + " con un " + type2 + ".\n";
+                    return error;
+                }
+            }
+            String nuevoRetorno = retorno1 + " " + retorno2 + " " + opSimb;
+            return nuevoRetorno;
         }
 
         public override string VisitShowExpression_Databases(gramSQLParser.ShowExpression_DatabasesContext context)
@@ -421,7 +482,28 @@ namespace BasesDeDatos
 
         public override string VisitColumnaDatos_referencia(gramSQLParser.ColumnaDatos_referenciaContext context)
         {
-            throw new NotImplementedException();
+            if (expConstraint)
+            {
+                mensajeError += "No se puede referenciar columnas de otras tablas en una Constraint CHECK. \n";
+                return error;
+            }
+            //codigo del WHERE
+            String nombreTabla = context.GetChild(0).GetText();
+            String nombreCol = context.GetChild(2).GetText();
+            Boolean existeTabla = miControl.existeTabla(nombreTabla);
+            if (!existeTabla)
+            {
+                mensajeError += "no existe una tabla de nombre " + nombreTabla + ". \n";
+            }
+            Boolean existeCol = miControl.existeColumna(nombreTabla, nombreCol);
+            if (!existeCol)
+            {
+                mensajeError += "no existe la columna " + nombreCol + "en la tabla "+nombreTabla+". \n";
+                return error;
+            }
+            String tipoCol = tablaNueva.tipoColumna(nombreCol);
+            return tipoCol;
+
         }
 
         public override string VisitLiteral(gramSQLParser.LiteralContext context)
@@ -461,7 +543,7 @@ namespace BasesDeDatos
 
         public override string VisitExpBooleana4_parentesis(gramSQLParser.ExpBooleana4_parentesisContext context)
         {
-            throw new NotImplementedException();
+            return Visit(context.GetChild(0));
         }
 
         public override string VisitCreate_Database(gramSQLParser.Create_DatabaseContext context)
@@ -511,7 +593,18 @@ namespace BasesDeDatos
 
         public override string VisitExpBooleana_and(gramSQLParser.ExpBooleana_andContext context)
         {
-            throw new NotImplementedException();
+            String retorno1 = Visit(context.GetChild(0));
+            if (retorno1.Equals(error))
+            {
+                return error;
+            }
+            String retorno2 = Visit(context.GetChild(2));
+            if (retorno2.Equals(error))
+            {
+                return error;
+            }
+            String nuevoRetorno = retorno1 + " " + retorno2 + " AND";
+            return nuevoRetorno;
         }
 
         public override string VisitDate_literal(gramSQLParser.Date_literalContext context)
@@ -549,7 +642,7 @@ namespace BasesDeDatos
 
         public override string VisitExpBooleana3_expBooleana4(gramSQLParser.ExpBooleana3_expBooleana4Context context)
         {
-            throw new NotImplementedException();
+            return Visit(context.GetChild(0));
         }
 
         public override string VisitDeclaracionColumnas1(gramSQLParser.DeclaracionColumnas1Context context)
@@ -560,12 +653,12 @@ namespace BasesDeDatos
 
         public override string VisitExpBooleana2_expBooleana3(gramSQLParser.ExpBooleana2_expBooleana3Context context)
         {
-            throw new NotImplementedException();
+            return Visit(context.GetChild(0));
         }
 
         public override string VisitColumnaDatos_literal(gramSQLParser.ColumnaDatos_literalContext context)
         {
-            throw new NotImplementedException();
+            return Visit(context.GetChild(0));
         }
 
         public override string VisitIdComa(gramSQLParser.IdComaContext context)
@@ -669,7 +762,19 @@ namespace BasesDeDatos
 
         public override string VisitExpBooleana_or(gramSQLParser.ExpBooleana_orContext context)
         {
-            throw new NotImplementedException();
+            String retorno1 = Visit(context.GetChild(0));
+            if (retorno1.Equals(error))
+            {
+                return error;
+            }
+            String retorno2 = Visit(context.GetChild(2));
+            if (retorno2.Equals(error))
+            {
+                return error;
+            }
+            String nuevoRetorno = retorno1 + " " + retorno2 + " OR";
+            return nuevoRetorno;
+
         }
 
         public override string VisitAlterExpression_accion(gramSQLParser.AlterExpression_accionContext context)
@@ -679,7 +784,7 @@ namespace BasesDeDatos
 
         public override string VisitExpBooleana4_relacion(gramSQLParser.ExpBooleana4_relacionContext context)
         {
-            throw new NotImplementedException();
+            return Visit(context.GetChild(0));
         }
 
         public override string VisitDeclaracionConstraint2_declaracion(gramSQLParser.DeclaracionConstraint2_declaracionContext context)

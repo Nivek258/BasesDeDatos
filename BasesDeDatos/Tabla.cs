@@ -14,7 +14,7 @@ namespace BasesDeDatos
         public List<ForeignConstraint> fConstraint = new List<ForeignConstraint>();
         public List<CheckConstraint> chConstraint = new List<CheckConstraint>();
         public int numColumnas = 0;
-        public List<Columna> columasTB = new List<Columna>();
+        public List<Columna> columnasTB = new List<Columna>();
 
         public String getNombre()
         {
@@ -38,9 +38,9 @@ namespace BasesDeDatos
 
         public Boolean existeColumna(String nombreCol)
         {
-            for (int i = 0; i < columasTB.Count(); i++)
+            for (int i = 0; i < columnasTB.Count(); i++)
             {
-                if (columasTB[i].getNombre().Equals(nombreCol))
+                if (columnasTB[i].getNombre().Equals(nombreCol))
                 {
                     return true;
                 }
@@ -50,7 +50,7 @@ namespace BasesDeDatos
 
         public void agregarColumna(Columna nuevaCol)
         {
-            columasTB.Add(nuevaCol);
+            columnasTB.Add(nuevaCol);
             numColumnas = numColumnas + 1;
         }
 
@@ -81,6 +81,17 @@ namespace BasesDeDatos
             return false;
         }
 
+        public String tipoColumna(String nombreCol)
+        {
+            for (int i = 0; i < columnasTB.Count(); i++)
+            {
+                if (columnasTB[i].getNombre().Equals(nombreCol))
+                {
+                    return columnasTB[i].getTipo();
+                }
+            }
+            return "";
+        }
 
     }
 }
