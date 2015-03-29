@@ -124,7 +124,7 @@ namespace BasesDeDatos
             {
                 return error;
             }
-            tempCC.setRestriccionExp(expBooleanPostfix);
+            tempCC.setRestriccionExp(retorno);
             tablaNueva.chConstraint.Add(tempCC);
             return "void";
 
@@ -295,6 +295,7 @@ namespace BasesDeDatos
                 return error;
             }
             refNombreTabla = nombreTabla;
+            tempFC.setTablaRefNombre(refNombreTabla);
             TipoConstraint = 3;
             String retorno2 = Visit(context.GetChild(9));
             TipoConstraint = 0;
@@ -462,7 +463,7 @@ namespace BasesDeDatos
             String type2 = Visit(context.GetChild(2));
             if (opSimb.Equals("<") || opSimb.Equals(">") || opSimb.Equals("<=") || opSimb.Equals(">="))
             {
-                if (!((type1.Equals("int") || type1.Equals("float")) && (type2.Equals("int") || type1.Equals("float"))))
+                if (!((type1.Equals("int") || type1.Equals("float")) && (type2.Equals("int") || type2.Equals("float"))))
                 {
                     mensajeError += "No se puede comparar un " + type1 + " con un " + type2 + " usando el operador " + opSimb;
                     return error;
@@ -470,7 +471,7 @@ namespace BasesDeDatos
             }
             else if (!(type1.Equals(type2)))
             {
-                if (!((type1.Equals("int") || type1.Equals("float")) && (type2.Equals("int") || type1.Equals("float"))))
+                if (!((type1.Equals("int") || type1.Equals("float")) && (type2.Equals("int") || type2.Equals("float"))))
                 {
                     mensajeError += "No se puede relacionar un " + type1 + " con un " + type2 + ".\n";
                     return error;

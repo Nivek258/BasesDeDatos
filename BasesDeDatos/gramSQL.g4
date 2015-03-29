@@ -94,7 +94,7 @@ declaracionConstraint2: declaracionConstraint ',' declaracionConstraint2 #declar
 					  | declaracionConstraint                       #declaracionConstraint2_declaracion;
 declaracionConstraint: CONSTRAINT cConstraint;
 cConstraint: ID PRIMARY KEY '(' idComa1')' #cConstraint_primary
-			| ID FOREING KEY '(' idComa1 ')'  REFERENCES ID '('  idComa1 ')' #cConstraint_foreign
+			| ID FOREIGN KEY '(' idComa1 ')'  REFERENCES ID '('  idComa1 ')' #cConstraint_foreign
 			| ID CHECK '(' expBooleana ')' #cConstraint_check;
 tipo: INT| CHAR '(' NUM ')' | FLOAT | DATE;
 

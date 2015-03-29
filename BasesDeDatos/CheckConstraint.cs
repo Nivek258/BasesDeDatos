@@ -24,7 +24,7 @@ namespace BasesDeDatos
         
         public void setRestriccionExp(String restExp)
         {
-            restriccionExp = restExp;
+            this.restriccionExp = restExp;
         }
 
 
