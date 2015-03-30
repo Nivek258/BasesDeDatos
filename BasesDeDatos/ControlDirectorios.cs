@@ -10,9 +10,9 @@ namespace BasesDeDatos
 {
     class ControlDirectorios
     {
-        ControlDB basesCreadas = new ControlDB();
+        public ControlDB basesCreadas = new ControlDB();
         String DBactual = "";
-        ControlTB tablasCreadas = new ControlTB();
+        public ControlTB tablasCreadas = new ControlTB();
         public void inicializar()
         {
             if (File.Exists("DataDB\\archivoM.dat") == false)
@@ -315,5 +315,51 @@ namespace BasesDeDatos
         {
             return DBactual;
         }
+
+        public ControlDB getBasesCreadas()
+        {
+            String contenido;
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\archivoM.dat");
+                basesCreadas = DeSerializarDB(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            return basesCreadas;
+        }
+
+        public ControlTB getTablasCreadas()
+        {
+            String contenido;
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+                tablasCreadas = DeSerializarTabla(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            return tablasCreadas;
+        }
+
+        //public String toStringDataBases()
+        //{
+        //    String contenido;
+        //    Strring toString = "";
+        //    try
+        //    {
+        //        contenido = File.ReadAllText("DataDB\\archivoM.dat");
+        //        basesCreadas = DeSerializarDB(contenido);
+        //    }
+        //    catch (Exception e)
+        //    {
+
+        //    }
+            
+        //}
     }
 }

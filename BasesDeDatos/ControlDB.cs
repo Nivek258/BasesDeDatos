@@ -81,5 +81,10 @@ namespace BasesDeDatos
                 }
             }
         }
+        public List<DataBase> getListaDB()
+        {
+            return listaDB;
+        }
+
     }
 }

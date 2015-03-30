@@ -87,7 +87,13 @@ namespace BasesDeDatos
 
             if (ea.getIError() == false)
             {
+                miVisitor.aMostrar = gridTabla;
                 miVisitor.Visit(tree);
+                //mostrar errores
+                //mostrar tablas
+                String errores = miVisitor.mensajeError;
+                textErrores.Text = errores;
+                
             }
             else
             {

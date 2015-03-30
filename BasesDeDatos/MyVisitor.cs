@@ -7,11 +7,11 @@ using System.Windows.Forms;
 
 namespace BasesDeDatos
 {
-    class MyVisitor : gramSQLBaseVisitor<String>
+    public class MyVisitor : gramSQLBaseVisitor<String>
     {
         //Variables
         String error = "Fate Stay Night";
-        String mensajeError = "";
+        public String mensajeError = "";
         ControlDirectorios miControl = new ControlDirectorios();
         Tabla tablaNueva = new Tabla();
         PrimaryConstraint tempPC = new PrimaryConstraint();
@@ -20,7 +20,8 @@ namespace BasesDeDatos
         String refNombreTabla = "";
         int TipoConstraint = 0;
         Boolean expConstraint = false;
-        String expBooleanPostfix = "";
+        public DataGridView aMostrar = new DataGridView();
+        //public List<DataBase> mostrarDB = new List<DataBase>();
 
         public override string VisitAlterExpression_database(gramSQLParser.AlterExpression_databaseContext context)
         {
@@ -483,7 +484,29 @@ namespace BasesDeDatos
 
         public override string VisitShowColumnsExpression(gramSQLParser.ShowColumnsExpressionContext context)
         {
-            throw new NotImplementedException();
+            if (miControl.getDBActual().Equals(""))
+            {
+                mensajeError += "No se ha especificado la base de datos a usar. \n";
+                return error;
+            }
+            String nombreTabla = context.GetChild(3).GetText();
+            Boolean existeTabla = miControl.existeTabla(nombreTabla);
+            if (!existeTabla)
+            {
+                mensajeError += "No existe la tabla " + nombreTabla + " en esta base de datos. \n";
+            }
+            aMostrar.ColumnCount = 2;
+            aMostrar.RowCount = miControl.getTablasCreadas().getListaTB().Count + 1;
+
+            aMostrar.Rows[0].Cells[0].Value = "Nombre Columna";
+            aMostrar.Rows[0].Cells[1].Value = "Tipo Columna";
+            for (int i = 1; i < aMostrar.RowCount; i++)
+            {
+                aMostrar.Rows[i].Cells[0].Value = miControl.getTablasCreadas().obtenerTabla(nombreTabla).columnasTB[i-1].getNombre();
+                aMostrar.Rows[i].Cells[1].Value = miControl.getTablasCreadas().obtenerTabla(nombreTabla).columnasTB[i - 1].getTipo() + "";
+            }
+            //mostrarDB = miControl.getBasesCreadas().listaDB;
+            return "void";
         }
 
         public override string VisitCConstraint_primary(gramSQLParser.CConstraint_primaryContext context)
@@ -517,7 +540,25 @@ namespace BasesDeDatos
 
         public override string VisitShowExpression_Tables(gramSQLParser.ShowExpression_TablesContext context)
         {
-            throw new NotImplementedException();
+            if (miControl.getDBActual().Equals(""))
+            {
+                mensajeError += "No se ha especificado la base de datos a usar. \n";
+                return error;
+            }
+            aMostrar.ColumnCount = 3;
+            aMostrar.RowCount = miControl.getTablasCreadas().getListaTB().Count + 1;
+
+            aMostrar.Rows[0].Cells[0].Value = "Nombre Tabla";
+            aMostrar.Rows[0].Cells[1].Value = "Numero de registros";
+            aMostrar.Rows[0].Cells[2].Value = "Numero de Columnas";
+            for (int i = 1; i < aMostrar.RowCount; i++)
+            {
+                aMostrar.Rows[i].Cells[0].Value = miControl.getTablasCreadas().getListaTB()[i - 1].getNombre();
+                aMostrar.Rows[i].Cells[1].Value = miControl.getTablasCreadas().getListaTB()[i - 1].getNumRegistros() +"";
+                aMostrar.Rows[i].Cells[2].Value = miControl.getTablasCreadas().getListaTB()[i - 1].getNumColumnas() + "";
+            }
+            //mostrarDB = miControl.getBasesCreadas().listaDB;
+            return "void";
         }
 
         public override string VisitDeclaracionConstraint(gramSQLParser.DeclaracionConstraintContext context)
@@ -603,7 +644,18 @@ namespace BasesDeDatos
 
         public override string VisitShowExpression_Databases(gramSQLParser.ShowExpression_DatabasesContext context)
         {
-            
+            aMostrar.ColumnCount = 2;
+            aMostrar.RowCount = miControl.getBasesCreadas().getListaDB().Count + 1;
+
+            aMostrar.Rows[0].Cells[0].Value = "Nombre Data Base";
+            aMostrar.Rows[0].Cells[1].Value = "Numero de tablas";
+            for (int i = 1; i < aMostrar.RowCount; i++)
+            {
+                aMostrar.Rows[i].Cells[0].Value = miControl.getBasesCreadas().getListaDB()[i-1].getNombre();
+                aMostrar.Rows[i].Cells[1].Value = miControl.getBasesCreadas().getListaDB()[i - 1].getNumTablas() + "";
+            }
+            //mostrarDB = miControl.getBasesCreadas().listaDB;
+            return "void";
         }
 
         public override string VisitNombreColumna(gramSQLParser.NombreColumnaContext context)

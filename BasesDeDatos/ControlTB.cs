@@ -151,5 +151,9 @@ namespace BasesDeDatos
                 }
             }
         }
+        public List<Tabla> getListaTB()
+        {
+            return listaTB;
+        }
     }
 }
