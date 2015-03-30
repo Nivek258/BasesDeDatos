@@ -21,6 +21,7 @@ namespace BasesDeDatos
         int TipoConstraint = 0;
         Boolean expConstraint = false;
         public DataGridView aMostrar = new DataGridView();
+        List<String> tiposCol = new List<String>();
         //public List<DataBase> mostrarDB = new List<DataBase>();
 
         public override string VisitAlterExpression_database(gramSQLParser.AlterExpression_databaseContext context)
@@ -579,7 +580,7 @@ namespace BasesDeDatos
 
         public override string VisitListaColumna1(gramSQLParser.ListaColumna1Context context)
         {
-            throw new NotImplementedException();
+            return Visit(context.GetChild(0));
         }
 
         public override string VisitVarchar_literal(gramSQLParser.Varchar_literalContext context)
@@ -689,7 +690,33 @@ namespace BasesDeDatos
 
         public override string VisitInsertExpression(gramSQLParser.InsertExpressionContext context)
         {
-            throw new NotImplementedException();
+            String nombreTabla = context.GetChild(2).GetText();
+            Boolean existeTabla = miControl.existeTabla(nombreTabla);
+            if (miControl.getDBActual().Equals(""))
+            {
+                mensajeError += "No ha seleccionado una base de datos en la cual trabajar.\n";
+                return error;
+            }
+            if (!existeTabla)
+            {
+                mensajeError += "No existe la tabla: " + nombreTabla + ".\n";
+                return error;
+            }
+            for (int i = 0; i < miControl.obtenerNumColumnas(nombreTabla); i++)
+            {
+                tiposCol.Add(null);
+            }
+            String retorno1 = Visit(context.GetChild(4));
+            if (retorno1.Equals(error))
+            {
+                return error;
+            }
+            String retorno2 = Visit(context.GetChild(8));
+            if (retorno2.Equals(error))
+            {
+                return error;
+            }
+            return "void";
         }
 
         public override string VisitColumnaDatos_referencia(gramSQLParser.ColumnaDatos_referenciaContext context)
@@ -876,7 +903,11 @@ namespace BasesDeDatos
 
         public override string VisitListaColumna2_comita(gramSQLParser.ListaColumna2_comitaContext context)
         {
-            throw new NotImplementedException();
+            String nombreColumna = context.GetChild(0).GetText();
+            
+            
+            
+            
         }
 
         public override string VisitExpBooleana3_expBooleana4(gramSQLParser.ExpBooleana3_expBooleana4Context context)

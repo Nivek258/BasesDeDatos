@@ -65,6 +65,7 @@
   <ItemGroup>
     <Compile Include="CheckConstraint.cs" />
     <Compile Include="Columna.cs" />
+    <Compile Include="ControlContenido.cs" />
     <Compile Include="ControlDB.cs" />
     <Compile Include="ControlDirectorios.cs" />
     <Compile Include="ControlTB.cs" />

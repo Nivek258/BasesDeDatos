@@ -68,6 +68,7 @@ namespace BasesDeDatos
             }
             return false;
         }
+
         
         public Boolean tablaEnReferencia(String nombreTabla)
         {
@@ -140,6 +141,17 @@ namespace BasesDeDatos
                 }
             }
             return "";
+        }
+        public int indiceColumna(String nombreTabl, String nombreCol)
+        {
+            for (int i = 0; i < listaTB.Count(); i++)
+            {
+                if (nombreTabl.Equals(listaTB[i].getNombre()))
+                {
+                    return listaTB[i].indiceColumna(nombreCol);
+                }
+            }
+            return -1;
         }
         public void cambiarNombreTabla(String nombreViejo, String nombreNuevo)
         {

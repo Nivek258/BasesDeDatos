@@ -13,6 +13,7 @@ namespace BasesDeDatos
         public ControlDB basesCreadas = new ControlDB();
         String DBactual = "";
         public ControlTB tablasCreadas = new ControlTB();
+        ControlContenido miContenido = new ControlContenido();
         public void inicializar()
         {
             if (File.Exists("DataDB\\archivoM.dat") == false)
@@ -21,7 +22,36 @@ namespace BasesDeDatos
             }
             Console.WriteLine("paso1");
         }
+        public String obtenerTipoCol(String nombreTabla, String idCol)
+        {
+            String contenido;
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+                tablasCreadas = DeSerializarTabla(contenido);
+            }
+            catch (Exception e)
+            {
 
+            }
+            String tipoCol = tablasCreadas.tipoColumna(nombreTabla, idCol);
+            return tipoCol;
+        }
+        public int obtenerIndiceCol(String nombreTabla, String idCol)
+        {
+            String contenido;
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+                tablasCreadas = DeSerializarTabla(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            int indiceCol = tablasCreadas.indiceColumna(nombreTabla, idCol);
+            return indiceCol;
+        }
         public int numRegistrosDB(String nombreDB)
         {
             String contenido;
@@ -35,6 +65,21 @@ namespace BasesDeDatos
 
             }
             return basesCreadas.numRegistros(nombreDB);
+        }
+        public int obtenerNumColumnas(String nombreTabla)
+        {
+            String contenido;
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+                tablasCreadas = DeSerializarTabla(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            int numColumnas = tablasCreadas.numColumnas(nombreTabla);
+            return numColumnas;
         }
         public Boolean existeDB(String nombreDB)
         {
@@ -260,6 +305,7 @@ namespace BasesDeDatos
             {
 
             }
+            File.Create("DataDB\\" + DBactual + "\\" + nuevaTabla.getNombre()+".dat").Dispose();
             tablasCreadas.agregarTabla(nuevaTabla);
             basesCreadas.agregarCountTabla(DBactual);
             contenido = SerializarTabla (tablasCreadas);
@@ -268,7 +314,7 @@ namespace BasesDeDatos
             File.WriteAllText("DataDB\\archivoM.dat", contenido);
 
         }
-
+        
         public String SerializarDB(ControlDB Obj)
         {
             XmlSerializer serializer = new XmlSerializer(Obj.GetType());
@@ -345,21 +391,21 @@ namespace BasesDeDatos
             }
             return tablasCreadas;
         }
-
-        //public String toStringDataBases()
-        //{
-        //    String contenido;
-        //    Strring toString = "";
-        //    try
-        //    {
-        //        contenido = File.ReadAllText("DataDB\\archivoM.dat");
-        //        basesCreadas = DeSerializarDB(contenido);
-        //    }
-        //    catch (Exception e)
-        //    {
-
-        //    }
-            
-        //}
+        public String SerializarContenido(ControlContenido contenidoObj)
+        {
+            XmlSerializer serializer = new XmlSerializer(contenidoObj.GetType());
+            using (StringWriter writer = new StringWriter())
+            {
+                serializer.Serialize(writer, contenidoObj);
+                return writer.ToString();
+            }
+        }
+        public ControlContenido DeSerializarContenido(String XmlText)
+        {
+            XmlSerializer x = new XmlSerializer(typeof(ControlContenido));
+            ControlContenido miControlTemp = (ControlContenido)x.Deserialize(new StringReader(XmlText));
+            return miControlTemp;
+        }
+        
     }
 }

@@ -138,6 +138,18 @@ namespace BasesDeDatos
             }
             return "";
         }
+        public int indiceColumna(String nombreCol)
+        {
+            for (int i = 0; i < columnasTB.Count(); i++)
+            {
+                if (columnasTB[i].getNombre().Equals(nombreCol))
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
 
     }
 }
