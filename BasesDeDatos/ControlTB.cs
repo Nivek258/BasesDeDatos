@@ -48,6 +48,41 @@ namespace BasesDeDatos
                 }
             }
         }
+        public Boolean columnaEnCostraint(String nombreTabla, String idCol)
+        {
+            for (int i = 0; i < listaTB.Count; i++)
+            {
+                for (int j = 0; j < listaTB[i].fConstraint.Count; j++)
+                {
+                    if (listaTB[i].fConstraint[j].getTablaRefNombre().Equals(nombreTabla))
+                    {
+                        for (int k = 0; k < listaTB[i].fConstraint[j].refCol.Count; k++)
+                        {
+                            if (listaTB[i].fConstraint[j].refCol[k].Equals(idCol))
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+        
+        public Boolean tablaEnReferencia(String nombreTabla)
+        {
+            for (int i = 0; i < listaTB.Count; i++)
+            {
+                for (int j = 0; j < listaTB[i].fConstraint.Count; j++)
+                {
+                    if (listaTB[i].fConstraint[j].getTablaRefNombre().Equals(nombreTabla))
+                    {
+                       return true;
+                    }
+                }
+            }
+            return false;
+        }
         public Boolean existeTabla(String nombreTabla)
         {
             for (int i = 0; i < listaTB.Count; i++)

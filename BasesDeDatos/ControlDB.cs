@@ -70,5 +70,16 @@ namespace BasesDeDatos
                 }
             }
         }
+        public void restarCountTabla(String nombreDataBase)
+        {
+            for (int i = 0; i < listaDB.Count; i++)
+            {
+                if (listaDB[i].getNombre().Equals(nombreDataBase))
+                {
+                    int numTabla = listaDB[i].getNumTablas() - 1;
+                    listaDB[i].setNumTablas(numTabla);
+                }
+            }
+        }
     }
 }

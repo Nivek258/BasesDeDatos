@@ -84,7 +84,7 @@ expression: createExpression
 		   | deleteExpression
 		   | selectExpression;
 createExpression: CREATE DATABASE ID #create_Database
-				| CREATE TABLE ID '('declaracionColumnas1  declaracionConstraint1 ')' #create_Table;
+				| CREATE TABLE ID '('declaracionColumnas1  declaracionConstraint1? ')' #create_Table;
 declaracionColumnas1: declaracionColumnas2;
 declaracionColumnas2: declaracionColumnas ',' declaracionColumnas2 #declaracionColumnas2_comita
 					  | declaracionColumnas                        #declaracionColumnas2_declaracion;

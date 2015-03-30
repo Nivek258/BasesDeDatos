@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace BasesDeDatos
 {
@@ -46,12 +47,40 @@ namespace BasesDeDatos
 
         public override string VisitDropExpression_database(gramSQLParser.DropExpression_databaseContext context)
         {
-            throw new NotImplementedException();
+            String nombreDatabase = context.GetChild(2).GetText();
+            Boolean existeDB = miControl.existeDB(nombreDatabase);
+            if (!existeDB)
+            {
+                mensajeError += "No existe una base de datos con el nombre: " +nombreDatabase+".\n";
+            }
+            int numRegistros = miControl.numRegistrosDB(nombreDatabase);
+            DialogResult resultado = MessageBox.Show("Borrar la base de datos: " + nombreDatabase + " con: " + numRegistros + " registros", "Eliminar Base de Datos", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+            if (resultado == DialogResult.Yes)
+            {
+                miControl.removerDB(nombreDatabase);
+            }
+            return "void";
+
         }
 
         public override string VisitAccionTabla_DropColumn(gramSQLParser.AccionTabla_DropColumnContext context)
         {
-            throw new NotImplementedException();
+            String idCol = context.GetChild(2).GetText();
+            String nombre = tablaNueva.getNombre();
+            Boolean existeCol = tablaNueva.existeColumna(idCol);
+            if (existeCol)
+            {
+                mensajeError += "No se puede borrar la columna: "+idCol+ " ya que no existe en la tabla. \n";
+                return error;
+            }
+            Boolean existeColEnConstraint = miControl.columnaEnConstraint(nombre, idCol);
+            if (existeColEnConstraint)
+            {
+                mensajeError += "No se puede borrar la columna: " + idCol + " ya que esta siendo referenciada en otra tabla.\n";
+            }
+            tablaNueva.removerColumna(idCol);
+            return "void";
+
         }
 
         public override string VisitTipo(gramSQLParser.TipoContext context)
@@ -159,29 +188,58 @@ namespace BasesDeDatos
 
         public override string VisitCreate_Table(gramSQLParser.Create_TableContext context)
         {
-            Console.WriteLine(miControl.getDBActual());
-            if (miControl.getDBActual().Equals(""))
+            if (context.ChildCount == 7)
             {
-                mensajeError += "No se ha especificado la base de datos a usar. \n";
-                return error;
+                Console.WriteLine(miControl.getDBActual());
+                if (miControl.getDBActual().Equals(""))
+                {
+                    mensajeError += "No se ha especificado la base de datos a usar. \n";
+                    return error;
+                }
+                String nombreTabla = context.GetChild(2).GetText();
+                Boolean existeTabla = miControl.existeTabla(nombreTabla);
+                if (existeTabla)
+                {
+                    mensajeError += "Ya existe la tabla " + nombreTabla + " en la base de datos actual.\n";
+                    return error;
+                }
+                tablaNueva = new Tabla();
+                tablaNueva.setNombre(nombreTabla);
+                String retorno = Visit(context.GetChild(4));
+                String retorno2 = Visit(context.GetChild(5));
+                if (retorno.Equals(error) || retorno2.Equals(error))
+                {
+                    return error;
+                }
+                miControl.agregarTabla(tablaNueva);
+                return "";
             }
-            String nombreTabla = context.GetChild(2).GetText();
-            Boolean existeTabla = miControl.existeTabla(nombreTabla);
-            if (existeTabla)
+            else
             {
-                mensajeError += "Ya existe la tabla " + nombreTabla + " en la base de datos actual.\n";
-                return error; 
+                Console.WriteLine(miControl.getDBActual());
+                if (miControl.getDBActual().Equals(""))
+                {
+                    mensajeError += "No se ha especificado la base de datos a usar. \n";
+                    return error;
+                }
+                String nombreTabla = context.GetChild(2).GetText();
+                Boolean existeTabla = miControl.existeTabla(nombreTabla);
+                if (existeTabla)
+                {
+                    mensajeError += "Ya existe la tabla " + nombreTabla + " en la base de datos actual.\n";
+                    return error;
+                }
+                tablaNueva = new Tabla();
+                tablaNueva.setNombre(nombreTabla);
+                String retorno = Visit(context.GetChild(4));
+                if (retorno.Equals(error))
+                {
+                    return error;
+                }
+                miControl.agregarTabla(tablaNueva);
+                return "";
             }
-            tablaNueva = new Tabla();
-            tablaNueva.setNombre(nombreTabla);
-            String retorno = Visit(context.GetChild(4));
-            String retorno2 = Visit(context.GetChild(5));
-            if (retorno.Equals(error) || retorno2.Equals(error))
-            {
-                return error;
-            }
-            miControl.agregarTabla(tablaNueva);
-            return "";
+
         }
 
         public override string VisitDeclaracionConstraint2_comita(gramSQLParser.DeclaracionConstraint2_comitaContext context)
@@ -201,7 +259,23 @@ namespace BasesDeDatos
 
         public override string VisitAccionTabla_AddColumn(gramSQLParser.AccionTabla_AddColumnContext context)
         {
-            throw new NotImplementedException();
+            String idCol = context.GetChild(2).GetText();
+            String colTipo = context.GetChild(3).GetText();
+            Boolean existeCol = tablaNueva.existeColumna(idCol);
+            if (existeCol)
+            {
+                mensajeError += "La columna: " + idCol + "ya existe en la tabla. \n";
+                return error;
+            }
+            Columna colTemp = new Columna();
+            colTemp.setNombre(idCol);
+            colTemp.setTipo(colTipo);
+            tablaNueva.agregarColumna(colTemp);
+            String retorno = Visit(context.GetChild(4));
+            if(retorno.Equals(error)){
+                return error;
+            }
+            return "void";
         }
 
         public override string VisitIdComa2_idComa(gramSQLParser.IdComa2_idComaContext context)
@@ -379,7 +453,27 @@ namespace BasesDeDatos
 
         public override string VisitDropExpression_table(gramSQLParser.DropExpression_tableContext context)
         {
-            throw new NotImplementedException();
+            String nombreTabla = context.GetChild(2).GetText();
+            if (miControl.getDBActual().Equals(""))
+            {
+                mensajeError += "No ha seleccionado una base de datos en la cual trabajar.\n";
+                return error;
+            }
+            Boolean existeTabla = miControl.existeTabla(nombreTabla);
+            if (!existeTabla)
+            {
+                mensajeError += "No existe la tabla " + nombreTabla + " en la base de datos. \n";
+                return error;
+            }
+            Boolean tablaReferenciada = miControl.tablaEnReferencia(nombreTabla);
+            if (tablaReferenciada)
+            {
+                mensajeError += "La tabla " + nombreTabla + " no puede ser borrada ya que es referenciada en otra tabla. \n";
+                return error;
+            }
+            miControl.removerTabla(nombreTabla);
+            return "void";
+           
         }
 
         public override string VisitListaValores2_comita(gramSQLParser.ListaValores2_comitaContext context)
@@ -469,7 +563,15 @@ namespace BasesDeDatos
 
         public override string VisitAccionTabla_DropConstraint(gramSQLParser.AccionTabla_DropConstraintContext context)
         {
-            throw new NotImplementedException();
+            String nombreConstraint = context.GetChild(2).GetText();
+            Boolean existeConstraint = tablaNueva.existeIdConstraint(nombreConstraint);
+            if (!existeConstraint)
+            {
+                mensajeError += "El constraint: " + nombreConstraint + " no existe en la tabla.\n";
+                return error;
+            }
+            tablaNueva.removerConstraint(nombreConstraint);
+            return "void";
         }
 
         public override string VisitExpRelacion(gramSQLParser.ExpRelacionContext context)
@@ -501,7 +603,7 @@ namespace BasesDeDatos
 
         public override string VisitShowExpression_Databases(gramSQLParser.ShowExpression_DatabasesContext context)
         {
-            throw new NotImplementedException();
+            
         }
 
         public override string VisitNombreColumna(gramSQLParser.NombreColumnaContext context)
@@ -587,6 +689,7 @@ namespace BasesDeDatos
             if (miControl.getDBActual().Equals(""))
             {
                 mensajeError += "No ha seleccionado una base de datos en la cual trabajar.\n";
+                return error;
             }
             if (!existeTabla)
             {
@@ -605,7 +708,12 @@ namespace BasesDeDatos
 
         public override string VisitAccionTabla_AddConstraint(gramSQLParser.AccionTabla_AddConstraintContext context)
         {
-            throw new NotImplementedException();
+            String retorno = Visit(context.GetChild(1));
+            if (retorno.Equals(error))
+            {
+                return error;
+            }
+            return "void"; 
         }
 
         public override string VisitExpresionOrden1(gramSQLParser.ExpresionOrden1Context context)
@@ -863,6 +971,7 @@ namespace BasesDeDatos
             if (miControl.getDBActual().Equals(""))
             {
                 mensajeError += "No ha seleccionado una base de datos en la cual trabajar.\n";
+                return error;
             }
             if (!existeTabla)
             {

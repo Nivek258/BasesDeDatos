@@ -22,6 +22,20 @@ namespace BasesDeDatos
             Console.WriteLine("paso1");
         }
 
+        public int numRegistrosDB(String nombreDB)
+        {
+            String contenido;
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\archivoM.dat");
+                basesCreadas = DeSerializarDB(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            return basesCreadas.numRegistros(nombreDB);
+        }
         public Boolean existeDB(String nombreDB)
         {
             String contenido;
@@ -91,6 +105,38 @@ namespace BasesDeDatos
             contenido = SerializarTabla(tablasCreadas);
             File.WriteAllText("DataDB\\" + DBactual + "\\controlTablas.dat", contenido);
         }
+        public Boolean columnaEnConstraint(String nombreTabla, String idCol)
+        {
+            String contenido;
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+                tablasCreadas = DeSerializarTabla(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            Boolean existeColenConstraint = tablasCreadas.columnaEnCostraint(nombreTabla, idCol);
+            return existeColenConstraint;
+
+        }
+        public Boolean tablaEnReferencia(String nombreTabla)
+        {
+            String contenido;
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+                tablasCreadas = DeSerializarTabla(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            Boolean existeColenConstraint = tablasCreadas.tablaEnReferencia(nombreTabla);
+            return existeColenConstraint;
+
+        }
         public void cambiarNombreTabla(String nombreViejo, String nombreNuevo)
         {
             String contenido;
@@ -130,7 +176,53 @@ namespace BasesDeDatos
             contenido = SerializarDB(basesCreadas);
             File.WriteAllText("DataDB\\archivoM.dat", contenido);
         }
+        public void removerDB(String nombreDB)
+        {
+            String contenido;
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\archivoM.dat");
+                basesCreadas = DeSerializarDB(contenido);
+            }
+            catch (Exception e)
+            {
 
+            }
+            basesCreadas.removerDataBase(nombreDB);
+            System.IO.DirectoryInfo directory = new System.IO.DirectoryInfo("DataDB\\" + nombreDB);
+            foreach (System.IO.FileInfo file in directory.GetFiles()) file.Delete();
+            Directory.Delete("DataDB\\" + nombreDB);
+            contenido = SerializarDB(basesCreadas);
+            File.WriteAllText("DataDB\\archivoM.dat", contenido);
+        }
+        public void removerTabla(String nombreTabla)
+        {
+            String contenido;
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+                tablasCreadas = DeSerializarTabla(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\archivoM.dat");
+                basesCreadas = DeSerializarDB(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            tablasCreadas.removerTabla(nombreTabla);
+            basesCreadas.restarCountTabla(DBactual);
+            contenido = SerializarTabla(tablasCreadas);
+            File.WriteAllText("DataDB\\" + DBactual + "\\controlTablas.dat", contenido);
+            contenido = SerializarDB(basesCreadas);
+            File.WriteAllText("DataDB\\archivoM.dat", contenido);
+        }
         public Boolean existeTabla(String nombreTabla)
         {  
             String contenido;

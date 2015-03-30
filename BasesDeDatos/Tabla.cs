@@ -53,6 +53,42 @@ namespace BasesDeDatos
             columnasTB.Add(nuevaCol);
             numColumnas = numColumnas + 1;
         }
+        public void removerColumna(String idColumna)
+        {
+            for (int i = 0; i < columnasTB.Count; i++)
+            {
+                if (columnasTB[i].getNombre().Equals(idColumna))
+                {
+                    columnasTB.RemoveAt(i);
+                }
+            }
+            numColumnas = numColumnas - 1;
+        }
+        public void removerConstraint(String nombreConstraint)
+        {
+            for (int i = 0; i < pConstraint.Count(); i++)
+            {
+                if (pConstraint[i].getPkNombre().Equals(nombreConstraint))
+                {
+                    pConstraint.RemoveAt(i);
+                }
+            }
+
+            for (int i = 0; i < fConstraint.Count(); i++)
+            {
+                if (fConstraint[i].getFkNombre().Equals(nombreConstraint))
+                {
+                    fConstraint.RemoveAt(i);
+                }
+            }
+            for (int i = 0; i < chConstraint.Count(); i++)
+            {
+                if (chConstraint[i].getChNombre().Equals(nombreConstraint))
+                {
+                    chConstraint.RemoveAt(i); ;
+                }
+            }
+        }
 
         public Boolean existeIdConstraint(String constraintId)
         {
