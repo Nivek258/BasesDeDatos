@@ -15,6 +15,16 @@ namespace BasesDeDatos
             listaDB.Add(nuevaDB);
         }
 
+        public void cambiarNombreDB(String nombreViejo, String nombreNuevo)
+        {
+            for (int i = 0; i < listaDB.Count; i++)
+            {
+                if (listaDB[i].getNombre().Equals(nombreViejo))
+                {
+                    listaDB[i].setNombre(nombreNuevo);
+                }
+            }
+        }
         public Boolean existeDataBase(String nombreDataBase)
         {
             for (int i = 0; i < listaDB.Count; i++)
@@ -48,6 +58,17 @@ namespace BasesDeDatos
                 }
             }
             return -1;
+        }
+        public void agregarCountTabla(String nombreDataBase)
+        {
+            for (int i = 0; i < listaDB.Count; i++)
+            {
+                if (listaDB[i].getNombre().Equals(nombreDataBase))
+                {
+                    int numTabla = listaDB[i].getNumTablas()+1;
+                    listaDB[i].setNumTablas(numTabla);
+                }
+            }
         }
     }
 }

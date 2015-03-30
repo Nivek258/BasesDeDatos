@@ -14,7 +14,40 @@ namespace BasesDeDatos
         {
             listaTB.Add(nuevaTB);
         }
-
+        public Tabla obtenerTabla(String nombreTabla)
+        {
+            for (int i = 0; i < listaTB.Count; i++)
+            {
+                if (listaTB[i].getNombre().Equals(nombreTabla))
+                {
+                    return listaTB[i];
+                }
+            }
+            return null;
+        }
+        public void sustituirTabla(String nombreTabla, Tabla nuevaTB)
+        {
+            for (int i = 0; i < listaTB.Count; i++)
+            {
+                if (listaTB[i].getNombre().Equals(nombreTabla))
+                {
+                    listaTB[i] = nuevaTB;  
+                }
+            }
+        }
+        public void cambiarRefTabla(String nombreTablaViejo, String nombreTablaNuevo)
+        {
+            for (int i = 0; i < listaTB.Count; i++)
+            {
+                for (int j = 0; j < listaTB[i].fConstraint.Count; j++)
+                {
+                    if (listaTB[i].fConstraint[j].getTablaRefNombre().Equals(nombreTablaViejo))
+                    {
+                        listaTB[i].fConstraint[j].setTablaRefNombre(nombreTablaNuevo);
+                    }
+                }
+            }
+        }
         public Boolean existeTabla(String nombreTabla)
         {
             for (int i = 0; i < listaTB.Count; i++)
@@ -72,6 +105,16 @@ namespace BasesDeDatos
                 }
             }
             return "";
+        }
+        public void cambiarNombreTabla(String nombreViejo, String nombreNuevo)
+        {
+            for (int i = 0; i < listaTB.Count; i++)
+            {
+                if (listaTB[i].getNombre().Equals(nombreViejo))
+                {
+                    listaTB[i].setNombre(nombreNuevo);
+                }
+            }
         }
     }
 }

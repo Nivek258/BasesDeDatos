@@ -23,7 +23,25 @@ namespace BasesDeDatos
 
         public override string VisitAlterExpression_database(gramSQLParser.AlterExpression_databaseContext context)
         {
-            throw new NotImplementedException();
+            String nombreViejo = context.GetChild(2).GetText();
+            String nombreNuevo = context.GetChild(5).GetText();
+            Boolean existeDB = miControl.existeDB(nombreViejo);
+            if (!existeDB)
+            {
+                mensajeError += "No existe la base de datos " + nombreViejo + " a la cual se le desea cambiar nombre. \n";
+                return error;
+            }
+            existeDB = miControl.existeDB(nombreNuevo);
+            if (existeDB)
+            {
+                mensajeError += "Ya existe una base de datos con el nombre " + nombreNuevo + ".\n";
+                return error;
+            }
+            miControl.cambiarNombreDB(nombreViejo, nombreNuevo);
+            if (miControl.getDBActual().Equals(nombreViejo)) {
+                miControl.setDBActual(nombreNuevo); 
+            }   
+            return "void";
         }
 
         public override string VisitDropExpression_database(gramSQLParser.DropExpression_databaseContext context)
@@ -511,8 +529,6 @@ namespace BasesDeDatos
                 return error;
             }
             miControl.setDBActual(nombreDataBase);
-            Console.WriteLine(nombreDataBase);
-            Console.WriteLine(miControl.getDBActual());
             return "void";
 
         }
@@ -565,7 +581,26 @@ namespace BasesDeDatos
 
         public override string VisitAlterExpression_table(gramSQLParser.AlterExpression_tableContext context)
         {
-            throw new NotImplementedException();
+            String nombreViejo = context.GetChild(2).GetText();
+            String nombreNuevo = context.GetChild(5).GetText();
+            Boolean existeTabla = miControl.existeTabla(nombreViejo);
+            if (miControl.getDBActual().Equals(""))
+            {
+                mensajeError += "No ha seleccionado una base de datos en la cual trabajar.\n";
+            }
+            if (!existeTabla)
+            {
+                mensajeError += "No existe la tabla " + nombreViejo + " a la cual se le desea cambiar nombre. \n";
+                return error;
+            }
+            existeTabla = miControl.existeTabla(nombreNuevo);
+            if (existeTabla)
+            {
+                mensajeError += "Ya existe una tabla con el nombre " + nombreNuevo + ".\n";
+                return error;
+            }
+            miControl.cambiarNombreTabla(nombreViejo, nombreNuevo);
+            return "void";
         }
 
         public override string VisitAccionTabla_AddConstraint(gramSQLParser.AccionTabla_AddConstraintContext context)
@@ -823,7 +858,26 @@ namespace BasesDeDatos
 
         public override string VisitAlterExpression_accion(gramSQLParser.AlterExpression_accionContext context)
         {
-            throw new NotImplementedException();
+            String nombreTabla = context.GetChild(2).GetText();
+            Boolean existeTabla = miControl.existeTabla(nombreTabla);
+            if (miControl.getDBActual().Equals(""))
+            {
+                mensajeError += "No ha seleccionado una base de datos en la cual trabajar.\n";
+            }
+            if (!existeTabla)
+            {
+                mensajeError += "No existe la tabla " + nombreTabla + " a la cual se le desea realizar la accion. \n";
+                return error;
+            }
+            tablaNueva = new Tabla();
+            tablaNueva = miControl.obtenerTabla(nombreTabla);
+            String retorno = Visit(context.GetChild(3));
+            if (retorno.Equals(error))
+            {
+                return error;
+            }
+            miControl.sustituirTabla(nombreTabla, tablaNueva);
+            return "void";
         }
 
         public override string VisitExpBooleana4_relacion(gramSQLParser.ExpBooleana4_relacionContext context)
