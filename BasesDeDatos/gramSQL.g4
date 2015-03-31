@@ -60,7 +60,7 @@ fragment DIGIT: [0-9];
 ID : LETTER (LETTER | DIGIT)*;
 NUM: DIGIT (DIGIT)*;
 CHARACTER: '\'' ('\\\''|[ -~]|'\\"'|'\\t'|'\\n'|'\t'|'\\\\') '\'';
-CHARACTER2:  ('\\\''|[ -~]|'\\"'|'\\t'|'\\n'|'\t'|'\\\\');
+CHARACTER2:  '\''('\\\''|[ -~]|'\\"'|'\\t'|'\\n'|'\t'|'\\\\')+'\'';
 
 
 
@@ -117,7 +117,7 @@ columnaDatos: literal  #columnaDatos_literal
 relOperator: '<' | '>' | '<=' | '>=' | '<>' | '=';
 literal: int_literal | varchar_literal | date_literal | float_literal;
 int_literal: NUM;
-varchar_literal: '\'' CHARACTER2+ '\'';
+varchar_literal: CHARACTER2 ;
 date_literal: '\'' NUM '-' NUM '-' NUM  '\'';
 float_literal: NUM'.'NUM;
 

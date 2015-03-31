@@ -406,6 +406,403 @@ namespace BasesDeDatos
             ControlContenido miControlTemp = (ControlContenido)x.Deserialize(new StringReader(XmlText));
             return miControlTemp;
         }
+
+        public Boolean revisarConstraint(List<Object> elementosIngreso, String nombreTabla)
+        {
+            String contenido;
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+                tablasCreadas = DeSerializarTabla(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            
+            for (int i = 0; i < tablasCreadas.obtenerTabla(nombreTabla).chConstraint.Count; i++)
+            {
+                String check = tablasCreadas.obtenerTabla(nombreTabla).chConstraint[i].restriccionExp;
+                List<string> checkElements = check.Split(new char[] { ' ' }).ToList();
+                Boolean cumple = cumpleConstraint(elementosIngreso, checkElements, nombreTabla);
+                if (!cumple)
+                {
+                    return false;
+                }
+
+            }
+            return true;
+        }
+
+        public Boolean cumpleConstraint(List<Object> elementosIngreso, List<String> elementosCheck, String nombreTabla)
+        {
+            Stack<Boolean> stack = new Stack<Boolean>();
+            List<String> nombresColumna= new List<String>();
+            List<String> tiposColumna= new List<String>();
+            Object elemento1 = null;
+            Object elemento2 = null;
+            String tipoElemento1 = "";
+            String tipoElemento2 = "";
+            Boolean op1 = false;
+            Boolean op2 = false;
+            Boolean elem1 = true;
+            for (int i = 0; i < tablasCreadas.obtenerTabla(nombreTabla).columnasTB.Count; i++)
+            {
+                nombresColumna.Add(tablasCreadas.obtenerTabla(nombreTabla).columnasTB[i].getNombre());
+                tiposColumna.Add(tablasCreadas.obtenerTabla(nombreTabla).columnasTB[i].getTipo());
+            }
+            for (int i = 0; i < elementosCheck.Count; i++)
+            {
+                if (nombresColumna.Contains(elementosCheck[i]))
+                {
+                    int indice = nombresColumna.IndexOf(elementosCheck[i]);
+                    if (elem1)
+                    {
+                        elemento1 = elementosIngreso[indice];
+                        tipoElemento1 = tiposColumna[indice];
+                        elem1 = false;
+                    }
+                    else
+                    {
+                        elemento2 = elementosIngreso[indice];
+                        tipoElemento2 = tiposColumna[indice];
+                        elem1 = true;
+                    }
+                }
+                else if (elementosCheck[i].Equals(">") || elementosCheck[i].Equals("<") || elementosCheck[i].Equals(">=") || elementosCheck[i].Equals("<=")) 
+                {
+                    if(elementosCheck[i].Equals(">"))
+                    {
+                        if (tipoElemento1.Equals("int") && tipoElemento2.Equals("int"))
+                        {
+                            op1 = (Int32)elemento1 > (Int32)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("int") && tipoElemento2.Equals("float"))
+                        {
+                            op1 = (Int32)elemento1 > (Single)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("float") && tipoElemento2.Equals("int"))
+                        {
+                            op1 = (Single)elemento1 > (Int32)elemento2;
+                        }
+                        else if(tipoElemento1.Equals("float") && tipoElemento2.Equals("float")){
+                            op1 = (Single)elemento1 > (Single)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("date") && tipoElemento2.Equals("date"))
+                        {
+                            op1 = (DateTime)elemento1 > (DateTime)elemento2;
+                        }
+                        stack.Push(op1);
+                    }
+                    else if (elementosCheck[i].Equals("<"))
+                    {
+                        if (tipoElemento1.Equals("int") && tipoElemento2.Equals("int"))
+                        {
+                            op1 = (Int32)elemento1 < (Int32)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("int") && tipoElemento2.Equals("float"))
+                        {
+                            op1 = (Int32)elemento1 < (Single)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("float") && tipoElemento2.Equals("int"))
+                        {
+                            op1 = (Single)elemento1 < (Int32)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("float") && tipoElemento2.Equals("float"))
+                        {
+                            op1 = (Single)elemento1 < (Single)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("date") && tipoElemento2.Equals("date"))
+                        {
+                            op1 = (DateTime)elemento1 < (DateTime)elemento2;
+                        }
+                        stack.Push(op1);
+                    }
+                    else if (elementosCheck[i].Equals("<="))
+                    {
+                        if (tipoElemento1.Equals("int") && tipoElemento2.Equals("int"))
+                        {
+                            op1 = (Int32)elemento1 <= (Int32)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("int") && tipoElemento2.Equals("float"))
+                        {
+                            op1 = (Int32)elemento1 <= (Single)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("float") && tipoElemento2.Equals("int"))
+                        {
+                            op1 = (Single)elemento1 <= (Int32)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("float") && tipoElemento2.Equals("float"))
+                        {
+                            op1 = (Single)elemento1 <= (Single)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("date") && tipoElemento2.Equals("date"))
+                        {
+                            op1 = (DateTime)elemento1 <= (DateTime)elemento2;
+                        }
+                        stack.Push(op1);
+                    }
+                    else if (elementosCheck[i].Equals(">="))
+                    {
+                        if (tipoElemento1.Equals("int") && tipoElemento2.Equals("int"))
+                        {
+                            op1 = (Int32)elemento1 >= (Int32)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("int") && tipoElemento2.Equals("float"))
+                        {
+                            op1 = (Int32)elemento1 >= (Single)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("float") && tipoElemento2.Equals("int"))
+                        {
+                            op1 = (Single)elemento1 >= (Int32)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("float") && tipoElemento2.Equals("float"))
+                        {
+                            op1 = (Single)elemento1 >= (Single)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("date") && tipoElemento2.Equals("date"))
+                        {
+                            op1 = (DateTime)elemento1 >= (DateTime)elemento2;
+                        }
+                        stack.Push(op1);
+                    }
+                }
+                else if (elementosCheck[i].Equals("=") || elementosCheck[i].Equals("<>"))
+                {
+                    if (elementosCheck[i].Equals("="))
+                    {
+                        if (tipoElemento1.Equals("int") && tipoElemento2.Equals("int"))
+                        {
+                            op1 = (Int32)elemento1 == (Int32)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("int") && tipoElemento2.Equals("float"))
+                        {
+                            op1 = (Int32)elemento1 == (Single)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("float") && tipoElemento2.Equals("int"))
+                        {
+                            op1 = (Single)elemento1 == (Int32)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("float") && tipoElemento2.Equals("float"))
+                        {
+                            op1 = (Single)elemento1 == (Single)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("date") && tipoElemento2.Equals("date"))
+                        {
+                            op1 = (DateTime)elemento1 == (DateTime)elemento2;
+                        }
+                        else if (tipoElemento1.Contains("char") && tipoElemento2.Equals("date"))
+                        {
+                            op1 = ((String)elemento1).Equals(((DateTime)elemento2).ToString());
+                        }
+                        else if (tipoElemento1.Contains("char") && tipoElemento2.Contains("char"))
+                        {
+                            op1 = ((String)elemento1).Equals((String)elemento2);
+                        }
+                        stack.Push(op1);
+                    }
+                    else if (elementosCheck[i].Equals("<>"))
+                    {
+                        if (tipoElemento1.Equals("int") && tipoElemento2.Equals("int"))
+                        {
+                            op1 = (Int32)elemento1 != (Int32)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("int") && tipoElemento2.Equals("float"))
+                        {
+                            op1 = (Int32)elemento1 != (Single)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("float") && tipoElemento2.Equals("int"))
+                        {
+                            op1 = (Single)elemento1 != (Int32)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("float") && tipoElemento2.Equals("float"))
+                        {
+                            op1 = (Single)elemento1 != (Single)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("date") && tipoElemento2.Equals("date"))
+                        {
+                            op1 = (DateTime)elemento1 != (DateTime)elemento2;
+                        }
+                        else if (tipoElemento1.Contains("char") && tipoElemento2.Equals("date"))
+                        {
+                            op1 = !(((String)elemento1).Equals(((DateTime)elemento2).ToString()));
+                        }
+                        else if (tipoElemento1.Contains("char") && tipoElemento2.Contains("char"))
+                        {
+                            op1 = !(((String)elemento1).Equals((String)elemento2));
+                        }
+                        stack.Push(op1);
+                    }
+                }
+                else if (elementosCheck[i].ToLower().Equals("and"))
+                {
+                    op1 = stack.Pop();
+                    op2 = stack.Pop();
+                    stack.Push(op1 && op2);
+                }
+                else if (elementosCheck[i].ToLower().Equals("or"))
+                {
+                    op1 = stack.Pop();
+                    op2 = stack.Pop();
+                    stack.Push(op1 || op2);
+                }
+                else if (elementosCheck[i].ToLower().Equals("not"))
+                {
+                    op1 = stack.Pop();
+                    stack.Push(!op1);
+                }
+                else
+                {
+                    if (elem1)
+                    {
+                        tipoElemento1 = tipoElemento(elementosCheck[i]);
+                        if(tipoElemento1.Equals("int")){
+                            elemento1 = Convert.ToInt32(elementosCheck[i]);
+                        }
+                        else if (tipoElemento1.Equals("float"))
+                        {
+                            elemento1 = Convert.ToSingle(elementosCheck[i]);
+                        }
+                        else if (tipoElemento1.Equals("date"))
+                        {
+                            String Fecha = elementosCheck[i].Replace("\'", "");
+                            List<string> dateElements = Fecha.Split(new char[] { '-' }).ToList();
+                            Fecha = dateElements[0] + "-";
+                            if (dateElements[1].Length == 1)
+                            {
+                                Fecha += 0 + dateElements[1] + "-";
+                            }
+                            else
+                            {
+                                Fecha += dateElements[1] + "-";
+                            }
+                            if (dateElements[2].Length == 1)
+                            {
+                                Fecha += 0 + dateElements[2];
+                            }
+                            else
+                            {
+                                Fecha += dateElements[2];
+                            }
+                            DateTime date = DateTime.ParseExact(Fecha, "yyyy-MM-dd", null);
+                            elemento1 = date;
+                        }
+                        else
+                        {
+                            elemento1 = elementosCheck[i].Replace("\'", "");
+                        }
+                        elem1 = false;
+                    }
+                    else
+                    {
+                        tipoElemento2 = tipoElemento(elementosCheck[i]);
+                        if (tipoElemento2.Equals("int"))
+                        {
+                            elemento2 = Convert.ToInt32(elementosCheck[i]);
+                        }
+                        else if (tipoElemento2.Equals("float"))
+                        {
+                            elemento2 = Convert.ToSingle(elementosCheck[i]);
+                        }
+                        else if (tipoElemento2.Equals("date"))
+                        {
+                            String Fecha = elementosCheck[i].Replace("\'", "");
+                            List<string> dateElements = Fecha.Split(new char[] { '-' }).ToList();
+                            Fecha = dateElements[0] + "-";
+                            if (dateElements[1].Length == 1)
+                            {
+                                Fecha += 0 + dateElements[1] + "-";
+                            }
+                            else
+                            {
+                                Fecha += dateElements[1] + "-";
+                            }
+                            if (dateElements[2].Length == 1)
+                            {
+                                Fecha += 0 + dateElements[2];
+                            }
+                            else
+                            {
+                                Fecha += dateElements[2];
+                            }
+                            DateTime date = DateTime.ParseExact(Fecha, "yyyy-MM-dd", null);
+                            elemento2 = date;
+                        }
+                        else
+                        {
+                            elemento2 = elementosCheck[i].Replace("\'", "");
+                        }
+                    }
+                    
+                }
+                
+            }
+            return stack.Pop();
+        }
+
+        public String tipoElemento(String elemento)
+        {
+            if (!(elemento[0].Equals('\'')))
+            {
+                if (elemento.Contains("."))
+                {
+                    return "float";
+                }
+                else
+                {
+                    return "int";
+                }
+            }
+            else
+            {
+                try
+                {
+                    String Fecha = elemento.Replace("\'", "");
+                    List<string> dateElements = Fecha.Split(new char[] { '-' }).ToList();
+                    Fecha = dateElements[0] + "-";
+                    if (dateElements[1].Length == 1)
+                    {
+                        Fecha += 0 + dateElements[1] + "-";
+                    }
+                    else
+                    {
+                        Fecha += dateElements[1] + "-";
+                    }
+                    if (dateElements[2].Length == 1)
+                    {
+                        Fecha += 0 + dateElements[2];
+                    }
+                    else
+                    {
+                        Fecha += dateElements[2];
+                    }
+                    DateTime date = DateTime.ParseExact(Fecha, "yyyy-MM-dd", null);
+                    return "date";
+                }
+                catch (Exception e)
+                {
+                    return "char";
+                }
+            }
+        }
+
+        public void agregarFilaTabla(String nombreTabla, List<Object> fila)
+        {
+            String contenido;
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
+                miContenido = DeSerializarContenido(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            miContenido.agregarFila(fila);
+            contenido = SerializarContenido(miContenido);
+            File.WriteAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat", contenido);
+
+        }
         
     }
 }

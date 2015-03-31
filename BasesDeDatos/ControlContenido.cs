@@ -8,7 +8,7 @@ namespace BasesDeDatos
 {
     public class ControlContenido
     {
-        List<List<Object>> listObj = new List<List<Object>>();
+        public List<List<Object>> listObj = new List<List<Object>>();
 
         public void agregarFila(List<Object> objetos)
         {
