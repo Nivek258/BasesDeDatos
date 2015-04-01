@@ -177,5 +177,16 @@ namespace BasesDeDatos
                 }
             }
         }
+
+        public void removerRegistro(String nombreTabla, int registrosEliminados)
+        {
+            for (int i = 0; i < listaTB.Count; i++)
+            {
+                if (listaTB[i].getNombre().Equals(nombreTabla))
+                {
+                    listaTB[i].removerRegistro(registrosEliminados);
+                }
+            }
+        }
     }
 }

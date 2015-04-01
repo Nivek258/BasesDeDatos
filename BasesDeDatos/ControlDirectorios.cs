@@ -940,9 +940,10 @@ namespace BasesDeDatos
 
         }
 
-        public void UpdateColumnas(List<Object> elementosIngreso, String nombreTabla, List<String> condicionWhere)
+        public int UpdateColumnas(List<Object> elementosIngreso, String nombreTabla, List<String> condicionWhere)
         {
             String contenido;
+            int columnasUpdate = 0;
             try
             {
                 contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
@@ -975,6 +976,7 @@ namespace BasesDeDatos
                     }
 
                     contenidoFilas[i] = filaTemp;
+                    columnasUpdate = columnasUpdate + 1;
                 }
                 
 
@@ -983,12 +985,14 @@ namespace BasesDeDatos
             miContenido.setListObj(contenidoFilas);
             contenido = SerializarContenido(miContenido);
             File.WriteAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat", contenido);
+            return columnasUpdate;
 
             
         }
 
-        public void UpdateColumnas(List<Object> elementosIngreso, String nombreTabla)
+        public int UpdateColumnas(List<Object> elementosIngreso, String nombreTabla)
         {
+            int columnasUpdate = 0;
             String contenido;
             try
             {
@@ -1019,12 +1023,104 @@ namespace BasesDeDatos
                 }
 
                 contenidoFilas[i] = filaTemp;
+                columnasUpdate = columnasUpdate + 1;
 
             }
             //se guarda matriz
             miContenido.setListObj(contenidoFilas);
             contenido = SerializarContenido(miContenido);
             File.WriteAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat", contenido);
+            return columnasUpdate;
+        }
+
+        public int DeleteFilas(String nombreTabla, List<String> condicionWhere)
+        {
+            String contenido;
+            int columnasDelete = 0;
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
+                miContenido = DeSerializarContenido(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+                tablasCreadas = DeSerializarTabla(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            
+            //eliminar elementos de la lista
+            List<List<Object>> contenidoFilas = miContenido.listObj;
+            List<List<Object>> nuevoContenido = new List<List<Object>>();
+            for (int i = 0; i < contenidoFilas.Count; i++)
+            {
+                List<Object> filaTemp = contenidoFilas[i];
+                Boolean cumple = cumpleConstraint(filaTemp, condicionWhere, nombreTabla);
+                if (cumple)
+                {
+                    columnasDelete = columnasDelete + 1;
+                }
+                else
+                {
+                    nuevoContenido.Add(contenidoFilas[i]);
+                }
+
+
+            }
+            //se guarda matriz
+            miContenido.setListObj(nuevoContenido);
+            contenido = SerializarContenido(miContenido);
+            File.WriteAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat", contenido);
+            tablasCreadas.removerRegistro(nombreTabla, columnasDelete);
+            contenido = SerializarTabla(tablasCreadas);
+            File.WriteAllText("DataDB\\" + DBactual + "\\controlTablas.dat", contenido);
+            return columnasDelete;
+
+
+        }
+
+        public int DeleteFilas(String nombreTabla)
+        {
+            int columnasDelete = 0;
+            String contenido;
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
+                miContenido = DeSerializarContenido(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+                tablasCreadas = DeSerializarTabla(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            //elimina elementos de la lista
+            List<List<Object>> contenidoFilas = miContenido.listObj;
+            List<List<Object>> nuevoContenido = new List<List<Object>>();
+            columnasDelete = contenidoFilas.Count;
+
+            //se guarda matriz
+            miContenido.setListObj(nuevoContenido);
+            contenido = SerializarContenido(miContenido);
+            File.WriteAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat", contenido);
+            tablasCreadas.removerRegistro(nombreTabla, columnasDelete);
+            contenido = SerializarTabla(tablasCreadas);
+            File.WriteAllText("DataDB\\" + DBactual + "\\controlTablas.dat", contenido);
+            return columnasDelete;
         }
         
     }

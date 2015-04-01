@@ -13,7 +13,11 @@ namespace BasesDeDatos
         String error = "Fate Stay Night";
         public String mensajeError = "";
         public String mensajeInsert = "";
+        public String mensajeUpdate = "";
+        public String mensajeDelete = "";
         int numeroInsert = 0;
+        int numeroUpdate = 0;
+        int numeroDelete = 0;
         ControlDirectorios miControl = new ControlDirectorios();
         Tabla tablaNueva = new Tabla();
         PrimaryConstraint tempPC = new PrimaryConstraint();
@@ -927,9 +931,12 @@ namespace BasesDeDatos
             }
 
             //Llamar metodo update
+            int filasUpdate;
             if (context.ChildCount == 4)
             {
-                miControl.UpdateColumnas(filaObjetos, nombreTabla);
+                filasUpdate = miControl.UpdateColumnas(filaObjetos, nombreTabla);
+                numeroUpdate = numeroUpdate + filasUpdate;
+                mensajeUpdate = "Update " + numeroUpdate + " con exito. \n";
             }
             else
             {
@@ -943,7 +950,9 @@ namespace BasesDeDatos
                     return error;
                 }
                 List<string> whereElements = retorno.Split(new char[] { ' ' }).ToList();
-                miControl.UpdateColumnas(filaObjetos, nombreTabla, whereElements);
+                filasUpdate = miControl.UpdateColumnas(filaObjetos, nombreTabla, whereElements);
+                numeroUpdate = numeroUpdate + filasUpdate;
+                mensajeUpdate = "Update " + numeroUpdate + " con exito. \n";
                 
             }
             return "void";
@@ -1498,7 +1507,49 @@ namespace BasesDeDatos
 
         public override string VisitDeleteExpression(gramSQLParser.DeleteExpressionContext context)
         {
-            throw new NotImplementedException();
+            String nombreTabla = context.GetChild(2).GetText();
+
+            if (miControl.getDBActual().Equals(""))
+            {
+                mensajeError += "No ha seleccionado una base de datos en la cual trabajar.\n";
+                return error;
+            }
+            Boolean existeTabla = miControl.existeTabla(nombreTabla);
+            if (!existeTabla)
+            {
+                mensajeError += "No existe la tabla: " + nombreTabla + ".\n";
+                return error;
+            }
+
+            //Llamar metodo Delete
+            int filasDelete;
+            String retorno;
+            if (context.ChildCount == 3)
+            {
+                filasDelete = miControl.DeleteFilas(nombreTabla);
+                numeroDelete = numeroDelete + filasDelete;
+                mensajeDelete = "Delete " + numeroDelete + " con exito. \n";
+            }
+            else
+            {
+                refNombreTabla = nombreTabla;
+                expConstraint = true;
+                expWhere = true;
+                retorno = Visit(context.GetChild(4));
+                expConstraint = false;
+                expWhere = false;
+                if (retorno.Equals(error))
+                {
+                    return error;
+                }
+                List<string> whereElements = retorno.Split(new char[] { ' ' }).ToList();
+                filasDelete = miControl.DeleteFilas(nombreTabla, whereElements);
+                numeroDelete = numeroDelete + filasDelete;
+                mensajeDelete = "Delete " + numeroDelete + " con exito. \n";
+
+            }
+            return "void";
+
         }
 
         public override string VisitExpBooleana_or(gramSQLParser.ExpBooleana_orContext context)

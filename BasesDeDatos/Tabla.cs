@@ -51,6 +51,11 @@ namespace BasesDeDatos
             numRegistros = numRegistros + 1;
         }
 
+        public void removerRegistro(int registrosEliminados)
+        {
+            numRegistros = numRegistros - registrosEliminados;
+        }
+
         public Boolean existeColumna(String nombreCol)
         {
             for (int i = 0; i < columnasTB.Count(); i++)

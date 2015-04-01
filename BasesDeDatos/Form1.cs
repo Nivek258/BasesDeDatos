@@ -92,7 +92,9 @@ namespace BasesDeDatos
                 //mostrar errores
                 //mostrar tablas
                 String errores = miVisitor.mensajeError;
-                textErrores.Text = miVisitor.mensajeInsert;
+                textErrores.Text = miVisitor.mensajeInsert+"\n";
+                textErrores.Text += miVisitor.mensajeUpdate + "\n";
+                textErrores.Text += miVisitor.mensajeDelete + "\n";
                 textErrores.Text += errores;
                 
             }
