@@ -25,6 +25,11 @@ namespace BasesDeDatos
             }
             return false;
         }
-        //public Boolean repitePrimaryKey(List<int> indices, )
+
+        public void setListObj(List<List<Object>> listObj)
+        {
+            this.listObj = listObj;
+        }
+
     }
 }

@@ -460,12 +460,20 @@ namespace BasesDeDatos
                     if (elem1)
                     {
                         elemento1 = elementosIngreso[indice];
+                        if (elemento1 == null)
+                        {
+                            return false;
+                        }
                         tipoElemento1 = tiposColumna[indice];
                         elem1 = false;
                     }
                     else
                     {
                         elemento2 = elementosIngreso[indice];
+                        if (elemento2 == null)
+                        {
+                            return false;
+                        }
                         tipoElemento2 = tiposColumna[indice];
                         elem1 = true;
                     }
@@ -930,6 +938,93 @@ namespace BasesDeDatos
                 return false;
             }
 
+        }
+
+        public void UpdateColumnas(List<Object> elementosIngreso, String nombreTabla, List<String> condicionWhere)
+        {
+            String contenido;
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
+                miContenido = DeSerializarContenido(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            List<int> indicesACambiar = new List<int>();
+            //Guardar los indices a cambiar
+            for (int i = 0; i < elementosIngreso.Count; i++)
+            {
+                if (elementosIngreso[i] != null)
+                {
+                    indicesACambiar.Add(i);
+                }
+            }
+            //cambia elementos de la lista
+            List<List<Object>> contenidoFilas = miContenido.listObj;
+            for (int i = 0; i < contenidoFilas.Count; i++)
+            {
+                List<Object> filaTemp = contenidoFilas[i];
+                Boolean cumple = cumpleConstraint(filaTemp, condicionWhere, nombreTabla);
+                if (cumple)
+                {
+                    for (int j = 0; j < indicesACambiar.Count; j++)
+                    {
+                        filaTemp[indicesACambiar[j]] = elementosIngreso[indicesACambiar[j]];
+                    }
+
+                    contenidoFilas[i] = filaTemp;
+                }
+                
+
+            }
+            //se guarda matriz
+            miContenido.setListObj(contenidoFilas);
+            contenido = SerializarContenido(miContenido);
+            File.WriteAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat", contenido);
+
+            
+        }
+
+        public void UpdateColumnas(List<Object> elementosIngreso, String nombreTabla)
+        {
+            String contenido;
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
+                miContenido = DeSerializarContenido(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            List<int> indicesACambiar = new List<int>();
+            //Guardar los indices a cambiar
+            for (int i = 0; i < elementosIngreso.Count; i++)
+            {
+                if (elementosIngreso[i] != null)
+                {
+                    indicesACambiar.Add(i);
+                }
+            }
+            //cambia elementos de la lista
+            List<List<Object>> contenidoFilas = miContenido.listObj;
+            for (int i = 0; i < contenidoFilas.Count; i++)
+            {
+                List<Object> filaTemp = contenidoFilas[i];
+                for (int j = 0; j < indicesACambiar.Count; j++)
+                {
+                    filaTemp[indicesACambiar[j]] = elementosIngreso[indicesACambiar[j]];
+                }
+
+                contenidoFilas[i] = filaTemp;
+
+            }
+            //se guarda matriz
+            miContenido.setListObj(contenidoFilas);
+            contenido = SerializarContenido(miContenido);
+            File.WriteAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat", contenido);
         }
         
     }

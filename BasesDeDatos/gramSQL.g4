@@ -145,7 +145,11 @@ listaValores1: listaValores2;
 listaValores2: valores ',' listaValores2			 #listaValores2_comita
 				| valores                            #listaValores2_valores;
 valores: literal; 
-updateExpression: UPDATE ID SET ID '=' listaValores1( WHERE expBooleana);
+updateExpression: UPDATE ID SET listaUpdate1 ( WHERE expBooleana)?;
+listaUpdate1: listaUpdate2;
+listaUpdate2: igualacion ',' listaUpdate2			#listaUpdate2_comita
+				| igualacion						#listaUpdate2_igualacion;
+igualacion: ID '=' literal;
 deleteExpression: DELETE FROM ID (WHERE expBooleana)?;
 selectExpression: SELECT ( '*' | listaColumna1 ) FROM ID (WHERE expBooleana)? (ORDER BY '[' expresionOrden1 ']')?;
 expresionOrden1: expresionOrden2;

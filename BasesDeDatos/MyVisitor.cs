@@ -22,6 +22,7 @@ namespace BasesDeDatos
         String refNombreTabla = "";
         int TipoConstraint = 0;
         Boolean expConstraint = false;
+        Boolean expWhere = false;
         public DataGridView aMostrar = new DataGridView();
         List<String> nombresCol = new List<String>();
         List<String> valuesCol = new List<String>();
@@ -121,6 +122,21 @@ namespace BasesDeDatos
         public override string VisitExpresionOrden2_comita(gramSQLParser.ExpresionOrden2_comitaContext context)
         {
             return ""; //aqui habia pegado algo que no era 
+        }
+
+        public override string VisitListaUpdate2_comita(gramSQLParser.ListaUpdate2_comitaContext context)
+        {
+            String retorno = Visit(context.GetChild(0));
+            if (retorno.Equals(error))
+            {
+                return error;
+            }
+            String retorno2 = Visit(context.GetChild(2));
+            if (retorno2.Equals(error))
+            {
+                return error;
+            }
+            return "void";
         }
 
         public override string VisitProgram(gramSQLParser.ProgramContext context)
@@ -440,6 +456,37 @@ namespace BasesDeDatos
             throw new NotImplementedException();
         }
 
+        public override string VisitIgualacion(gramSQLParser.IgualacionContext context)
+        {
+            String nombreColumna = context.GetChild(0).GetText();
+            Boolean existeColumna = miControl.existeColumna(refNombreTabla, nombreColumna);
+            if(!existeColumna)
+            {
+                mensajeError += "no existe la columna "+nombreColumna+" en la tabla "+refNombreTabla+". \n";
+                return error;
+            }
+            String tipoColumna = miControl.obtenerTipoCol(refNombreTabla,nombreColumna);
+
+            String retorno = Visit(context.GetChild(2));
+            if(retorno.Equals(error)){
+                return error;
+            }
+            if(!(tipoColumna.Equals(retorno)))
+            {
+                 if (!(((tipoColumna.Equals("int") || tipoColumna.Equals("float")) && (retorno.Equals("int") || retorno.Equals("float"))) || (tipoColumna.Contains("char") && retorno.Equals("date")) || (tipoColumna.Contains("char") && retorno.Contains("char"))))
+                {
+                    mensajeError += "No se puede guardar un " + retorno + " como un " + tipoColumna + ".\n";
+                    return error;
+                }
+            }
+            nombresCol.Add(nombreColumna);
+            valuesCol.Add(context.GetChild(2).GetText());
+            valuesTipo.Add(retorno);
+
+            return "void";
+
+        }
+
         public override string VisitIdComa1(gramSQLParser.IdComa1Context context)
         {
             return Visit(context.GetChild(0));
@@ -448,13 +495,29 @@ namespace BasesDeDatos
         public override string VisitColumnaDatos_id(gramSQLParser.ColumnaDatos_idContext context)
         {
             String nombreCol = context.GetChild(0).GetText();
-            Boolean existeCol = tablaNueva.existeColumna(nombreCol);
-            if (!existeCol)
+            Boolean existeCol;
+            String tipoCol = "";
+            if (expWhere)
             {
-                mensajeError += "no existe la columna " + nombreCol + ". \n";
-                return error;
+                existeCol = miControl.existeColumna(refNombreTabla, nombreCol);
+                if (!existeCol)
+                {
+                    mensajeError += "no existe la columna " + nombreCol + ". \n";
+                    return error;
+                }
+                tipoCol = miControl.obtenerTipoCol(refNombreTabla, nombreCol);
             }
-            String tipoCol = tablaNueva.tipoColumna(nombreCol);
+            else
+            {
+                existeCol = tablaNueva.existeColumna(nombreCol);
+                if (!existeCol)
+                {
+                    mensajeError += "no existe la columna " + nombreCol + ". \n";
+                    return error;
+                }
+                tipoCol = tablaNueva.tipoColumna(nombreCol);
+            }
+            
             return tipoCol;
         }
 
@@ -603,6 +666,16 @@ namespace BasesDeDatos
             throw new NotImplementedException();
         }
 
+        public override string VisitListaUpdate2_igualacion(gramSQLParser.ListaUpdate2_igualacionContext context)
+        {
+            String retorno = Visit(context.GetChild(0));
+            if (retorno.Equals(error))
+            {
+                return error;
+            }
+            return "void";
+        }
+
         public override string VisitListaColumna1(gramSQLParser.ListaColumna1Context context)
         {
             return Visit(context.GetChild(0));
@@ -648,6 +721,10 @@ namespace BasesDeDatos
             String opSimb = context.GetChild(1).GetText();
             String type1 = Visit(context.GetChild(0));
             String type2 = Visit(context.GetChild(2));
+            if (type1.Equals(error) || type2.Equals(error))
+            {
+                return error;
+            }
             if (opSimb.Equals("<") || opSimb.Equals(">") || opSimb.Equals("<=") || opSimb.Equals(">="))
             {
                 if (!(((type1.Equals("int") || type1.Equals("float")) && (type2.Equals("int") || type2.Equals("float")))||(type1.Equals("date")&&type2.Equals("date"))))
@@ -702,7 +779,174 @@ namespace BasesDeDatos
 
         public override string VisitUpdateExpression(gramSQLParser.UpdateExpressionContext context)
         {
-            throw new NotImplementedException();
+            String nombreTabla = context.GetChild(1).GetText();
+            
+            if (miControl.getDBActual().Equals(""))
+            {
+                mensajeError += "No ha seleccionado una base de datos en la cual trabajar.\n";
+                return error;
+            }
+            Boolean existeTabla = miControl.existeTabla(nombreTabla);
+            if (!existeTabla)
+            {
+                mensajeError += "No existe la tabla: " + nombreTabla + ".\n";
+                return error;
+            }
+
+
+            nombresCol = new List<String>();
+            refNombreTabla = nombreTabla;
+            valuesCol = new List<String>();
+            valuesTipo = new List<String>();
+
+            String retorno = Visit(context.GetChild(3));
+            if (retorno.Equals(error))
+            {
+                return error;
+            }
+
+            //Hacer lista de objetos y revisar especificaciones por tipo
+            //Hacer lista de objetos
+            filaObjetos = new List<Object>();
+            for (int i = 0; i < miControl.obtenerNumColumnas(nombreTabla); i++)
+            {
+                filaObjetos.Add(null);
+            }
+            String tipoColumna;
+            int indiceColumna;
+            String tipoValues;
+            for (int i = 0; i < nombresCol.Count; i++)
+            {
+                tipoColumna = miControl.obtenerTipoCol(nombreTabla, nombresCol[i]);
+                indiceColumna = miControl.obtenerIndiceCol(nombreTabla, nombresCol[i]);
+                tipoValues = valuesTipo[i];
+                if (tipoColumna.Equals("int"))
+                {
+                    if (tipoValues.Equals("int"))
+                    {
+                        int numero = Convert.ToInt32(valuesCol[i]);
+                        filaObjetos[indiceColumna] = numero;
+                    }
+                    else if (tipoValues.Equals("float"))
+                    {
+                        float numero = Convert.ToSingle(valuesCol[i]);
+                        int numero2 = (int)Math.Floor(numero);
+                        filaObjetos[indiceColumna] = numero2;
+                    }
+                    else
+                    {
+                        int indice = i + 1;
+                        mensajeError += "En el valor numero " + indice + " se esperaba un int.";
+                        return error;
+                    }
+
+                }
+                else if (tipoColumna.Equals("float"))
+                {
+                    if (tipoValues.Equals("float"))
+                    {
+                        float numero = Convert.ToSingle(valuesCol[i]);
+                        filaObjetos[indiceColumna] = numero;
+                    }
+                    else if (tipoValues.Equals("int"))
+                    {
+                        int numero = Convert.ToInt32(valuesCol[i]);
+                        float numero2 = (float)numero;
+                        filaObjetos[indiceColumna] = numero2;
+                    }
+                    else
+                    {
+                        int indice = i + 1;
+                        mensajeError += "En el valor numero " + indice + " se esperaba un float.";
+                        return error;
+                    }
+                }
+                else if (tipoColumna.Equals("date"))
+                {
+                    if (tipoValues.Equals("date"))
+                    {
+                        String Fecha = valuesCol[i].Replace("\'", "");
+                        List<string> dateElements = Fecha.Split(new char[] { '-' }).ToList();
+                        Fecha = dateElements[0] + "-";
+                        if (dateElements[1].Length == 1)
+                        {
+                            Fecha += 0 + dateElements[1] + "-";
+                        }
+                        else
+                        {
+                            Fecha += dateElements[1] + "-";
+                        }
+                        if (dateElements[2].Length == 1)
+                        {
+                            Fecha += 0 + dateElements[2];
+                        }
+                        else
+                        {
+                            Fecha += dateElements[2];
+                        }
+                        DateTime date = DateTime.ParseExact(Fecha, "yyyy-MM-dd", null);
+                        filaObjetos[indiceColumna] = date;
+                    }
+                    else
+                    {
+                        int indice = i + 1;
+                        mensajeError += "En el valor numero " + indice + " se esperaba un date.";
+                        return error;
+                    }
+                }
+                else
+                {
+                    if (tipoValues.Equals("date"))
+                    {
+                        filaObjetos[indiceColumna] = valuesCol[i];
+                    }
+                    else if (tipoValues.Contains("char"))
+                    {
+                        String sizeChar = tipoColumna.Replace("char ", "");
+                        int size = Convert.ToInt32(sizeChar);
+                        int realSize = valuesCol[i].Length - 2;
+                        if (realSize <= size)
+                        {
+                            filaObjetos[indiceColumna] = valuesCol[i].Replace("\' ", "");
+                        }
+                        else
+                        {
+                            int indice = i + 1;
+                            mensajeError += "El varchar en el valor " + indice + " supera el tamaño especificado. \n";
+                            return error;
+                        }
+
+                    }
+                    else
+                    {
+                        int indice = i + 1;
+                        mensajeError += "En el valor numero " + indice + " se esperaba un varchar.";
+                        return error;
+                    }
+                }
+            }
+
+            //Llamar metodo update
+            if (context.ChildCount == 4)
+            {
+                miControl.UpdateColumnas(filaObjetos, nombreTabla);
+            }
+            else
+            {
+                expConstraint = true;
+                expWhere = true;
+                retorno = Visit(context.GetChild(5));
+                expConstraint = false;
+                expWhere = false;
+                if (retorno.Equals(error))
+                {
+                    return error;
+                }
+                List<string> whereElements = retorno.Split(new char[] { ' ' }).ToList();
+                miControl.UpdateColumnas(filaObjetos, nombreTabla, whereElements);
+                
+            }
+            return "void";
         }
 
         public override string VisitUseExpression(gramSQLParser.UseExpressionContext context)
@@ -722,12 +966,13 @@ namespace BasesDeDatos
         public override string VisitInsertExpression(gramSQLParser.InsertExpressionContext context)
         {
             String nombreTabla = context.GetChild(2).GetText();
-            Boolean existeTabla = miControl.existeTabla(nombreTabla);
             if (miControl.getDBActual().Equals(""))
             {
                 mensajeError += "No ha seleccionado una base de datos en la cual trabajar.\n";
                 return error;
             }
+
+            Boolean existeTabla = miControl.existeTabla(nombreTabla);
             if (!existeTabla)
             {
                 mensajeError += "No existe la tabla: " + nombreTabla + ".\n";
@@ -914,7 +1159,7 @@ namespace BasesDeDatos
         {
             if (expConstraint)
             {
-                mensajeError += "No se puede referenciar columnas de otras tablas en una Constraint CHECK. \n";
+                mensajeError += "No se puede referenciar columnas de otras tablas en esta condicion. \n";
                 return error;
             }
             //codigo del WHERE
@@ -999,6 +1244,11 @@ namespace BasesDeDatos
         public override string VisitExpresionOrden1(gramSQLParser.ExpresionOrden1Context context)
         {
             throw new NotImplementedException();
+        }
+
+        public override string VisitListaUpdate1(gramSQLParser.ListaUpdate1Context context)
+        {
+            return Visit(context.GetChild(0));
         }
 
         public override string VisitFloat_literal(gramSQLParser.Float_literalContext context)
