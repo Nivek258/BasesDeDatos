@@ -46,6 +46,11 @@ namespace BasesDeDatos
             this.numRegistros = numRegistros;
         }
 
+        public void agregarRegistro()
+        {
+            numRegistros = numRegistros + 1;
+        }
+
         public Boolean existeColumna(String nombreCol)
         {
             for (int i = 0; i < columnasTB.Count(); i++)

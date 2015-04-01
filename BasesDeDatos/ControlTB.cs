@@ -167,5 +167,15 @@ namespace BasesDeDatos
         {
             return listaTB;
         }
+        public void agregarRegistro(String nombreTabla)
+        {
+            for (int i = 0; i < listaTB.Count; i++)
+            {
+                if (listaTB[i].getNombre().Equals(nombreTabla))
+                {
+                    listaTB[i].agregarRegistro();
+                }
+            }
+        }
     }
 }

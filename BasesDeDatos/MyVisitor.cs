@@ -12,6 +12,8 @@ namespace BasesDeDatos
         //Variables
         String error = "Fate Stay Night";
         public String mensajeError = "";
+        public String mensajeInsert = "";
+        int numeroInsert = 0;
         ControlDirectorios miControl = new ControlDirectorios();
         Tabla tablaNueva = new Tabla();
         PrimaryConstraint tempPC = new PrimaryConstraint();
@@ -608,7 +610,7 @@ namespace BasesDeDatos
 
         public override string VisitVarchar_literal(gramSQLParser.Varchar_literalContext context)
         {
-            return "varchar";
+            return "char";
         }
 
         public override string VisitListaValores1(gramSQLParser.ListaValores1Context context)
@@ -656,7 +658,7 @@ namespace BasesDeDatos
             }
             else if (!(type1.Equals(type2)))
             {
-                if (!(((type1.Equals("int") || type1.Equals("float")) && (type2.Equals("int") || type2.Equals("float")))||(type1.Contains("char")&&type2.Equals("date"))))
+                if (!(((type1.Equals("int") || type1.Equals("float")) && (type2.Equals("int") || type2.Equals("float"))) || (type1.Contains("char") && type2.Equals("date")) || (type1.Contains("char") && type2.Contains("char"))))
                 {
                     mensajeError += "No se puede relacionar un " + type1 + " con un " + type2 + ".\n";
                     return error;
@@ -742,6 +744,7 @@ namespace BasesDeDatos
             //Recorrer values
             //nombresCol = new List<String>();
             valuesTipo = new List<String>();
+            valuesCol = new List<String>();
             String retorno2 = Visit(context.GetChild(8));
             if (retorno2.Equals(error))
             {
@@ -860,7 +863,7 @@ namespace BasesDeDatos
                         else
                         {
                             int indice = i + 1;
-                            mensajeError += "El varchar en el valor " + indice + "supera el tamaño especificado. \n";
+                            mensajeError += "El varchar en el valor " + indice + " supera el tamaño especificado. \n";
                             return error;
                         }
 
@@ -878,7 +881,30 @@ namespace BasesDeDatos
             Boolean cumplen = miControl.revisarConstraint(filaObjetos, nombreTabla);
             if (cumplen)
             {
-                miControl.agregarFilaTabla(nombreTabla, filaObjetos);
+                Boolean pKeyNulo = miControl.primaryNull(nombreTabla, filaObjetos);
+                if (!pKeyNulo)
+                {
+                    Boolean existePKey = miControl.existePrimaryKey(nombreTabla, filaObjetos);
+                    if (!existePKey)
+                    {
+                        miControl.agregarFilaTabla(nombreTabla, filaObjetos);
+                        numeroInsert = numeroInsert + 1;
+                        mensajeInsert = "Insert " + numeroInsert + " con exito. \n";
+                    }
+                    else
+                    {
+                        mensajeError += "Ya existe la llave primaria que se trata de agregar. \n";
+                    }
+                }
+                else
+                {
+                    mensajeError += "Una de las llaves primarias no puede ser null. \n";
+                }
+                
+            }
+            else
+            {
+                mensajeError += "No se pudo agregar la fila en "+nombreTabla+". \n";
             }
 
             return "void";
@@ -982,7 +1008,7 @@ namespace BasesDeDatos
 
         public override string VisitExpBooleana4_parentesis(gramSQLParser.ExpBooleana4_parentesisContext context)
         {
-            return Visit(context.GetChild(0));
+            return Visit(context.GetChild(1));
         }
 
         public override string VisitCreate_Database(gramSQLParser.Create_DatabaseContext context)

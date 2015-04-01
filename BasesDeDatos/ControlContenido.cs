@@ -25,5 +25,6 @@ namespace BasesDeDatos
             }
             return false;
         }
+        //public Boolean repitePrimaryKey(List<int> indices, )
     }
 }

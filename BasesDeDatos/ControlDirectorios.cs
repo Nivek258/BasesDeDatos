@@ -261,6 +261,7 @@ namespace BasesDeDatos
             {
 
             }
+            File.Delete("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
             tablasCreadas.removerTabla(nombreTabla);
             basesCreadas.restarCountTabla(DBactual);
             contenido = SerializarTabla(tablasCreadas);
@@ -689,7 +690,7 @@ namespace BasesDeDatos
                         }
                         else
                         {
-                            elemento1 = elementosCheck[i].Replace("\'", "");
+                            elemento1 = elementosCheck[i];
                         }
                         elem1 = false;
                     }
@@ -730,8 +731,9 @@ namespace BasesDeDatos
                         }
                         else
                         {
-                            elemento2 = elementosCheck[i].Replace("\'", "");
+                            elemento2 = elementosCheck[i];
                         }
+                        elem1 = true;
                     }
                     
                 }
@@ -798,9 +800,135 @@ namespace BasesDeDatos
             {
 
             }
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+                tablasCreadas = DeSerializarTabla(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            tablasCreadas.agregarRegistro(nombreTabla);
             miContenido.agregarFila(fila);
+            contenido = SerializarTabla(tablasCreadas);
+            File.WriteAllText("DataDB\\" + DBactual + "\\controlTablas.dat", contenido);
             contenido = SerializarContenido(miContenido);
             File.WriteAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat", contenido);
+
+        }
+
+        public Boolean existePrimaryKey(String nombreTabla, List<Object> fila)
+        {
+            String contenido;
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
+                miContenido = DeSerializarContenido(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+                tablasCreadas = DeSerializarTabla(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+           List<PrimaryConstraint> tempPConstraint = tablasCreadas.obtenerTabla(nombreTabla).pConstraint;
+            if (tempPConstraint.Count == 0)
+            {
+                return false;
+            }
+            else
+            {
+                List<String> columnasConstraint = tempPConstraint[0].idCol;
+                List<int> indicesPConstraints = new List<int>();
+                List<String> tiposPConstraints = new List<String>();
+                for (int i = 0; i < columnasConstraint.Count; i++)
+                {
+                    int indice = tablasCreadas.indiceColumna(nombreTabla, columnasConstraint[i]);
+                    String tipo = tablasCreadas.tipoColumna(nombreTabla, columnasConstraint[i]);
+                    indicesPConstraints.Add(indice);
+                    tiposPConstraints.Add(tipo);
+
+                }
+                String filaEntrante = "";
+                for (int i = 0; i < indicesPConstraints.Count; i++)
+                {
+                    filaEntrante += fila[i].ToString()+" ";
+                }
+                
+                List<List<Object>> contenidoFilas = miContenido.listObj;
+                for (int i = 0; i < contenidoFilas.Count; i++)
+                {
+                    List<Object> filaTemp = contenidoFilas[i];
+                    String FilaComparar = "";
+                    for (int j = 0; j < indicesPConstraints.Count; j++)
+                    {
+                        FilaComparar += filaTemp[j].ToString()+" ";
+                    }
+                    if (filaEntrante.Equals(FilaComparar))
+                    {
+                        return true;
+                    }
+
+                }
+                return false;
+            }
+
+        }
+
+        public Boolean primaryNull(String nombreTabla, List<Object> fila)
+        {
+            String contenido;
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
+                miContenido = DeSerializarContenido(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+                tablasCreadas = DeSerializarTabla(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            List<PrimaryConstraint> tempPConstraint = tablasCreadas.obtenerTabla(nombreTabla).pConstraint;
+            if (tempPConstraint.Count == 0)
+            {
+                return false;
+            }
+            else
+            {
+                List<String> columnasConstraint = tempPConstraint[0].idCol;
+                List<int> indicesPConstraints = new List<int>();
+                for (int i = 0; i < columnasConstraint.Count; i++)
+                {
+                    int indice = tablasCreadas.indiceColumna(nombreTabla, columnasConstraint[i]);
+                    indicesPConstraints.Add(indice);
+
+                }
+                for (int i = 0; i < indicesPConstraints.Count; i++)
+                {
+                    if (fila[i] == null)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
 
         }
         
