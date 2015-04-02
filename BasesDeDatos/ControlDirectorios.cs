@@ -1123,7 +1123,8 @@ namespace BasesDeDatos
             return columnasDelete;
         }
 
-        public List<List<Object>> SelectFilas(List<String> nombreTablas)
+        //Muestra todo de las tablas indicadas
+        public List<List<Object>> SelectFilas(List<String> nombreTablas, Boolean auxiliar)
         {
             String contenido;
             List<ControlContenido> coleccionContenido = new List<ControlContenido>();
@@ -1164,7 +1165,7 @@ namespace BasesDeDatos
                         List<List<Object>> contenidoTabla2 = coleccionContenido[i].listObj;
                         for (int k = 0; k < contenidoTabla2.Count; k++)
                         {
-                            List<Object> fila1 = new List<Object>;
+                            List<Object> fila1 = new List<Object>();
                             fila1 = conjuntoTemp[j];
                             List<Object> fila2 = contenidoTabla2[k];
                             for (int l = 0; l < fila2.Count; l++)
@@ -1178,7 +1179,66 @@ namespace BasesDeDatos
                 }
             }
             
-            //
+            return productoCartesiano;
+
+        }
+        
+        //Muestra lo seleccionado de las tablas indicadas
+        public List<List<Object>> SelectFilas(List<String> nombreTablas,  List<String>columnasSeleccionadas)
+        {
+            String contenido;
+            List<ControlContenido> coleccionContenido = new List<ControlContenido>();
+            List<List<Object>> productoCartesiano = new List<List<Object>>();
+
+            //Lista de contenidos
+            for (int i = 0; i < nombreTablas.Count; i++)
+            {
+                try
+                {
+                    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTablas[i] + ".dat");
+                    miContenido = new ControlContenido();
+                    miContenido = DeSerializarContenido(contenido);
+                    coleccionContenido.Add(miContenido);
+                }
+                catch (Exception e)
+                {
+                    miContenido = new ControlContenido();
+                    coleccionContenido.Add(miContenido);
+                }
+            }
+
+            if (coleccionContenido.Count == 1)
+            {
+                productoCartesiano = coleccionContenido[0].listObj;
+            }
+            else
+            {
+                //Realizar producto cartesiano
+                List<List<Object>> conjuntoTemp = new List<List<Object>>();
+                productoCartesiano = coleccionContenido[0].listObj;
+                for (int i = 1; i < coleccionContenido.Count; i++)
+                {
+                    conjuntoTemp = productoCartesiano;
+                    productoCartesiano = new List<List<Object>>();
+                    for (int j = 0; j < conjuntoTemp.Count; j++)
+                    {
+                        List<List<Object>> contenidoTabla2 = coleccionContenido[i].listObj;
+                        for (int k = 0; k < contenidoTabla2.Count; k++)
+                        {
+                            List<Object> fila1 = new List<Object>();
+                            fila1 = conjuntoTemp[j];
+                            List<Object> fila2 = contenidoTabla2[k];
+                            for (int l = 0; l < fila2.Count; l++)
+                            {
+                                fila1.Add(fila2[0]);
+                            }
+                            productoCartesiano.Add(fila1);
+                                
+                        }
+                    }
+                }
+            }
+            
             try
             {
                 contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
@@ -1189,9 +1249,905 @@ namespace BasesDeDatos
 
             }
 
-            List<String> listaColumnas = new 
+
+            //Realizar listas para conocer nombre y tabla
+            List<String> nombresColumna = new List<String>();
+            List<String> TablaColumna = new List<String>();
+
+            for(int i = 0; i<tablasCreadas.getListaTB().Count;i++)
+            {
+                Tabla tablaTemp = tablasCreadas.getListaTB()[i];
+                for(int j = 0; j<tablaTemp.columnasTB.Count;j++){
+                    nombresColumna.Add(tablaTemp.columnasTB[j].getNombre());
+                    TablaColumna.Add(tablaTemp.getNombre());
+                }
+            }
+
+
+            
+
+            //Llamar metodo para seleccionar columnas
+            return obtenerSelect(productoCartesiano, columnasSeleccionadas, nombresColumna, TablaColumna);
 
         }
-        
+
+        //Muestra todo de las tablas indicadas cuando se cumple where
+        public List<List<Object>> SelectFilas(List<String> nombreTablas, List<String> expWhere, Boolean auxiliar)
+        {
+            String contenido;
+            List<ControlContenido> coleccionContenido = new List<ControlContenido>();
+            List<List<Object>> productoCartesiano = new List<List<Object>>();
+
+            //Lista de contenidos
+            for (int i = 0; i < nombreTablas.Count; i++)
+            {
+                try
+                {
+                    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTablas[i] + ".dat");
+                    miContenido = new ControlContenido();
+                    miContenido = DeSerializarContenido(contenido);
+                    coleccionContenido.Add(miContenido);
+                }
+                catch (Exception e)
+                {
+                    miContenido = new ControlContenido();
+                    coleccionContenido.Add(miContenido);
+                }
+            }
+
+            if (coleccionContenido.Count == 1)
+            {
+                productoCartesiano = coleccionContenido[0].listObj;
+            }
+            else
+            {
+                //Realizar producto cartesiano
+                List<List<Object>> conjuntoTemp = new List<List<Object>>();
+                productoCartesiano = coleccionContenido[0].listObj;
+                for (int i = 1; i < coleccionContenido.Count; i++)
+                {
+                    conjuntoTemp = productoCartesiano;
+                    productoCartesiano = new List<List<Object>>();
+                    for (int j = 0; j < conjuntoTemp.Count; j++)
+                    {
+                        List<List<Object>> contenidoTabla2 = coleccionContenido[i].listObj;
+                        for (int k = 0; k < contenidoTabla2.Count; k++)
+                        {
+                            List<Object> fila1 = new List<Object>();
+                            fila1 = conjuntoTemp[j];
+                            List<Object> fila2 = contenidoTabla2[k];
+                            for (int l = 0; l < fila2.Count; l++)
+                            {
+                                fila1.Add(fila2[0]);
+                            }
+                            productoCartesiano.Add(fila1);
+
+                        }
+                    }
+                }
+            }
+
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+                tablasCreadas = DeSerializarTabla(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+
+
+            //Realizar listas para conocer nombre y tabla
+            List<String> nombresColumna = new List<String>();
+            List<String> TablaColumna = new List<String>();
+            List<String> tipoColum = new List<string>();
+
+            for (int i = 0; i < tablasCreadas.getListaTB().Count; i++)
+            {
+                Tabla tablaTemp = tablasCreadas.getListaTB()[i];
+                for (int j = 0; j < tablaTemp.columnasTB.Count; j++)
+                {
+                    nombresColumna.Add(tablaTemp.columnasTB[j].getNombre());
+                    tipoColum.Add(tablaTemp.columnasTB[j].getTipo());
+                    TablaColumna.Add(tablaTemp.getNombre());
+                    
+                }
+            }
+
+            //Reducir la tabla incluyendo solo donde se cumple el where
+
+            List<List<Object>> cumplenWhere = new List<List<Object>>();
+            Boolean cumple = false;
+            for (int i = 0; i < productoCartesiano.Count; i++)
+            {
+                //cumple = (productoCartesiano[i], expWhere, nombreColumna, tipoColum, TablaColumna) metodo para determinar si cumple
+                cumple = verificarWhere(productoCartesiano[i], expWhere, nombresColumna, tipoColum, TablaColumna);
+                if (cumple)
+                {
+                    cumplenWhere.Add(productoCartesiano[i]);
+                }
+            }
+
+            return cumplenWhere;
+        }
+
+        //Muestra lo seleccionado de las tablas indicadas cuando se cumple where
+        public List<List<Object>> SelectFilas(List<String> nombreTablas, List<String>columnasSeleccionadas, List<String> expWhere)
+        {
+            String contenido;
+            List<ControlContenido> coleccionContenido = new List<ControlContenido>();
+            List<List<Object>> productoCartesiano = new List<List<Object>>();
+
+            //Lista de contenidos
+            for (int i = 0; i < nombreTablas.Count; i++)
+            {
+                try
+                {
+                    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTablas[i] + ".dat");
+                    miContenido = new ControlContenido();
+                    miContenido = DeSerializarContenido(contenido);
+                    coleccionContenido.Add(miContenido);
+                }
+                catch (Exception e)
+                {
+                    miContenido = new ControlContenido();
+                    coleccionContenido.Add(miContenido);
+                }
+            }
+
+            if (coleccionContenido.Count == 1)
+            {
+                productoCartesiano = coleccionContenido[0].listObj;
+            }
+            else
+            {
+                //Realizar producto cartesiano
+                List<List<Object>> conjuntoTemp = new List<List<Object>>();
+                productoCartesiano = coleccionContenido[0].listObj;
+                for (int i = 1; i < coleccionContenido.Count; i++)
+                {
+                    conjuntoTemp = productoCartesiano;
+                    productoCartesiano = new List<List<Object>>();
+                    for (int j = 0; j < conjuntoTemp.Count; j++)
+                    {
+                        List<List<Object>> contenidoTabla2 = coleccionContenido[i].listObj;
+                        for (int k = 0; k < contenidoTabla2.Count; k++)
+                        {
+                            List<Object> fila1 = new List<Object>();
+                            fila1 = conjuntoTemp[j];
+                            List<Object> fila2 = contenidoTabla2[k];
+                            for (int l = 0; l < fila2.Count; l++)
+                            {
+                                fila1.Add(fila2[0]);
+                            }
+                            productoCartesiano.Add(fila1);
+
+                        }
+                    }
+                }
+            }
+
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+                tablasCreadas = DeSerializarTabla(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+
+
+            //Realizar listas para conocer nombre y tabla
+            List<String> nombresColumna = new List<String>();
+            List<String> TablaColumna = new List<String>();
+            List<String> tipoColum = new List<string>();
+
+            for (int i = 0; i < tablasCreadas.getListaTB().Count; i++)
+            {
+                Tabla tablaTemp = tablasCreadas.getListaTB()[i];
+                for (int j = 0; j < tablaTemp.columnasTB.Count; j++)
+                {
+                    nombresColumna.Add(tablaTemp.columnasTB[j].getNombre());
+                    tipoColum.Add(tablaTemp.columnasTB[j].getTipo());
+                    TablaColumna.Add(tablaTemp.getNombre());
+
+                }
+            }
+
+            //Reducir la tabla incluyendo solo donde se cumple el where
+
+            List<List<Object>> cumplenWhere = new List<List<Object>>();
+            Boolean cumple = false;
+            for (int i = 0; i < productoCartesiano.Count; i++)
+            {
+                //cumple = (productoCartesiano[i], expWhere, nombreColumna, tipoColum, TablaColumna) metodo para determinar si cumple
+                cumple = verificarWhere(productoCartesiano[i], expWhere, nombresColumna, tipoColum, TablaColumna);
+                if (cumple)
+                {
+                    cumplenWhere.Add(productoCartesiano[i]);
+                }
+            }
+            return obtenerSelect(cumplenWhere, columnasSeleccionadas, nombresColumna, TablaColumna);
+        }
+
+//
+        //Muestra todo de las tablas indicadas cuando se cumple where en el orden especificado
+        public List<List<Object>> SelectFilas(List<String> nombreTablas, List<String> expWhere, Boolean auxiliar)
+        {
+            String contenido;
+            List<ControlContenido> coleccionContenido = new List<ControlContenido>();
+            List<List<Object>> productoCartesiano = new List<List<Object>>();
+
+            //Lista de contenidos
+            for (int i = 0; i < nombreTablas.Count; i++)
+            {
+                try
+                {
+                    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTablas[i] + ".dat");
+                    miContenido = new ControlContenido();
+                    miContenido = DeSerializarContenido(contenido);
+                    coleccionContenido.Add(miContenido);
+                }
+                catch (Exception e)
+                {
+                    miContenido = new ControlContenido();
+                    coleccionContenido.Add(miContenido);
+                }
+            }
+
+            if (coleccionContenido.Count == 1)
+            {
+                productoCartesiano = coleccionContenido[0].listObj;
+            }
+            else
+            {
+                //Realizar producto cartesiano
+                List<List<Object>> conjuntoTemp = new List<List<Object>>();
+                productoCartesiano = coleccionContenido[0].listObj;
+                for (int i = 1; i < coleccionContenido.Count; i++)
+                {
+                    conjuntoTemp = productoCartesiano;
+                    productoCartesiano = new List<List<Object>>();
+                    for (int j = 0; j < conjuntoTemp.Count; j++)
+                    {
+                        List<List<Object>> contenidoTabla2 = coleccionContenido[i].listObj;
+                        for (int k = 0; k < contenidoTabla2.Count; k++)
+                        {
+                            List<Object> fila1 = new List<Object>();
+                            fila1 = conjuntoTemp[j];
+                            List<Object> fila2 = contenidoTabla2[k];
+                            for (int l = 0; l < fila2.Count; l++)
+                            {
+                                fila1.Add(fila2[0]);
+                            }
+                            productoCartesiano.Add(fila1);
+
+                        }
+                    }
+                }
+            }
+
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+                tablasCreadas = DeSerializarTabla(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+
+
+            //Realizar listas para conocer nombre y tabla
+            List<String> nombresColumna = new List<String>();
+            List<String> TablaColumna = new List<String>();
+            List<String> tipoColum = new List<string>();
+
+            for (int i = 0; i < tablasCreadas.getListaTB().Count; i++)
+            {
+                Tabla tablaTemp = tablasCreadas.getListaTB()[i];
+                for (int j = 0; j < tablaTemp.columnasTB.Count; j++)
+                {
+                    nombresColumna.Add(tablaTemp.columnasTB[j].getNombre());
+                    tipoColum.Add(tablaTemp.columnasTB[j].getTipo());
+                    TablaColumna.Add(tablaTemp.getNombre());
+
+                }
+            }
+
+            //Reducir la tabla incluyendo solo donde se cumple el where
+
+            List<List<Object>> cumplenWhere = new List<List<Object>>();
+            Boolean cumple = false;
+            for (int i = 0; i < productoCartesiano.Count; i++)
+            {
+                //cumple = (productoCartesiano[i], expWhere, nombreColumna, tipoColum, TablaColumna) metodo para determinar si cumple
+                cumple = verificarWhere(productoCartesiano[i], expWhere, nombresColumna, tipoColum, TablaColumna);
+                if (cumple)
+                {
+                    cumplenWhere.Add(productoCartesiano[i]);
+                }
+            }
+
+            return cumplenWhere;
+        }
+
+        public List<List<Object>> ordenarContenido(List<List<Object>> tablaCompleta, List<String> columnasOrdenar, List<String> tipoOrdenamiento, List<String> nombresCol, List<String> tipoCol, List<String> TablaCol)
+        {
+            List<List<Object>> tablaOrdenada = new List<List<Object>>();
+            List<List<Object>> conjuntoTemp= new List<List<Object>>();
+            tablaOrdenada = tablaCompleta;
+            int indiceColumna = 0;
+            String tipoC = "";
+            for (int i = columnasOrdenar.Count-1; i >= 0; i--)
+            {
+                //obtener indice
+                if(columnasOrdenar[i].Contains(".")){
+                    String nombreTabla = columnasOrdenar[i].Substring(0,columnasOrdenar[i].IndexOf("."));
+                    String nombreColumna2 = columnasOrdenar[i].Substring(columnasOrdenar[i].IndexOf(".") + 1, columnasOrdenar[i].Length - columnasOrdenar[i].IndexOf("."));
+                    for(int j = 0; j < nombresCol.Count; j++){
+                        if(nombreTabla.Equals(nombresCol[j])&&nombreTabla.Equals(nombreTabla[j]){
+                            indiceColumna = j;
+                            tipoC = tipoCol[j];
+                        }
+                    }
+                }
+                else{
+                    for(int j = 0; j < nombresCol.Count; j++){
+                        if(columnasOrdenar[i].Equals(nombresCol[j])){
+                            indiceColumna = j;
+                            tipoC = tipoCol[j];
+                        }
+                    }
+                }
+                
+
+
+                conjuntoTemp = tablaOrdenada;
+                tablaOrdenada = new List<List<Object>>();
+                for (int j = 0; j < conjuntoTemp.Count; j++)
+                {
+                    if (tablaOrdenada.Count == 0)
+                    {
+                        tablaOrdenada.Add(conjuntoTemp[j]);
+                    }
+                    else
+                    {
+                        if(tipoC.Equals("int")){
+                            if(tipoOrdenamiento[i].Equals("asc")){
+                                if(conjuntoTemp[j][indiceColumna]==null){
+                                    tablaOrdenada.Add(conjuntoTemp[j]);
+                                }
+                                else{
+                                    for (int k = 0; k < tablaOrdenada.Count; k++)
+                                    {
+                                        if(tablaOrdenada[k][indiceColumna]==null)
+                                        {
+                                            tablaOrdenada.Insert(k,conjuntoTemp[j]);
+                                            k = tablaOrdenada.Count;
+                                        }
+                                        else{
+                                            int num1 = Convert.ToInt32(tablaOrdenada[k][indiceColumna]);
+                                            int num2 = Convert.ToInt32(conjuntoTemp[j][indiceColumna]);
+                                            if(num1>num2)
+                                            {
+                                                tablaOrdenada.Insert(k,conjuntoTemp[j]);
+                                                k = tablaOrdenada.Count;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else{
+                                if(conjuntoTemp[j][indiceColumna]==null){
+                                    for (int k = 0; k < tablaOrdenada.Count; k++)
+                                    {
+                                        if(tablaOrdenada[k][indiceColumna]!=null)
+                                        {
+                                            tablaOrdenada.Insert(k,conjuntoTemp[j]);
+                                            k = tablaOrdenada.Count;
+                                        }
+                                    }
+                                }
+                                else{
+                                    for (int k = 0; k < tablaOrdenada.Count; k++)
+                                    {
+                                        if(tablaOrdenada[k][indiceColumna]!=null)
+                                        {
+                                            int num1 = Convert.ToInt32(tablaOrdenada[k][indiceColumna]);
+                                            int num2 = Convert.ToInt32(conjuntoTemp[j][indiceColumna]);
+                                            if(num1<num2)
+                                            {
+                                                tablaOrdenada.Insert(k,conjuntoTemp[j]);
+                                                k = tablaOrdenada.Count;
+                                            }
+                                        }
+                                    }
+                                }
+
+                            }
+                            
+                        }
+                        else if(tipoC.Equals("float")){
+                            if(tipoOrdenamiento[i].Equals("asc")){
+                                if(conjuntoTemp[j][indiceColumna]==null){
+                                    tablaOrdenada.Add(conjuntoTemp[j]);
+                                }
+                                else{
+                                    for (int k = 0; k < tablaOrdenada.Count; k++)
+                                    {
+                                        if(tablaOrdenada[k][indiceColumna]==null)
+                                        {
+                                            tablaOrdenada.Insert(k,conjuntoTemp[j]);
+                                            k = tablaOrdenada.Count;
+                                        }
+                                        else{
+                                            float num1 = Convert.ToSingle(tablaOrdenada[k][indiceColumna]);
+                                            float num2 = Convert.ToSingle(conjuntoTemp[j][indiceColumna]);
+                                            if(num1>num2)
+                                            {
+                                                tablaOrdenada.Insert(k,conjuntoTemp[j]);
+                                                k = tablaOrdenada.Count;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else{
+                                if(conjuntoTemp[j][indiceColumna]==null){
+                                    for (int k = 0; k < tablaOrdenada.Count; k++)
+                                    {
+                                        if(tablaOrdenada[k][indiceColumna]!=null)
+                                        {
+                                            tablaOrdenada.Insert(k,conjuntoTemp[j]);
+                                            k = tablaOrdenada.Count;
+                                        }
+                                    }
+                                }
+                                else{
+                                    for (int k = 0; k < tablaOrdenada.Count; k++)
+                                    {
+                                        if(tablaOrdenada[k][indiceColumna]!=null)
+                                        {
+                                            float num1 = Convert.ToSingle(tablaOrdenada[k][indiceColumna]);
+                                            float num2 = Convert.ToSingle(conjuntoTemp[j][indiceColumna]);
+                                            if(num1<num2)
+                                            {
+                                                tablaOrdenada.Insert(k,conjuntoTemp[j]);
+                                                k = tablaOrdenada.Count;
+                                            }
+                                        }
+                                    }
+                                }
+
+                            }
+                            
+                        }
+                        
+                    }
+                }
+            }
+        }
+
+        public List<List<Object>> obtenerSelect(List<List<Object>> tablaCompleta, List<String> columnasMostrar, List<String> nombreColumnas, List<String> tablaColumnas)
+        {
+            //Obtener indices
+            List<int> indicesMostrar = new List<int>();
+            for (int i = 0; i < columnasMostrar.Count; i++)
+            {
+                if (columnasMostrar[i].Contains("."))
+                {
+                    String nombreTabla = columnasMostrar[i].Substring(0, columnasMostrar[i].IndexOf("."));
+                    String nombreColumna2 = columnasMostrar[i].Substring(columnasMostrar[i].IndexOf(".") + 1, columnasMostrar[i].Length - columnasMostrar[i].IndexOf("."));
+
+                    for (int j = 0; j < nombreColumnas.Count; j++)
+                    {
+                        if (nombreColumna2.Equals(nombreColumnas[j])&&nombreTabla.Equals(tablaColumnas[j]))
+                        {
+                            indicesMostrar.Add(j);
+                        }
+                    }
+                }
+                else
+                {
+                    String nombreColumna2 = columnasMostrar[i];
+                    for (int j = 0; j < nombreColumnas.Count; j++)
+                    {
+                        if (nombreColumna2.Equals(nombreColumnas[j]))
+                        {
+                            indicesMostrar.Add(j);
+                        }
+                    }
+                }
+            }
+
+            //Generar nuevas filas con lo seleccionado
+            List<List<Object>> tablaFinal = new List<List<Object>>();
+            for (int i = 0; i < tablaCompleta.Count; i++)
+            {
+                List<Object> listaTemp = new List<Object>();
+                for (int j = 0; j < indicesMostrar.Count; j++)
+                {
+                    listaTemp.Add(tablaCompleta[i][indicesMostrar[j]]);
+
+                }
+                tablaFinal.Add(listaTemp);
+            }
+
+            return tablaFinal;
+
+        }
+
+
+        public Boolean verificarWhere(List<Object> elementosFila, List<String> expresionWhere, List<String> nombresCol, List<String> tipoCol, List<String>TablaCol){
+            Stack<Boolean> stack = new Stack<Boolean>();
+            Object elemento1 = null;
+            Object elemento2 = null;
+            String tipoElemento1 = "";
+            String tipoElemento2 = "";
+            Boolean op1 = false;
+            Boolean op2 = false;
+            Boolean elem1 = true;
+
+            for (int i = 0; i < expresionWhere.Count; i++)
+            {
+                if (expresionWhere[i].Contains("."))
+                {
+                    if(elem1){
+                        try
+                        {
+
+                            elemento1 = Convert.ToSingle(expresionWhere[i]);
+                            tipoElemento1 = "float";
+                            elem1 = false;
+                        }
+                        catch (FormatException e)
+                        {
+                            int indiceElemento = 0;
+                            String nombreTabla = expresionWhere[i].Substring(0, expresionWhere[i].IndexOf("."));
+                            String nombreColumna2 = expresionWhere[i].Substring(expresionWhere[i].IndexOf(".") + 1, expresionWhere[i].Length - expresionWhere[i].IndexOf("."));
+                            for (int j = 0; j < nombresCol.Count; j++)
+                            {
+                                if (nombreColumna2.Equals(nombresCol[j]) && nombreTabla.Equals(TablaCol[j]))
+                                {
+                                    indiceElemento = j;
+                                }
+                            }
+                            elemento1 = elementosFila[indiceElemento];
+                            if (elemento1 == null)
+                            {
+                                return false;
+                            }
+                            tipoElemento1 = tipoCol[indiceElemento];
+                            elem1 = false;
+                        }
+                    }
+                    else{
+                        try
+                        {
+                            elemento2 = Convert.ToSingle(expresionWhere[i]);
+                            tipoElemento2 = "float";
+                            elem1 = true;
+                        }
+                        catch (FormatException e)
+                        {
+                            int indiceElemento = 0;
+                            String nombreTabla = expresionWhere[i].Substring(0, expresionWhere[i].IndexOf("."));
+                            String nombreColumna2 = expresionWhere[i].Substring(expresionWhere[i].IndexOf(".") + 1, expresionWhere[i].Length - expresionWhere[i].IndexOf("."));
+                            for (int j = 0; j < nombresCol.Count; j++)
+                            {
+                                if (nombreColumna2.Equals(nombresCol[j]) && nombreTabla.Equals(TablaCol[j]))
+                                {
+                                    indiceElemento = j;
+                                }
+                            }
+                            elemento2 = elementosFila[indiceElemento];
+                            if (elemento2 == null)
+                            {
+                                return false;
+                            }
+                            tipoElemento2 = tipoCol[indiceElemento];
+                            elem1 = true;
+                        }
+                    } 
+                }
+                else if (nombresCol.Contains(expresionWhere[i]))
+                {
+                    int indiceElemento = 0;
+                    for (int j = 0; j < nombresCol.Count; j++)
+                    {
+                        if (expresionWhere[i].Equals(nombresCol[j]))
+                        {
+                            indiceElemento = j;
+                        }
+                    }
+                    if (elem1)
+                    {
+                        elemento1 = elementosFila[indiceElemento];
+                        if (elemento1 == null)
+                        {
+                            return false;
+                        }
+                        tipoElemento1 = tipoCol[indiceElemento];
+                        elem1 = false;
+                    }
+                    else
+                    {
+                        elemento2 = elementosFila[indiceElemento];
+                        if (elemento2 == null)
+                        {
+                            return false;
+                        }
+                        tipoElemento2 = tipoCol[indiceElemento];
+                        elem1 = true;
+                    }
+                }
+                else if (expresionWhere[i].Equals(">") || expresionWhere[i].Equals("<") || expresionWhere[i].Equals(">=") || expresionWhere[i].Equals("<="))
+                {
+                    if (expresionWhere[i].Equals(">"))
+                    {
+                        if (tipoElemento1.Equals("int") && tipoElemento2.Equals("int"))
+                        {
+                            op1 = (Int32)elemento1 > (Int32)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("int") && tipoElemento2.Equals("float"))
+                        {
+                            op1 = (Int32)elemento1 > (Single)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("float") && tipoElemento2.Equals("int"))
+                        {
+                            op1 = (Single)elemento1 > (Int32)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("float") && tipoElemento2.Equals("float"))
+                        {
+                            op1 = (Single)elemento1 > (Single)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("date") && tipoElemento2.Equals("date"))
+                        {
+                            op1 = (DateTime)elemento1 > (DateTime)elemento2;
+                        }
+                        stack.Push(op1);
+                    }
+                    else if (expresionWhere[i].Equals("<"))
+                    {
+                        if (tipoElemento1.Equals("int") && tipoElemento2.Equals("int"))
+                        {
+                            op1 = (Int32)elemento1 < (Int32)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("int") && tipoElemento2.Equals("float"))
+                        {
+                            op1 = (Int32)elemento1 < (Single)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("float") && tipoElemento2.Equals("int"))
+                        {
+                            op1 = (Single)elemento1 < (Int32)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("float") && tipoElemento2.Equals("float"))
+                        {
+                            op1 = (Single)elemento1 < (Single)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("date") && tipoElemento2.Equals("date"))
+                        {
+                            op1 = (DateTime)elemento1 < (DateTime)elemento2;
+                        }
+                        stack.Push(op1);
+                    }
+                    else if (expresionWhere[i].Equals("<="))
+                    {
+                        if (tipoElemento1.Equals("int") && tipoElemento2.Equals("int"))
+                        {
+                            op1 = (Int32)elemento1 <= (Int32)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("int") && tipoElemento2.Equals("float"))
+                        {
+                            op1 = (Int32)elemento1 <= (Single)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("float") && tipoElemento2.Equals("int"))
+                        {
+                            op1 = (Single)elemento1 <= (Int32)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("float") && tipoElemento2.Equals("float"))
+                        {
+                            op1 = (Single)elemento1 <= (Single)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("date") && tipoElemento2.Equals("date"))
+                        {
+                            op1 = (DateTime)elemento1 <= (DateTime)elemento2;
+                        }
+                        stack.Push(op1);
+                    }
+                    else if (expresionWhere[i].Equals(">="))
+                    {
+                        if (tipoElemento1.Equals("int") && tipoElemento2.Equals("int"))
+                        {
+                            op1 = (Int32)elemento1 >= (Int32)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("int") && tipoElemento2.Equals("float"))
+                        {
+                            op1 = (Int32)elemento1 >= (Single)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("float") && tipoElemento2.Equals("int"))
+                        {
+                            op1 = (Single)elemento1 >= (Int32)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("float") && tipoElemento2.Equals("float"))
+                        {
+                            op1 = (Single)elemento1 >= (Single)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("date") && tipoElemento2.Equals("date"))
+                        {
+                            op1 = (DateTime)elemento1 >= (DateTime)elemento2;
+                        }
+                        stack.Push(op1);
+                    }
+                }
+                else if (expresionWhere[i].Equals("=") || expresionWhere[i].Equals("<>"))
+                {
+                    if (expresionWhere[i].Equals("="))
+                    {
+                        if (tipoElemento1.Equals("int") && tipoElemento2.Equals("int"))
+                        {
+                            op1 = (Int32)elemento1 == (Int32)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("int") && tipoElemento2.Equals("float"))
+                        {
+                            op1 = (Int32)elemento1 == (Single)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("float") && tipoElemento2.Equals("int"))
+                        {
+                            op1 = (Single)elemento1 == (Int32)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("float") && tipoElemento2.Equals("float"))
+                        {
+                            op1 = (Single)elemento1 == (Single)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("date") && tipoElemento2.Equals("date"))
+                        {
+                            op1 = (DateTime)elemento1 == (DateTime)elemento2;
+                        }
+                        else if (tipoElemento1.Contains("char") && tipoElemento2.Equals("date"))
+                        {
+                            op1 = ((String)elemento1).Equals(((DateTime)elemento2).ToString());
+                        }
+                        else if (tipoElemento1.Contains("char") && tipoElemento2.Contains("char"))
+                        {
+                            op1 = ((String)elemento1).Equals((String)elemento2);
+                        }
+                        stack.Push(op1);
+                    }
+                    else if (expresionWhere[i].Equals("<>"))
+                    {
+                        if (tipoElemento1.Equals("int") && tipoElemento2.Equals("int"))
+                        {
+                            op1 = (Int32)elemento1 != (Int32)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("int") && tipoElemento2.Equals("float"))
+                        {
+                            op1 = (Int32)elemento1 != (Single)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("float") && tipoElemento2.Equals("int"))
+                        {
+                            op1 = (Single)elemento1 != (Int32)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("float") && tipoElemento2.Equals("float"))
+                        {
+                            op1 = (Single)elemento1 != (Single)elemento2;
+                        }
+                        else if (tipoElemento1.Equals("date") && tipoElemento2.Equals("date"))
+                        {
+                            op1 = (DateTime)elemento1 != (DateTime)elemento2;
+                        }
+                        else if (tipoElemento1.Contains("char") && tipoElemento2.Equals("date"))
+                        {
+                            op1 = !(((String)elemento1).Equals(((DateTime)elemento2).ToString()));
+                        }
+                        else if (tipoElemento1.Contains("char") && tipoElemento2.Contains("char"))
+                        {
+                            op1 = !(((String)elemento1).Equals((String)elemento2));
+                        }
+                        stack.Push(op1);
+                    }
+                }
+                else if (expresionWhere[i].ToLower().Equals("and"))
+                {
+                    op1 = stack.Pop();
+                    op2 = stack.Pop();
+                    stack.Push(op1 && op2);
+                }
+                else if (expresionWhere[i].ToLower().Equals("or"))
+                {
+                    op1 = stack.Pop();
+                    op2 = stack.Pop();
+                    stack.Push(op1 || op2);
+                }
+                else if (expresionWhere[i].ToLower().Equals("not"))
+                {
+                    op1 = stack.Pop();
+                    stack.Push(!op1);
+                }
+                else
+                {
+                    if (elem1)
+                    {
+                        tipoElemento1 = tipoElemento(expresionWhere[i]);
+                        if (tipoElemento1.Equals("int"))
+                        {
+                            elemento1 = Convert.ToInt32(expresionWhere[i]);
+                        }
+                        else if (tipoElemento1.Equals("date"))
+                        {
+                            String Fecha = expresionWhere[i].Replace("\'", "");
+                            List<string> dateElements = Fecha.Split(new char[] { '-' }).ToList();
+                            Fecha = dateElements[0] + "-";
+                            if (dateElements[1].Length == 1)
+                            {
+                                Fecha += 0 + dateElements[1] + "-";
+                            }
+                            else
+                            {
+                                Fecha += dateElements[1] + "-";
+                            }
+                            if (dateElements[2].Length == 1)
+                            {
+                                Fecha += 0 + dateElements[2];
+                            }
+                            else
+                            {
+                                Fecha += dateElements[2];
+                            }
+                            DateTime date = DateTime.ParseExact(Fecha, "yyyy-MM-dd", null);
+                            elemento1 = date;
+                        }
+                        else
+                        {
+                            elemento1 = expresionWhere[i];
+                        }
+                        elem1 = false;
+                    }
+                    else
+                    {
+                        tipoElemento2 = tipoElemento(expresionWhere[i]);
+                        if (tipoElemento2.Equals("int"))
+                        {
+                            elemento2 = Convert.ToInt32(expresionWhere[i]);
+                        }
+                        else if (tipoElemento2.Equals("date"))
+                        {
+                            String Fecha = expresionWhere[i].Replace("\'", "");
+                            List<string> dateElements = Fecha.Split(new char[] { '-' }).ToList();
+                            Fecha = dateElements[0] + "-";
+                            if (dateElements[1].Length == 1)
+                            {
+                                Fecha += 0 + dateElements[1] + "-";
+                            }
+                            else
+                            {
+                                Fecha += dateElements[1] + "-";
+                            }
+                            if (dateElements[2].Length == 1)
+                            {
+                                Fecha += 0 + dateElements[2];
+                            }
+                            else
+                            {
+                                Fecha += dateElements[2];
+                            }
+                            DateTime date = DateTime.ParseExact(Fecha, "yyyy-MM-dd", null);
+                            elemento2 = date;
+                        }
+                        else
+                        {
+                            elemento2 = expresionWhere[i];
+                        }
+                        elem1 = true;
+                    }
+
+                }
+            }
+            return stack.Pop();
+        }
+
     }
 }

@@ -477,10 +477,20 @@ namespace BasesDeDatos
             {
                 return error;
             }
-            String typeSort = context.GetChild(1).GetText().ToLower();
             columnaSort.Add(nombreColumna);
-            tipoSort.Add(typeSort);
+            if (context.ChildCount == 2)
+            {
+                String typeSort = context.GetChild(1).GetText().ToLower();
+
+                tipoSort.Add(typeSort);
+                
+            }
+            else
+            {
+                tipoSort.Add("asc");
+            }
             return "void";
+            
 
         }
 
