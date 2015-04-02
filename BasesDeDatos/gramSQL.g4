@@ -151,10 +151,15 @@ listaUpdate2: igualacion ',' listaUpdate2			#listaUpdate2_comita
 				| igualacion						#listaUpdate2_igualacion;
 igualacion: ID '=' literal;
 deleteExpression: DELETE FROM ID (WHERE expBooleana)?;
-selectExpression: SELECT ( '*' | listaColumna1 ) FROM ID (WHERE expBooleana)? (ORDER BY '[' expresionOrden1 ']')?;
+selectExpression: SELECT ( '*' | listaTablaColumna1 ) FROM listaTablaColumna1 (WHERE expBooleana)? (ORDER BY '[' expresionOrden1 ']')?;
+listaTablaColumna1: listaTablaColumna2;
+listaTablaColumna2: nombreTablaColumna ',' listaTablaColumna2        #listaTablaColumna2_comita
+				|nombreTablaColumna                        #listaTablaColumna2_nombreColumna;
+nombreTablaColumna: ID	#nombreTablaColumna_id
+			| ID'.'ID	#nombreTablaColumna_referencia;
 expresionOrden1: expresionOrden2;
 expresionOrden2: expresionOrden ',' expresionOrden2    #expresionOrden2_comita
 				| expresionOrden                       #expresionOrden2_expresionOrden;
-expresionOrden: ID (ASC|DESC);
+expresionOrden: nombreTablaColumna (ASC|DESC)?;
 
 

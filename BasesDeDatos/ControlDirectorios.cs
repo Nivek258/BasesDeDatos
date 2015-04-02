@@ -1122,6 +1122,75 @@ namespace BasesDeDatos
             File.WriteAllText("DataDB\\" + DBactual + "\\controlTablas.dat", contenido);
             return columnasDelete;
         }
+
+        public List<List<Object>> SelectFilas(List<String> nombreTablas)
+        {
+            String contenido;
+            List<ControlContenido> coleccionContenido = new List<ControlContenido>();
+            List<List<Object>> productoCartesiano = new List<List<Object>>();
+
+            //Lista de contenidos
+            for (int i = 0; i < nombreTablas.Count; i++)
+            {
+                try
+                {
+                    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTablas[i] + ".dat");
+                    miContenido = new ControlContenido();
+                    miContenido = DeSerializarContenido(contenido);
+                    coleccionContenido.Add(miContenido);
+                }
+                catch (Exception e)
+                {
+                    miContenido = new ControlContenido();
+                    coleccionContenido.Add(miContenido);
+                }
+            }
+
+            
+
+            if (coleccionContenido.Count == 1)
+            {
+                productoCartesiano = coleccionContenido[0].listObj;
+            }
+            else
+            {
+                //Realizar producto cartesiano
+                List<List<Object>> conjuntoTemp = new List<List<Object>>();
+                productoCartesiano = coleccionContenido[0].listObj;
+                for (int i = 1; i < coleccionContenido.Count; i++)
+                {
+                    conjuntoTemp = productoCartesiano;
+                    productoCartesiano = new List<List<Object>>();
+                    for (int j = 0; j < conjuntoTemp.Count; j++)
+                    {
+                        List<List<Object>> contenidoTabla2 = coleccionContenido[i].listObj;
+                        for (int k = 0; k < contenidoTabla2.Count; k++)
+                        {
+                            List<Object> fila1 = new List<Object>;
+                            fila1 = conjuntoTemp[j];
+                            List<Object> fila2 = contenidoTabla2[k];
+                            for (int l = 0; l < fila2.Count; l++)
+                            {
+                                fila1.Add(fila2[0]);
+                            }
+                            productoCartesiano.Add(fila1);
+                                
+                        }
+                    }
+                }
+            }
+            
+
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+                tablasCreadas = DeSerializarTabla(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
         
     }
 }

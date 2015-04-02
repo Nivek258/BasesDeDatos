@@ -27,10 +27,14 @@ namespace BasesDeDatos
         int TipoConstraint = 0;
         Boolean expConstraint = false;
         Boolean expWhere = false;
+        Boolean conTabla = false;
         public DataGridView aMostrar = new DataGridView();
         List<String> nombresCol = new List<String>();
         List<String> valuesCol = new List<String>();
         List<String> valuesTipo = new List<String>();
+        List<String> nombresTabla = new List<String>();
+        List<String> tipoSort = new List<String>();
+        List<String> columnaSort = new List<String>();
         List<Object> filaObjetos;
         //public List<DataBase> mostrarDB = new List<DataBase>();
 
@@ -125,7 +129,18 @@ namespace BasesDeDatos
 
         public override string VisitExpresionOrden2_comita(gramSQLParser.ExpresionOrden2_comitaContext context)
         {
-            return ""; //aqui habia pegado algo que no era 
+            String retorno = Visit(context.GetChild(0));
+            if (retorno.Equals(error))
+            {
+                return error;
+            }
+            retorno = Visit(context.GetChild(2));
+            if (retorno.Equals(error))
+            {
+                return error;
+            }
+
+            return "void"; 
         }
 
         public override string VisitListaUpdate2_comita(gramSQLParser.ListaUpdate2_comitaContext context)
@@ -457,7 +472,16 @@ namespace BasesDeDatos
 
         public override string VisitExpresionOrden(gramSQLParser.ExpresionOrdenContext context)
         {
-            throw new NotImplementedException();
+            String nombreColumna = Visit(context.GetChild(0));
+            if (nombreColumna.Equals(error))
+            {
+                return error;
+            }
+            String typeSort = context.GetChild(1).GetText().ToLower();
+            columnaSort.Add(nombreColumna);
+            tipoSort.Add(typeSort);
+            return "void";
+
         }
 
         public override string VisitIgualacion(gramSQLParser.IgualacionContext context)
@@ -524,6 +548,54 @@ namespace BasesDeDatos
             
             return tipoCol;
         }
+
+        public override string VisitNombreTablaColumna_id(gramSQLParser.NombreTablaColumna_idContext context)
+        {
+            //columna
+            if (conTabla)
+            {
+                String nombreColumna = context.GetChild(0).GetText();
+                int coincidencias = 0;
+                Boolean existe = false;
+                for (int i = 0; i < nombresTabla.Count; i++)
+                {
+                    existe = miControl.existeColumna(nombresTabla[i], nombreColumna);
+                    if (existe)
+                    {
+                        coincidencias++;
+                    }
+                }
+                if (coincidencias == 0)
+                {
+                    mensajeError += "las tablas referenciadas no poseen una tabla de nombre " + nombreColumna + ". \n";
+                    return error;
+                }
+                else if (coincidencias > 1)
+                {
+                    mensajeError += "existe ambiguedad al hacer uso de la columna " + nombreColumna + ". \n";
+                    return error;
+                }
+
+                return nombreColumna;
+            }
+            //tabla
+            else
+            {
+                String nombreTabla = context.GetChild(0).GetText();
+                Boolean existeTabla = miControl.existeTabla(nombreTabla);
+                if (existeTabla)
+                {
+                    return nombreTabla;
+                }
+                else
+                {
+                    mensajeError += "no existe la tabla de nombre " + nombreTabla + ". \n";
+                    return error;
+                }
+
+            }
+        }
+
 
         public override string VisitDropExpression_table(gramSQLParser.DropExpression_tableContext context)
         {
@@ -667,7 +739,12 @@ namespace BasesDeDatos
 
         public override string VisitExpresionOrden2_expresionOrden(gramSQLParser.ExpresionOrden2_expresionOrdenContext context)
         {
-            throw new NotImplementedException();
+            String retorno = Visit(context.GetChild(0));
+            if (retorno.Equals(error))
+            {
+                return error;
+            }
+            return "void";
         }
 
         public override string VisitListaUpdate2_igualacion(gramSQLParser.ListaUpdate2_igualacionContext context)
@@ -681,6 +758,11 @@ namespace BasesDeDatos
         }
 
         public override string VisitListaColumna1(gramSQLParser.ListaColumna1Context context)
+        {
+            return Visit(context.GetChild(0));
+        }
+
+        public override string VisitListaTablaColumna1(gramSQLParser.ListaTablaColumna1Context context)
         {
             return Visit(context.GetChild(0));
         }
@@ -1190,6 +1272,36 @@ namespace BasesDeDatos
 
         }
 
+        public override string VisitNombreTablaColumna_referencia(gramSQLParser.NombreTablaColumna_referenciaContext context)
+        {
+            //columna
+            if (conTabla)
+            {
+                String nombreColumna = context.GetChild(2).GetText();
+                String nombreTabla = context.GetChild(0).GetText();
+                Boolean existe = miControl.existeTabla(nombreColumna);
+                if (!existe)
+                {
+                    mensajeError += "No existe la tabla de nombre " + nombreTabla + ". \n";
+                    return error;
+                }
+                existe = miControl.existeColumna(nombreTabla, nombreColumna);
+                if (!existe)
+                {
+                    mensajeError += "No existe la columna de nombre " + nombreColumna + "en la tabla "+nombreTabla+". \n";
+                    return error;
+                }
+                return nombreTabla + "." + nombreColumna;
+
+            }
+            //tabla
+            else
+            {
+                mensajeError += "se requiere el nombre de una tabla, no una referencia .\n";
+                return error;
+            }
+        }
+
         public override string VisitLiteral(gramSQLParser.LiteralContext context)
         {
             return Visit(context.GetChild(0));
@@ -1197,7 +1309,118 @@ namespace BasesDeDatos
 
         public override string VisitSelectExpression(gramSQLParser.SelectExpressionContext context)
         {
-            throw new NotImplementedException();
+            Boolean seleccionarTodo = false;
+            if (miControl.getDBActual().Equals(""))
+            {
+                mensajeError += "No ha seleccionado una base de datos en la cual trabajar.\n";
+                return error;
+            }
+
+            String retorno = Visit(context.GetChild(3));
+
+            if (retorno.Equals(error))
+            {
+                return error;
+            }
+
+            if (context.GetChild(1).Equals("*"))
+            {
+                seleccionarTodo = true;
+            }
+            else
+            {
+                nombresCol = new List<String>();
+                conTabla = true;
+                retorno = Visit(context.GetChild(1));
+                conTabla = false;
+                if (retorno.Equals(error))
+                {
+                    return error;
+                }
+            }
+
+            if (context.ChildCount == 4)
+            {
+                if (seleccionarTodo)
+                {
+                    //llamar metodo 1 parametros (nombreTablas)
+                }
+                else
+                {
+                    //llamar metodo 2 parametros (nombreTablas, select)
+                }
+                
+            }
+            else
+            {
+                String palabra = context.GetChild(4).GetText().ToLower();
+                if (palabra.Equals("where"))
+                {
+                    expWhere = true;
+                    retorno = Visit(context.GetChild(5));
+                    expWhere = false;
+                    if (retorno.Equals(error))
+                    {
+                        return error;
+                    }
+                    List<string> whereElements = retorno.Split(new char[] { ' ' }).ToList();
+                    if (context.ChildCount == 6)
+                    {
+                        if (seleccionarTodo)
+                        {
+                            //llamar a metodo que usa 2 parametros (nombreTablas y where)
+                        }
+                        else
+                        {
+                            //llamar a metodo que usa 3 parametros (nombreTablas, select y where)
+                        }
+                        
+                    }
+                    else
+                    {
+                        tipoSort = new List<String>();
+                        columnaSort = new List<String>();
+                        retorno = Visit(context.GetChild(10));
+                        if (retorno.Equals(error))
+                        {
+                            return error;
+                        }
+
+                        if (seleccionarTodo)
+                        {
+                            //llamar metodo que usa 4 parametros (nombre, where, tipoSort, columnaSort)
+                        }
+                        else
+                        {
+                            //llamar metodo que usa 5 parametros (nombre, select, where, tipoSort, columnaSort)
+                        }
+                        
+
+                    }
+                }
+                else
+                {
+                    tipoSort = new List<String>();
+                    columnaSort = new List<String>();
+                    retorno = Visit(context.GetChild(10));
+                    if (retorno.Equals(error))
+                    {
+                        return error;
+                    }
+                    if (seleccionarTodo)
+                    {
+                        //llamar metodo que usa 3 parametros (nombre, tipoSort, columnaSort)
+                    }
+                    else
+                    {
+                        //llamar metodo que usa 4 parametros (nombre, select, tipoSort, columnaSort)
+                    }
+                    
+                }
+            }
+            
+
+
         }
 
         public override string VisitListaColumna2_nombreColumna(gramSQLParser.ListaColumna2_nombreColumnaContext context)
@@ -1212,6 +1435,36 @@ namespace BasesDeDatos
             nombresCol.Add(nombreColumna);
             return "void";
 
+
+        }
+
+        public override string VisitListaTablaColumna2_nombreColumna(gramSQLParser.ListaTablaColumna2_nombreColumnaContext context)
+        {
+            
+            //lista de columnas
+            if (conTabla)
+            {
+                String nombreColumna = Visit(context.GetChild(0));
+                if (nombreColumna.Equals(error))
+                {
+                    return error;
+                }
+
+                nombresCol.Add(nombreColumna);
+
+            }
+            //lista tablas
+            else
+            {
+                String nombreTabla= Visit(context.GetChild(0));
+                if (nombreTabla.Equals(error))
+                {
+                    return error;
+                }
+                nombresTabla.Add(nombreTabla);
+            }
+
+            return "void";
 
         }
 
@@ -1252,7 +1505,7 @@ namespace BasesDeDatos
 
         public override string VisitExpresionOrden1(gramSQLParser.ExpresionOrden1Context context)
         {
-            throw new NotImplementedException();
+            return Visit(context.GetChild(0));
         }
 
         public override string VisitListaUpdate1(gramSQLParser.ListaUpdate1Context context)
@@ -1388,6 +1641,39 @@ namespace BasesDeDatos
             return "void";
 
             
+        }
+
+        public override string VisitListaTablaColumna2_comita(gramSQLParser.ListaTablaColumna2_comitaContext context)
+        {
+            //lista de columnas
+            if (conTabla)
+            {
+                String nombreColumna = Visit(context.GetChild(0));
+                if (nombreColumna.Equals(error))
+                {
+                    return error;
+                }
+
+                nombresCol.Add(nombreColumna);
+            }
+            //lista tablas
+            else
+            {
+                String nombreTabla = Visit(context.GetChild(0));
+                if (nombreTabla.Equals(error))
+                {
+                    return error;
+                }
+                nombresTabla.Add(nombreTabla);
+            }
+
+            String retorno = Visit(context.GetChild(2));
+            if (retorno.Equals(error))
+            {
+                return error;
+            }
+
+            return "void";
         }
 
         public override string VisitExpBooleana3_expBooleana4(gramSQLParser.ExpBooleana3_expBooleana4Context context)
