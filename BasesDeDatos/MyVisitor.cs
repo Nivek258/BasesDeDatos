@@ -1272,14 +1272,22 @@ namespace BasesDeDatos
             if (!existeTabla)
             {
                 mensajeError += "no existe una tabla de nombre " + nombreTabla + ". \n";
+                return error;
             }
+
+            if (!nombresTabla.Contains(nombreTabla))
+            {
+                mensajeError += "no se especifico hacer uso de la tabla " + nombreTabla + ". \n";
+                return error;
+            }
+
             Boolean existeCol = miControl.existeColumna(nombreTabla, nombreCol);
             if (!existeCol)
             {
                 mensajeError += "no existe la columna " + nombreCol + "en la tabla "+nombreTabla+". \n";
                 return error;
             }
-            String tipoCol = tablaNueva.tipoColumna(nombreCol);
+            String tipoCol = miControl.obtenerTipoCol(nombreTabla, nombreCol);
             return tipoCol;
 
         }
@@ -1291,7 +1299,7 @@ namespace BasesDeDatos
             {
                 String nombreColumna = context.GetChild(2).GetText();
                 String nombreTabla = context.GetChild(0).GetText();
-                Boolean existe = miControl.existeTabla(nombreColumna);
+                Boolean existe = miControl.existeTabla(nombreTabla);
                 if (!existe)
                 {
                     mensajeError += "No existe la tabla de nombre " + nombreTabla + ". \n";
@@ -1412,6 +1420,7 @@ namespace BasesDeDatos
                 String palabra = context.GetChild(4).GetText().ToLower();
                 if (palabra.Equals("where"))
                 {
+                    
                     expWhere = true;
                     retorno = Visit(context.GetChild(5));
                     expWhere = false;
@@ -1478,7 +1487,9 @@ namespace BasesDeDatos
                     {
                         tipoSort = new List<String>();
                         columnaSort = new List<String>();
-                        retorno = Visit(context.GetChild(10));
+                        conTabla = true;
+                        retorno = Visit(context.GetChild(9));
+                        conTabla = false;
                         if (retorno.Equals(error))
                         {
                             return error;
@@ -1542,7 +1553,9 @@ namespace BasesDeDatos
                 {
                     tipoSort = new List<String>();
                     columnaSort = new List<String>();
-                    retorno = Visit(context.GetChild(10));
+                    conTabla = true;
+                    retorno = Visit(context.GetChild(7));
+                    conTabla = false;
                     if (retorno.Equals(error))
                     {
                         return error;
@@ -1575,7 +1588,7 @@ namespace BasesDeDatos
                     else
                     {
                         //llamar metodo que usa 4 parametros (nombre, select, tipoSort, columnaSort)
-                        List<List<Object>> tablaParaMostrar = miControl.SelectFilas(nombresTabla,columnaSort, tipoSort);
+                        List<List<Object>> tablaParaMostrar = miControl.SelectFilas(nombresTabla,nombresCol, columnaSort, tipoSort);
                         List<String> titulos = miControl.tituloColumnas;
 
                         aMostrar.ColumnCount = titulos.Count;

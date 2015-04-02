@@ -1163,7 +1163,10 @@ namespace BasesDeDatos
                 for (int i = 1; i < coleccionContenido.Count; i++)
                 {
                     conjuntoTemp = new List<List<Object>>();
-                    conjuntoTemp = productoCartesiano;
+                    for (int j = 0; j < productoCartesiano.Count; j++)
+                    {
+                        conjuntoTemp.Add(productoCartesiano[j]);
+                    }
                     productoCartesiano = new List<List<Object>>();
                     for (int j = 0; j < conjuntoTemp.Count; j++)
                     {
@@ -1171,7 +1174,10 @@ namespace BasesDeDatos
                         for (int k = 0; k < contenidoTabla2.Count; k++)
                         {
                             List<Object> fila1 = new List<Object>();
-                            fila1 = conjuntoTemp[j];
+                            for (int l = 0; l < conjuntoTemp[j].Count; l++)
+                            {
+                                fila1.Add(conjuntoTemp[j][l]);
+                            }
                             List<Object> fila2 = contenidoTabla2[k];
                             for (int l = 0; l < fila2.Count; l++)
                             {
@@ -1255,7 +1261,11 @@ namespace BasesDeDatos
                 productoCartesiano = coleccionContenido[0].listObj;
                 for (int i = 1; i < coleccionContenido.Count; i++)
                 {
-                    conjuntoTemp = productoCartesiano;
+                    conjuntoTemp = new List<List<Object>>();
+                    for (int j = 0; j < productoCartesiano.Count; j++)
+                    {
+                        conjuntoTemp.Add(productoCartesiano[j]);
+                    }
                     productoCartesiano = new List<List<Object>>();
                     for (int j = 0; j < conjuntoTemp.Count; j++)
                     {
@@ -1263,14 +1273,17 @@ namespace BasesDeDatos
                         for (int k = 0; k < contenidoTabla2.Count; k++)
                         {
                             List<Object> fila1 = new List<Object>();
-                            fila1 = conjuntoTemp[j];
+                            for (int l = 0; l < conjuntoTemp[j].Count; l++)
+                            {
+                                fila1.Add(conjuntoTemp[j][l]);
+                            }
                             List<Object> fila2 = contenidoTabla2[k];
                             for (int l = 0; l < fila2.Count; l++)
                             {
                                 fila1.Add(fila2[l]);
                             }
                             productoCartesiano.Add(fila1);
-                                
+
                         }
                     }
                 }
@@ -1349,7 +1362,11 @@ namespace BasesDeDatos
                 productoCartesiano = coleccionContenido[0].listObj;
                 for (int i = 1; i < coleccionContenido.Count; i++)
                 {
-                    conjuntoTemp = productoCartesiano;
+                    conjuntoTemp = new List<List<Object>>();
+                    for (int j = 0; j < productoCartesiano.Count; j++)
+                    {
+                        conjuntoTemp.Add(productoCartesiano[j]);
+                    }
                     productoCartesiano = new List<List<Object>>();
                     for (int j = 0; j < conjuntoTemp.Count; j++)
                     {
@@ -1357,7 +1374,10 @@ namespace BasesDeDatos
                         for (int k = 0; k < contenidoTabla2.Count; k++)
                         {
                             List<Object> fila1 = new List<Object>();
-                            fila1 = conjuntoTemp[j];
+                            for (int l = 0; l < conjuntoTemp[j].Count; l++)
+                            {
+                                fila1.Add(conjuntoTemp[j][l]);
+                            }
                             List<Object> fila2 = contenidoTabla2[k];
                             for (int l = 0; l < fila2.Count; l++)
                             {
@@ -1387,16 +1407,22 @@ namespace BasesDeDatos
             List<String> tipoColum = new List<string>();
             tituloColumnas = new List<String>();
 
-            for (int i = 0; i < tablasCreadas.getListaTB().Count; i++)
+            for (int k = 0; k < nombreTablas.Count; k++)
             {
-                Tabla tablaTemp = tablasCreadas.getListaTB()[i];
-                for (int j = 0; j < tablaTemp.columnasTB.Count; j++)
+                for (int i = 0; i < tablasCreadas.getListaTB().Count; i++)
                 {
-                    nombresColumna.Add(tablaTemp.columnasTB[j].getNombre());
-                    tipoColum.Add(tablaTemp.columnasTB[j].getTipo());
-                    TablaColumna.Add(tablaTemp.getNombre());
-                    tituloColumnas.Add(tablaTemp.getNombre() + "." + tablaTemp.columnasTB[j].getNombre());
-                    
+                    Tabla tablaTemp = tablasCreadas.getListaTB()[i];
+                    if (nombreTablas[k].Equals(tablaTemp.getNombre()))
+                    {
+                        for (int j = 0; j < tablaTemp.columnasTB.Count; j++)
+                        {
+                            nombresColumna.Add(tablaTemp.columnasTB[j].getNombre());
+                            tipoColum.Add(tablaTemp.columnasTB[j].getTipo());
+                            TablaColumna.Add(tablaTemp.getNombre());
+                            tituloColumnas.Add(tablaTemp.getNombre() + "." + tablaTemp.columnasTB[j].getNombre());
+
+                        }
+                    }
                 }
             }
 
@@ -1452,7 +1478,11 @@ namespace BasesDeDatos
                 productoCartesiano = coleccionContenido[0].listObj;
                 for (int i = 1; i < coleccionContenido.Count; i++)
                 {
-                    conjuntoTemp = productoCartesiano;
+                    conjuntoTemp = new List<List<Object>>();
+                    for (int j = 0; j < productoCartesiano.Count; j++)
+                    {
+                        conjuntoTemp.Add(productoCartesiano[j]);
+                    }
                     productoCartesiano = new List<List<Object>>();
                     for (int j = 0; j < conjuntoTemp.Count; j++)
                     {
@@ -1460,7 +1490,10 @@ namespace BasesDeDatos
                         for (int k = 0; k < contenidoTabla2.Count; k++)
                         {
                             List<Object> fila1 = new List<Object>();
-                            fila1 = conjuntoTemp[j];
+                            for (int l = 0; l < conjuntoTemp[j].Count; l++)
+                            {
+                                fila1.Add(conjuntoTemp[j][l]);
+                            }
                             List<Object> fila2 = contenidoTabla2[k];
                             for (int l = 0; l < fila2.Count; l++)
                             {
@@ -1489,16 +1522,22 @@ namespace BasesDeDatos
             List<String> TablaColumna = new List<String>();
             List<String> tipoColum = new List<string>();
             tituloColumnas = new List<String>();
-            for (int i = 0; i < tablasCreadas.getListaTB().Count; i++)
+            for (int k = 0; k < nombreTablas.Count; k++)
             {
-                Tabla tablaTemp = tablasCreadas.getListaTB()[i];
-                for (int j = 0; j < tablaTemp.columnasTB.Count; j++)
+                for (int i = 0; i < tablasCreadas.getListaTB().Count; i++)
                 {
-                    nombresColumna.Add(tablaTemp.columnasTB[j].getNombre());
-                    tipoColum.Add(tablaTemp.columnasTB[j].getTipo());
-                    TablaColumna.Add(tablaTemp.getNombre());
-                    tituloColumnas.Add(tablaTemp.getNombre() + "." + tablaTemp.columnasTB[j].getNombre());
+                    Tabla tablaTemp = tablasCreadas.getListaTB()[i];
+                    if (nombreTablas[k].Equals(tablaTemp.getNombre()))
+                    {
+                        for (int j = 0; j < tablaTemp.columnasTB.Count; j++)
+                        {
+                            nombresColumna.Add(tablaTemp.columnasTB[j].getNombre());
+                            tipoColum.Add(tablaTemp.columnasTB[j].getTipo());
+                            TablaColumna.Add(tablaTemp.getNombre());
+                            tituloColumnas.Add(tablaTemp.getNombre() + "." + tablaTemp.columnasTB[j].getNombre());
 
+                        }
+                    }
                 }
             }
 
@@ -1554,7 +1593,11 @@ namespace BasesDeDatos
                 productoCartesiano = coleccionContenido[0].listObj;
                 for (int i = 1; i < coleccionContenido.Count; i++)
                 {
-                    conjuntoTemp = productoCartesiano;
+                    conjuntoTemp = new List<List<Object>>();
+                    for (int j = 0; j < productoCartesiano.Count; j++)
+                    {
+                        conjuntoTemp.Add(productoCartesiano[j]);
+                    }
                     productoCartesiano = new List<List<Object>>();
                     for (int j = 0; j < conjuntoTemp.Count; j++)
                     {
@@ -1562,7 +1605,10 @@ namespace BasesDeDatos
                         for (int k = 0; k < contenidoTabla2.Count; k++)
                         {
                             List<Object> fila1 = new List<Object>();
-                            fila1 = conjuntoTemp[j];
+                            for (int l = 0; l < conjuntoTemp[j].Count; l++)
+                            {
+                                fila1.Add(conjuntoTemp[j][l]);
+                            }
                             List<Object> fila2 = contenidoTabla2[k];
                             for (int l = 0; l < fila2.Count; l++)
                             {
@@ -1591,19 +1637,24 @@ namespace BasesDeDatos
             List<String> TablaColumna = new List<String>();
             List<String> tipoColum = new List<string>();
             List<String> tituloColumna = new List<String>();
-            for (int i = 0; i < tablasCreadas.getListaTB().Count; i++)
+            for (int k = 0; k < nombreTablas.Count; k++)
             {
-                Tabla tablaTemp = tablasCreadas.getListaTB()[i];
-                for (int j = 0; j < tablaTemp.columnasTB.Count; j++)
+                for (int i = 0; i < tablasCreadas.getListaTB().Count; i++)
                 {
-                    nombresColumna.Add(tablaTemp.columnasTB[j].getNombre());
-                    tipoColum.Add(tablaTemp.columnasTB[j].getTipo());
-                    TablaColumna.Add(tablaTemp.getNombre());
-                    tituloColumnas.Add(tablaTemp.getNombre() + "." + tablaTemp.columnasTB[j].getNombre());
+                    Tabla tablaTemp = tablasCreadas.getListaTB()[i];
+                    if (nombreTablas[k].Equals(tablaTemp.getNombre()))
+                    {
+                        for (int j = 0; j < tablaTemp.columnasTB.Count; j++)
+                        {
+                            nombresColumna.Add(tablaTemp.columnasTB[j].getNombre());
+                            tipoColum.Add(tablaTemp.columnasTB[j].getTipo());
+                            TablaColumna.Add(tablaTemp.getNombre());
+                            tituloColumnas.Add(tablaTemp.getNombre() + "." + tablaTemp.columnasTB[j].getNombre());
 
+                        }
+                    }
                 }
             }
-
             //Reducir la tabla incluyendo solo donde se cumple el where
 
             List<List<Object>> cumplenWhere = new List<List<Object>>();
@@ -1659,7 +1710,11 @@ namespace BasesDeDatos
                 productoCartesiano = coleccionContenido[0].listObj;
                 for (int i = 1; i < coleccionContenido.Count; i++)
                 {
-                    conjuntoTemp = productoCartesiano;
+                    conjuntoTemp = new List<List<Object>>();
+                    for (int j = 0; j < productoCartesiano.Count; j++)
+                    {
+                        conjuntoTemp.Add(productoCartesiano[j]);
+                    }
                     productoCartesiano = new List<List<Object>>();
                     for (int j = 0; j < conjuntoTemp.Count; j++)
                     {
@@ -1667,7 +1722,10 @@ namespace BasesDeDatos
                         for (int k = 0; k < contenidoTabla2.Count; k++)
                         {
                             List<Object> fila1 = new List<Object>();
-                            fila1 = conjuntoTemp[j];
+                            for (int l = 0; l < conjuntoTemp[j].Count; l++)
+                            {
+                                fila1.Add(conjuntoTemp[j][l]);
+                            }
                             List<Object> fila2 = contenidoTabla2[k];
                             for (int l = 0; l < fila2.Count; l++)
                             {
@@ -1696,15 +1754,21 @@ namespace BasesDeDatos
             List<String> TablaColumna = new List<String>();
             List<String> tipoColum = new List<string>();
             List<String> tituloColumna = new List<String>();
-            for (int i = 0; i < tablasCreadas.getListaTB().Count; i++)
+            for (int k = 0; k < nombreTablas.Count; k++)
             {
-                Tabla tablaTemp = tablasCreadas.getListaTB()[i];
-                for (int j = 0; j < tablaTemp.columnasTB.Count; j++)
+                for (int i = 0; i < tablasCreadas.getListaTB().Count; i++)
                 {
-                    nombresColumna.Add(tablaTemp.columnasTB[j].getNombre());
-                    tipoColum.Add(tablaTemp.columnasTB[j].getTipo());
-                    TablaColumna.Add(tablaTemp.getNombre());
-                    tituloColumnas.Add(tablaTemp.getNombre() + "." + tablaTemp.columnasTB[j].getNombre());
+                    Tabla tablaTemp = tablasCreadas.getListaTB()[i];
+                    if (nombreTablas[k].Equals(tablaTemp.getNombre()))
+                    {
+                        for (int j = 0; j < tablaTemp.columnasTB.Count; j++)
+                        {
+                            nombresColumna.Add(tablaTemp.columnasTB[j].getNombre());
+                            tipoColum.Add(tablaTemp.columnasTB[j].getTipo());
+                            TablaColumna.Add(tablaTemp.getNombre());
+                            tituloColumnas.Add(tablaTemp.getNombre() + "." + tablaTemp.columnasTB[j].getNombre());
+                        }
+                    }
                 }
             }
 
@@ -1766,7 +1830,11 @@ namespace BasesDeDatos
                 productoCartesiano = coleccionContenido[0].listObj;
                 for (int i = 1; i < coleccionContenido.Count; i++)
                 {
-                    conjuntoTemp = productoCartesiano;
+                    conjuntoTemp = new List<List<Object>>();
+                    for (int j = 0; j < productoCartesiano.Count; j++)
+                    {
+                        conjuntoTemp.Add(productoCartesiano[j]);
+                    }
                     productoCartesiano = new List<List<Object>>();
                     for (int j = 0; j < conjuntoTemp.Count; j++)
                     {
@@ -1774,7 +1842,10 @@ namespace BasesDeDatos
                         for (int k = 0; k < contenidoTabla2.Count; k++)
                         {
                             List<Object> fila1 = new List<Object>();
-                            fila1 = conjuntoTemp[j];
+                            for (int l = 0; l < conjuntoTemp[j].Count; l++)
+                            {
+                                fila1.Add(conjuntoTemp[j][l]);
+                            }
                             List<Object> fila2 = contenidoTabla2[k];
                             for (int l = 0; l < fila2.Count; l++)
                             {
@@ -1803,15 +1874,21 @@ namespace BasesDeDatos
             List<String> TablaColumna = new List<String>();
             List<String> tipoColum = new List<string>();
             List<String> tituloColum = new List<String>();
-            for (int i = 0; i < tablasCreadas.getListaTB().Count; i++)
+            for (int k = 0; k < nombreTablas.Count; k++)
             {
-                Tabla tablaTemp = tablasCreadas.getListaTB()[i];
-                for (int j = 0; j < tablaTemp.columnasTB.Count; j++)
+                for (int i = 0; i < tablasCreadas.getListaTB().Count; i++)
                 {
-                    nombresColumna.Add(tablaTemp.columnasTB[j].getNombre());
-                    tipoColum.Add(tablaTemp.columnasTB[j].getTipo());
-                    TablaColumna.Add(tablaTemp.getNombre());
-                    tituloColumnas.Add(tablaTemp.getNombre() + "." + tablaTemp.columnasTB[j].getNombre());
+                    Tabla tablaTemp = tablasCreadas.getListaTB()[i];
+                    if (nombreTablas[k].Equals(tablaTemp.getNombre()))
+                    {
+                        for (int j = 0; j < tablaTemp.columnasTB.Count; j++)
+                        {
+                            nombresColumna.Add(tablaTemp.columnasTB[j].getNombre());
+                            tipoColum.Add(tablaTemp.columnasTB[j].getTipo());
+                            TablaColumna.Add(tablaTemp.getNombre());
+                            tituloColumnas.Add(tablaTemp.getNombre() + "." + tablaTemp.columnasTB[j].getNombre());
+                        }
+                    }
                 }
             }
 
@@ -1857,7 +1934,11 @@ namespace BasesDeDatos
                 productoCartesiano = coleccionContenido[0].listObj;
                 for (int i = 1; i < coleccionContenido.Count; i++)
                 {
-                    conjuntoTemp = productoCartesiano;
+                    conjuntoTemp = new List<List<Object>>();
+                    for (int j = 0; j < productoCartesiano.Count; j++)
+                    {
+                        conjuntoTemp.Add(productoCartesiano[j]);
+                    }
                     productoCartesiano = new List<List<Object>>();
                     for (int j = 0; j < conjuntoTemp.Count; j++)
                     {
@@ -1865,7 +1946,10 @@ namespace BasesDeDatos
                         for (int k = 0; k < contenidoTabla2.Count; k++)
                         {
                             List<Object> fila1 = new List<Object>();
-                            fila1 = conjuntoTemp[j];
+                            for (int l = 0; l < conjuntoTemp[j].Count; l++)
+                            {
+                                fila1.Add(conjuntoTemp[j][l]);
+                            }
                             List<Object> fila2 = contenidoTabla2[k];
                             for (int l = 0; l < fila2.Count; l++)
                             {
@@ -1894,15 +1978,21 @@ namespace BasesDeDatos
             List<String> TablaColumna = new List<String>();
             List<String> tipoColum = new List<string>();
             List<String> tituloColumna = new List<String>();
-            for (int i = 0; i < tablasCreadas.getListaTB().Count; i++)
+            for (int k = 0; k < nombreTablas.Count; k++)
             {
-                Tabla tablaTemp = tablasCreadas.getListaTB()[i];
-                for (int j = 0; j < tablaTemp.columnasTB.Count; j++)
+                for (int i = 0; i < tablasCreadas.getListaTB().Count; i++)
                 {
-                    nombresColumna.Add(tablaTemp.columnasTB[j].getNombre());
-                    tipoColum.Add(tablaTemp.columnasTB[j].getTipo());
-                    TablaColumna.Add(tablaTemp.getNombre());
-                    tituloColumnas.Add(tablaTemp.getNombre() + "." + tablaTemp.columnasTB[j].getNombre());
+                    Tabla tablaTemp = tablasCreadas.getListaTB()[i];
+                    if (nombreTablas[k].Equals(tablaTemp.getNombre()))
+                    {
+                        for (int j = 0; j < tablaTemp.columnasTB.Count; j++)
+                        {
+                            nombresColumna.Add(tablaTemp.columnasTB[j].getNombre());
+                            tipoColum.Add(tablaTemp.columnasTB[j].getTipo());
+                            TablaColumna.Add(tablaTemp.getNombre());
+                            tituloColumnas.Add(tablaTemp.getNombre() + "." + tablaTemp.columnasTB[j].getNombre());
+                        }
+                    }
                 }
             }
 
@@ -1926,9 +2016,9 @@ namespace BasesDeDatos
                 //obtener indice
                 if(columnasOrdenar[i].Contains(".")){
                     String nombreTabla = columnasOrdenar[i].Substring(0,columnasOrdenar[i].IndexOf("."));
-                    String nombreColumna2 = columnasOrdenar[i].Substring(columnasOrdenar[i].IndexOf(".") + 1, columnasOrdenar[i].Length - columnasOrdenar[i].IndexOf("."));
+                    String nombreColumna2 = columnasOrdenar[i].Substring(columnasOrdenar[i].IndexOf(".") + 1, columnasOrdenar[i].Length - (columnasOrdenar[i].IndexOf(".")+1));
                     for(int j = 0; j < nombresCol.Count; j++){
-                        if(nombreTabla.Equals(nombresCol[j])&&nombreTabla.Equals(nombreTabla[j])){
+                        if(nombreColumna2.Equals(nombresCol[j])&&nombreTabla.Equals(TablaCol[j])){
                             indiceColumna = j;
                             tipoC = tipoCol[j];
                         }
@@ -1942,10 +2032,12 @@ namespace BasesDeDatos
                         }
                     }
                 }
-                
 
-
-                conjuntoTemp = tablaOrdenada;
+                conjuntoTemp = new List<List<Object>>();
+                for (int j = 0; j < tablaOrdenada.Count; j++)
+                {
+                    conjuntoTemp.Add(tablaOrdenada[j]);
+                }
                 tablaOrdenada = new List<List<Object>>();
                 for (int j = 0; j < conjuntoTemp.Count; j++)
                 {
@@ -1976,6 +2068,11 @@ namespace BasesDeDatos
                                                 tablaOrdenada.Insert(k,conjuntoTemp[j]);
                                                 k = tablaOrdenada.Count;
                                             }
+                                            else if (k == tablaOrdenada.Count - 1)
+                                            {
+                                                tablaOrdenada.Add(conjuntoTemp[j]);
+                                                k = tablaOrdenada.Count;
+                                            }
                                         }
                                     }
                                 }
@@ -2003,6 +2100,16 @@ namespace BasesDeDatos
                                                 tablaOrdenada.Insert(k,conjuntoTemp[j]);
                                                 k = tablaOrdenada.Count;
                                             }
+                                            else if (k == tablaOrdenada.Count - 1)
+                                            {
+                                                tablaOrdenada.Add(conjuntoTemp[j]);
+                                                k = tablaOrdenada.Count;
+                                            }
+                                        }
+                                        else if (k == tablaOrdenada.Count - 1)
+                                        {
+                                            tablaOrdenada.Add(conjuntoTemp[j]);
+                                            k = tablaOrdenada.Count;
                                         }
                                     }
                                 }
@@ -2031,6 +2138,11 @@ namespace BasesDeDatos
                                                 tablaOrdenada.Insert(k,conjuntoTemp[j]);
                                                 k = tablaOrdenada.Count;
                                             }
+                                            else if (k == tablaOrdenada.Count - 1)
+                                            {
+                                                tablaOrdenada.Add(conjuntoTemp[j]);
+                                                k = tablaOrdenada.Count;
+                                            }
                                         }
                                     }
                                 }
@@ -2058,6 +2170,16 @@ namespace BasesDeDatos
                                                 tablaOrdenada.Insert(k,conjuntoTemp[j]);
                                                 k = tablaOrdenada.Count;
                                             }
+                                            else if (k == tablaOrdenada.Count - 1)
+                                            {
+                                                tablaOrdenada.Add(conjuntoTemp[j]);
+                                                k = tablaOrdenada.Count;
+                                            }
+                                        }
+                                        else if (k == tablaOrdenada.Count - 1)
+                                        {
+                                            tablaOrdenada.Add(conjuntoTemp[j]);
+                                            k = tablaOrdenada.Count;
                                         }
                                     }
                                 }
@@ -2084,6 +2206,11 @@ namespace BasesDeDatos
                                             if(fecha1>fecha2)
                                             {
                                                 tablaOrdenada.Insert(k,conjuntoTemp[j]);
+                                                k = tablaOrdenada.Count;
+                                            }
+                                            else if (k == tablaOrdenada.Count - 1)
+                                            {
+                                                tablaOrdenada.Add(conjuntoTemp[j]);
                                                 k = tablaOrdenada.Count;
                                             }
                                         }
@@ -2113,6 +2240,16 @@ namespace BasesDeDatos
                                                 tablaOrdenada.Insert(k,conjuntoTemp[j]);
                                                 k = tablaOrdenada.Count;
                                             }
+                                            else if (k == tablaOrdenada.Count - 1)
+                                            {
+                                                tablaOrdenada.Add(conjuntoTemp[j]);
+                                                k = tablaOrdenada.Count;
+                                            }
+                                        }
+                                        else if (k == tablaOrdenada.Count - 1)
+                                        {
+                                            tablaOrdenada.Add(conjuntoTemp[j]);
+                                            k = tablaOrdenada.Count;
                                         }
                                     }
                                 }
@@ -2146,6 +2283,11 @@ namespace BasesDeDatos
                                                 tablaOrdenada.Insert(k, conjuntoTemp[j]);
                                                 k = tablaOrdenada.Count;
                                             }
+                                            else if (k == tablaOrdenada.Count - 1)
+                                            {
+                                                tablaOrdenada.Add(conjuntoTemp[j]);
+                                                k = tablaOrdenada.Count;
+                                            }
                                         }
                                     }
                                 }
@@ -2176,6 +2318,16 @@ namespace BasesDeDatos
                                                 tablaOrdenada.Insert(k, conjuntoTemp[j]);
                                                 k = tablaOrdenada.Count;
                                             }
+                                            else if (k == tablaOrdenada.Count - 1)
+                                            {
+                                                tablaOrdenada.Add(conjuntoTemp[j]);
+                                                k = tablaOrdenada.Count;
+                                            }
+                                        }
+                                        else if (k == tablaOrdenada.Count - 1)
+                                        {
+                                            tablaOrdenada.Add(conjuntoTemp[j]);
+                                            k = tablaOrdenada.Count;
                                         }
                                     }
                                 }
@@ -2201,14 +2353,14 @@ namespace BasesDeDatos
                 if (columnasMostrar[i].Contains("."))
                 {
                     String nombreTabla = columnasMostrar[i].Substring(0, columnasMostrar[i].IndexOf("."));
-                    String nombreColumna2 = columnasMostrar[i].Substring(columnasMostrar[i].IndexOf(".") + 1, columnasMostrar[i].Length - columnasMostrar[i].IndexOf("."));
+                    String nombreColumna2 = columnasMostrar[i].Substring(columnasMostrar[i].IndexOf(".") + 1, columnasMostrar[i].Length - (columnasMostrar[i].IndexOf(".")+1));
 
                     for (int j = 0; j < nombreColumnas.Count; j++)
                     {
                         if (nombreColumna2.Equals(nombreColumnas[j])&&nombreTabla.Equals(tablaColumnas[j]))
                         {
                             indicesMostrar.Add(j);
-                            tituloColumnas.Add(nombreColumnas[j] + "." + tablaColumnas[j]);
+                            tituloColumnas.Add(tablaColumnas[j] + "." + nombreColumnas[j]);
                         }
                     }
                 }
@@ -2270,7 +2422,7 @@ namespace BasesDeDatos
                         {
                             int indiceElemento = 0;
                             String nombreTabla = expresionWhere[i].Substring(0, expresionWhere[i].IndexOf("."));
-                            String nombreColumna2 = expresionWhere[i].Substring(expresionWhere[i].IndexOf(".") + 1, expresionWhere[i].Length - expresionWhere[i].IndexOf("."));
+                            String nombreColumna2 = expresionWhere[i].Substring(expresionWhere[i].IndexOf(".") + 1, expresionWhere[i].Length - (expresionWhere[i].IndexOf(".")+1));
                             for (int j = 0; j < nombresCol.Count; j++)
                             {
                                 if (nombreColumna2.Equals(nombresCol[j]) && nombreTabla.Equals(TablaCol[j]))
@@ -2298,7 +2450,7 @@ namespace BasesDeDatos
                         {
                             int indiceElemento = 0;
                             String nombreTabla = expresionWhere[i].Substring(0, expresionWhere[i].IndexOf("."));
-                            String nombreColumna2 = expresionWhere[i].Substring(expresionWhere[i].IndexOf(".") + 1, expresionWhere[i].Length - expresionWhere[i].IndexOf("."));
+                            String nombreColumna2 = expresionWhere[i].Substring(expresionWhere[i].IndexOf(".") + 1, expresionWhere[i].Length - (expresionWhere[i].IndexOf(".") + 1));
                             for (int j = 0; j < nombresCol.Count; j++)
                             {
                                 if (nombreColumna2.Equals(nombresCol[j]) && nombreTabla.Equals(TablaCol[j]))
