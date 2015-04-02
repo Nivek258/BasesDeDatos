@@ -14,6 +14,7 @@ namespace BasesDeDatos
         String DBactual = "";
         public ControlTB tablasCreadas = new ControlTB();
         ControlContenido miContenido = new ControlContenido();
+        public List<String> tituloColumnas = new List<String>();
         public void inicializar()
         {
             if (File.Exists("DataDB\\archivoM.dat") == false)
@@ -602,7 +603,7 @@ namespace BasesDeDatos
                         }
                         else if (tipoElemento1.Contains("char") && tipoElemento2.Equals("date"))
                         {
-                            op1 = ((String)elemento1).Equals(((DateTime)elemento2).ToString());
+                            op1 = ((((String)elemento1).Replace("'", "")).Equals(((DateTime)elemento2).ToString()));
                         }
                         else if (tipoElemento1.Contains("char") && tipoElemento2.Contains("char"))
                         {
@@ -634,7 +635,7 @@ namespace BasesDeDatos
                         }
                         else if (tipoElemento1.Contains("char") && tipoElemento2.Equals("date"))
                         {
-                            op1 = !(((String)elemento1).Equals(((DateTime)elemento2).ToString()));
+                            op1 = !((((String)elemento1).Replace("'","")).Equals(((DateTime)elemento2).ToString()));
                         }
                         else if (tipoElemento1.Contains("char") && tipoElemento2.Contains("char"))
                         {
@@ -1123,6 +1124,9 @@ namespace BasesDeDatos
             return columnasDelete;
         }
 
+        //Obtener lista con los nombres de las columnas
+
+
         //Muestra todo de las tablas indicadas
         public List<List<Object>> SelectFilas(List<String> nombreTablas, Boolean auxiliar)
         {
@@ -1158,6 +1162,7 @@ namespace BasesDeDatos
                 productoCartesiano = coleccionContenido[0].listObj;
                 for (int i = 1; i < coleccionContenido.Count; i++)
                 {
+                    conjuntoTemp = new List<List<Object>>();
                     conjuntoTemp = productoCartesiano;
                     productoCartesiano = new List<List<Object>>();
                     for (int j = 0; j < conjuntoTemp.Count; j++)
@@ -1170,7 +1175,7 @@ namespace BasesDeDatos
                             List<Object> fila2 = contenidoTabla2[k];
                             for (int l = 0; l < fila2.Count; l++)
                             {
-                                fila1.Add(fila2[0]);
+                                fila1.Add(fila2[l]);
                             }
                             productoCartesiano.Add(fila1);
                                 
@@ -1178,7 +1183,39 @@ namespace BasesDeDatos
                     }
                 }
             }
-            
+
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+                tablasCreadas = DeSerializarTabla(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+
+
+            //Realizar listas para conocer nombre y tabla
+            List<String> nombresColumna = new List<String>();
+            List<String> TablaColumna = new List<String>();
+            tituloColumnas = new List<String>();
+            for (int k = 0; k < nombreTablas.Count; k++)
+            {
+                for (int i = 0; i < tablasCreadas.getListaTB().Count; i++)
+                {
+                    Tabla tablaTemp = tablasCreadas.getListaTB()[i];
+                    if(nombreTablas[k].Equals(tablaTemp.getNombre())){
+                        for (int j = 0; j < tablaTemp.columnasTB.Count; j++)
+                        {
+                            nombresColumna.Add(tablaTemp.columnasTB[j].getNombre());
+                            TablaColumna.Add(tablaTemp.getNombre());
+                            tituloColumnas.Add(tablaTemp.getNombre() + "." + tablaTemp.columnasTB[j].getNombre());
+                        }
+                    }
+                }
+            }
+
+
             return productoCartesiano;
 
         }
@@ -1230,7 +1267,7 @@ namespace BasesDeDatos
                             List<Object> fila2 = contenidoTabla2[k];
                             for (int l = 0; l < fila2.Count; l++)
                             {
-                                fila1.Add(fila2[0]);
+                                fila1.Add(fila2[l]);
                             }
                             productoCartesiano.Add(fila1);
                                 
@@ -1253,18 +1290,24 @@ namespace BasesDeDatos
             //Realizar listas para conocer nombre y tabla
             List<String> nombresColumna = new List<String>();
             List<String> TablaColumna = new List<String>();
-
-            for(int i = 0; i<tablasCreadas.getListaTB().Count;i++)
+            tituloColumnas = new List<String>();
+            for (int k = 0; k < nombreTablas.Count; k++)
             {
-                Tabla tablaTemp = tablasCreadas.getListaTB()[i];
-                for(int j = 0; j<tablaTemp.columnasTB.Count;j++){
-                    nombresColumna.Add(tablaTemp.columnasTB[j].getNombre());
-                    TablaColumna.Add(tablaTemp.getNombre());
+                for (int i = 0; i < tablasCreadas.getListaTB().Count; i++)
+                {
+                    Tabla tablaTemp = tablasCreadas.getListaTB()[i];
+                    if (nombreTablas[k].Equals(tablaTemp.getNombre()))
+                    {
+                        for (int j = 0; j < tablaTemp.columnasTB.Count; j++)
+                        {
+                            nombresColumna.Add(tablaTemp.columnasTB[j].getNombre());
+                            TablaColumna.Add(tablaTemp.getNombre());
+                            tituloColumnas.Add(tablaTemp.getNombre() + "." + tablaTemp.columnasTB[j].getNombre());
+                        }
+                    }
+                    
                 }
             }
-
-
-            
 
             //Llamar metodo para seleccionar columnas
             return obtenerSelect(productoCartesiano, columnasSeleccionadas, nombresColumna, TablaColumna);
@@ -1318,7 +1361,7 @@ namespace BasesDeDatos
                             List<Object> fila2 = contenidoTabla2[k];
                             for (int l = 0; l < fila2.Count; l++)
                             {
-                                fila1.Add(fila2[0]);
+                                fila1.Add(fila2[l]);
                             }
                             productoCartesiano.Add(fila1);
 
@@ -1342,6 +1385,7 @@ namespace BasesDeDatos
             List<String> nombresColumna = new List<String>();
             List<String> TablaColumna = new List<String>();
             List<String> tipoColum = new List<string>();
+            tituloColumnas = new List<String>();
 
             for (int i = 0; i < tablasCreadas.getListaTB().Count; i++)
             {
@@ -1351,6 +1395,7 @@ namespace BasesDeDatos
                     nombresColumna.Add(tablaTemp.columnasTB[j].getNombre());
                     tipoColum.Add(tablaTemp.columnasTB[j].getTipo());
                     TablaColumna.Add(tablaTemp.getNombre());
+                    tituloColumnas.Add(tablaTemp.getNombre() + "." + tablaTemp.columnasTB[j].getNombre());
                     
                 }
             }
@@ -1419,7 +1464,7 @@ namespace BasesDeDatos
                             List<Object> fila2 = contenidoTabla2[k];
                             for (int l = 0; l < fila2.Count; l++)
                             {
-                                fila1.Add(fila2[0]);
+                                fila1.Add(fila2[l]);
                             }
                             productoCartesiano.Add(fila1);
 
@@ -1443,7 +1488,7 @@ namespace BasesDeDatos
             List<String> nombresColumna = new List<String>();
             List<String> TablaColumna = new List<String>();
             List<String> tipoColum = new List<string>();
-
+            tituloColumnas = new List<String>();
             for (int i = 0; i < tablasCreadas.getListaTB().Count; i++)
             {
                 Tabla tablaTemp = tablasCreadas.getListaTB()[i];
@@ -1452,6 +1497,7 @@ namespace BasesDeDatos
                     nombresColumna.Add(tablaTemp.columnasTB[j].getNombre());
                     tipoColum.Add(tablaTemp.columnasTB[j].getTipo());
                     TablaColumna.Add(tablaTemp.getNombre());
+                    tituloColumnas.Add(tablaTemp.getNombre() + "." + tablaTemp.columnasTB[j].getNombre());
 
                 }
             }
@@ -1474,7 +1520,7 @@ namespace BasesDeDatos
 
 //
         //Muestra todo de las tablas indicadas cuando se cumple where en el orden especificado
-        public List<List<Object>> SelectFilas(List<String> nombreTablas, List<String> expWhere, Boolean auxiliar)
+        public List<List<Object>> SelectFilas(List<String> nombreTablas, List<String> expWhere, List<String> columnasOrden, List<String> tipoOrden, Boolean auxiliar)
         {
             String contenido;
             List<ControlContenido> coleccionContenido = new List<ControlContenido>();
@@ -1520,7 +1566,7 @@ namespace BasesDeDatos
                             List<Object> fila2 = contenidoTabla2[k];
                             for (int l = 0; l < fila2.Count; l++)
                             {
-                                fila1.Add(fila2[0]);
+                                fila1.Add(fila2[l]);
                             }
                             productoCartesiano.Add(fila1);
 
@@ -1544,7 +1590,7 @@ namespace BasesDeDatos
             List<String> nombresColumna = new List<String>();
             List<String> TablaColumna = new List<String>();
             List<String> tipoColum = new List<string>();
-
+            List<String> tituloColumna = new List<String>();
             for (int i = 0; i < tablasCreadas.getListaTB().Count; i++)
             {
                 Tabla tablaTemp = tablasCreadas.getListaTB()[i];
@@ -1553,6 +1599,7 @@ namespace BasesDeDatos
                     nombresColumna.Add(tablaTemp.columnasTB[j].getNombre());
                     tipoColum.Add(tablaTemp.columnasTB[j].getTipo());
                     TablaColumna.Add(tablaTemp.getNombre());
+                    tituloColumnas.Add(tablaTemp.getNombre() + "." + tablaTemp.columnasTB[j].getNombre());
 
                 }
             }
@@ -1571,7 +1618,300 @@ namespace BasesDeDatos
                 }
             }
 
-            return cumplenWhere;
+
+            //generar el orden 
+            return ordenarContenido(cumplenWhere, columnasOrden, tipoOrden, nombresColumna, tipoColum, TablaColumna);
+
+        }
+
+        //Muestra lo indicado de las tablas indicadas cuando se cumple where en el orden especificado
+        public List<List<Object>> SelectFilas(List<String> nombreTablas, List<String> columnasSeleccionadas, List<String> expWhere, List<String> columnasOrden, List<String> tipoOrden)
+        {
+            String contenido;
+            List<ControlContenido> coleccionContenido = new List<ControlContenido>();
+            List<List<Object>> productoCartesiano = new List<List<Object>>();
+
+            //Lista de contenidos
+            for (int i = 0; i < nombreTablas.Count; i++)
+            {
+                try
+                {
+                    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTablas[i] + ".dat");
+                    miContenido = new ControlContenido();
+                    miContenido = DeSerializarContenido(contenido);
+                    coleccionContenido.Add(miContenido);
+                }
+                catch (Exception e)
+                {
+                    miContenido = new ControlContenido();
+                    coleccionContenido.Add(miContenido);
+                }
+            }
+
+            if (coleccionContenido.Count == 1)
+            {
+                productoCartesiano = coleccionContenido[0].listObj;
+            }
+            else
+            {
+                //Realizar producto cartesiano
+                List<List<Object>> conjuntoTemp = new List<List<Object>>();
+                productoCartesiano = coleccionContenido[0].listObj;
+                for (int i = 1; i < coleccionContenido.Count; i++)
+                {
+                    conjuntoTemp = productoCartesiano;
+                    productoCartesiano = new List<List<Object>>();
+                    for (int j = 0; j < conjuntoTemp.Count; j++)
+                    {
+                        List<List<Object>> contenidoTabla2 = coleccionContenido[i].listObj;
+                        for (int k = 0; k < contenidoTabla2.Count; k++)
+                        {
+                            List<Object> fila1 = new List<Object>();
+                            fila1 = conjuntoTemp[j];
+                            List<Object> fila2 = contenidoTabla2[k];
+                            for (int l = 0; l < fila2.Count; l++)
+                            {
+                                fila1.Add(fila2[l]);
+                            }
+                            productoCartesiano.Add(fila1);
+
+                        }
+                    }
+                }
+            }
+
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+                tablasCreadas = DeSerializarTabla(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+
+
+            //Realizar listas para conocer nombre y tabla
+            List<String> nombresColumna = new List<String>();
+            List<String> TablaColumna = new List<String>();
+            List<String> tipoColum = new List<string>();
+            List<String> tituloColumna = new List<String>();
+            for (int i = 0; i < tablasCreadas.getListaTB().Count; i++)
+            {
+                Tabla tablaTemp = tablasCreadas.getListaTB()[i];
+                for (int j = 0; j < tablaTemp.columnasTB.Count; j++)
+                {
+                    nombresColumna.Add(tablaTemp.columnasTB[j].getNombre());
+                    tipoColum.Add(tablaTemp.columnasTB[j].getTipo());
+                    TablaColumna.Add(tablaTemp.getNombre());
+                    tituloColumnas.Add(tablaTemp.getNombre() + "." + tablaTemp.columnasTB[j].getNombre());
+                }
+            }
+
+            //Reducir la tabla incluyendo solo donde se cumple el where
+
+            List<List<Object>> cumplenWhere = new List<List<Object>>();
+            Boolean cumple = false;
+            for (int i = 0; i < productoCartesiano.Count; i++)
+            {
+                //cumple = (productoCartesiano[i], expWhere, nombreColumna, tipoColum, TablaColumna) metodo para determinar si cumple
+                cumple = verificarWhere(productoCartesiano[i], expWhere, nombresColumna, tipoColum, TablaColumna);
+                if (cumple)
+                {
+                    cumplenWhere.Add(productoCartesiano[i]);
+                }
+            }
+
+
+            //generar el orden 
+            List<List<Object>> ordenado = ordenarContenido(cumplenWhere, columnasOrden, tipoOrden, nombresColumna, tipoColum, TablaColumna);
+            
+            //Seleccionar columnas
+            return obtenerSelect(ordenado, columnasSeleccionadas, nombresColumna, TablaColumna);
+        }
+
+/////
+        //Muestra todo de las tablas indicadas en el orden especificado
+        public List<List<Object>> SelectFilas(List<String> nombreTablas, List<String> columnasOrden, List<String> tipoOrden, Boolean auxiliar)
+        {
+            String contenido;
+            List<ControlContenido> coleccionContenido = new List<ControlContenido>();
+            List<List<Object>> productoCartesiano = new List<List<Object>>();
+
+            //Lista de contenidos
+            for (int i = 0; i < nombreTablas.Count; i++)
+            {
+                try
+                {
+                    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTablas[i] + ".dat");
+                    miContenido = new ControlContenido();
+                    miContenido = DeSerializarContenido(contenido);
+                    coleccionContenido.Add(miContenido);
+                }
+                catch (Exception e)
+                {
+                    miContenido = new ControlContenido();
+                    coleccionContenido.Add(miContenido);
+                }
+            }
+
+            if (coleccionContenido.Count == 1)
+            {
+                productoCartesiano = coleccionContenido[0].listObj;
+            }
+            else
+            {
+                //Realizar producto cartesiano
+                List<List<Object>> conjuntoTemp = new List<List<Object>>();
+                productoCartesiano = coleccionContenido[0].listObj;
+                for (int i = 1; i < coleccionContenido.Count; i++)
+                {
+                    conjuntoTemp = productoCartesiano;
+                    productoCartesiano = new List<List<Object>>();
+                    for (int j = 0; j < conjuntoTemp.Count; j++)
+                    {
+                        List<List<Object>> contenidoTabla2 = coleccionContenido[i].listObj;
+                        for (int k = 0; k < contenidoTabla2.Count; k++)
+                        {
+                            List<Object> fila1 = new List<Object>();
+                            fila1 = conjuntoTemp[j];
+                            List<Object> fila2 = contenidoTabla2[k];
+                            for (int l = 0; l < fila2.Count; l++)
+                            {
+                                fila1.Add(fila2[l]);
+                            }
+                            productoCartesiano.Add(fila1);
+
+                        }
+                    }
+                }
+            }
+
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+                tablasCreadas = DeSerializarTabla(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+
+
+            //Realizar listas para conocer nombre y tabla
+            List<String> nombresColumna = new List<String>();
+            List<String> TablaColumna = new List<String>();
+            List<String> tipoColum = new List<string>();
+            List<String> tituloColum = new List<String>();
+            for (int i = 0; i < tablasCreadas.getListaTB().Count; i++)
+            {
+                Tabla tablaTemp = tablasCreadas.getListaTB()[i];
+                for (int j = 0; j < tablaTemp.columnasTB.Count; j++)
+                {
+                    nombresColumna.Add(tablaTemp.columnasTB[j].getNombre());
+                    tipoColum.Add(tablaTemp.columnasTB[j].getTipo());
+                    TablaColumna.Add(tablaTemp.getNombre());
+                    tituloColumnas.Add(tablaTemp.getNombre() + "." + tablaTemp.columnasTB[j].getNombre());
+                }
+            }
+
+
+
+            //generar el orden 
+            return ordenarContenido(productoCartesiano, columnasOrden, tipoOrden, nombresColumna, tipoColum, TablaColumna);
+
+        }
+
+        //Muestra lo indicado de las tablas indicadas  en el orden especificado
+        public List<List<Object>> SelectFilas(List<String> nombreTablas, List<String> columnasSeleccionadas, List<String> columnasOrden, List<String> tipoOrden)
+        {
+            String contenido;
+            List<ControlContenido> coleccionContenido = new List<ControlContenido>();
+            List<List<Object>> productoCartesiano = new List<List<Object>>();
+
+            //Lista de contenidos
+            for (int i = 0; i < nombreTablas.Count; i++)
+            {
+                try
+                {
+                    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTablas[i] + ".dat");
+                    miContenido = new ControlContenido();
+                    miContenido = DeSerializarContenido(contenido);
+                    coleccionContenido.Add(miContenido);
+                }
+                catch (Exception e)
+                {
+                    miContenido = new ControlContenido();
+                    coleccionContenido.Add(miContenido);
+                }
+            }
+
+            if (coleccionContenido.Count == 1)
+            {
+                productoCartesiano = coleccionContenido[0].listObj;
+            }
+            else
+            {
+                //Realizar producto cartesiano
+                List<List<Object>> conjuntoTemp = new List<List<Object>>();
+                productoCartesiano = coleccionContenido[0].listObj;
+                for (int i = 1; i < coleccionContenido.Count; i++)
+                {
+                    conjuntoTemp = productoCartesiano;
+                    productoCartesiano = new List<List<Object>>();
+                    for (int j = 0; j < conjuntoTemp.Count; j++)
+                    {
+                        List<List<Object>> contenidoTabla2 = coleccionContenido[i].listObj;
+                        for (int k = 0; k < contenidoTabla2.Count; k++)
+                        {
+                            List<Object> fila1 = new List<Object>();
+                            fila1 = conjuntoTemp[j];
+                            List<Object> fila2 = contenidoTabla2[k];
+                            for (int l = 0; l < fila2.Count; l++)
+                            {
+                                fila1.Add(fila2[l]);
+                            }
+                            productoCartesiano.Add(fila1);
+
+                        }
+                    }
+                }
+            }
+
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+                tablasCreadas = DeSerializarTabla(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+
+
+            //Realizar listas para conocer nombre y tabla
+            List<String> nombresColumna = new List<String>();
+            List<String> TablaColumna = new List<String>();
+            List<String> tipoColum = new List<string>();
+            List<String> tituloColumna = new List<String>();
+            for (int i = 0; i < tablasCreadas.getListaTB().Count; i++)
+            {
+                Tabla tablaTemp = tablasCreadas.getListaTB()[i];
+                for (int j = 0; j < tablaTemp.columnasTB.Count; j++)
+                {
+                    nombresColumna.Add(tablaTemp.columnasTB[j].getNombre());
+                    tipoColum.Add(tablaTemp.columnasTB[j].getTipo());
+                    TablaColumna.Add(tablaTemp.getNombre());
+                    tituloColumnas.Add(tablaTemp.getNombre() + "." + tablaTemp.columnasTB[j].getNombre());
+                }
+            }
+
+
+            //generar el orden 
+            List<List<Object>> ordenado = ordenarContenido(productoCartesiano, columnasOrden, tipoOrden, nombresColumna, tipoColum, TablaColumna);
+
+            //Seleccionar columnas
+            return obtenerSelect(ordenado, columnasSeleccionadas, nombresColumna, TablaColumna);
         }
 
         public List<List<Object>> ordenarContenido(List<List<Object>> tablaCompleta, List<String> columnasOrdenar, List<String> tipoOrdenamiento, List<String> nombresCol, List<String> tipoCol, List<String> TablaCol)
@@ -1588,7 +1928,7 @@ namespace BasesDeDatos
                     String nombreTabla = columnasOrdenar[i].Substring(0,columnasOrdenar[i].IndexOf("."));
                     String nombreColumna2 = columnasOrdenar[i].Substring(columnasOrdenar[i].IndexOf(".") + 1, columnasOrdenar[i].Length - columnasOrdenar[i].IndexOf("."));
                     for(int j = 0; j < nombresCol.Count; j++){
-                        if(nombreTabla.Equals(nombresCol[j])&&nombreTabla.Equals(nombreTabla[j]){
+                        if(nombreTabla.Equals(nombresCol[j])&&nombreTabla.Equals(nombreTabla[j])){
                             indiceColumna = j;
                             tipoC = tipoCol[j];
                         }
@@ -1629,8 +1969,8 @@ namespace BasesDeDatos
                                             k = tablaOrdenada.Count;
                                         }
                                         else{
-                                            int num1 = Convert.ToInt32(tablaOrdenada[k][indiceColumna]);
-                                            int num2 = Convert.ToInt32(conjuntoTemp[j][indiceColumna]);
+                                            int num1 = (Int32)tablaOrdenada[k][indiceColumna];
+                                            int num2 = (Int32)conjuntoTemp[j][indiceColumna];
                                             if(num1>num2)
                                             {
                                                 tablaOrdenada.Insert(k,conjuntoTemp[j]);
@@ -1656,8 +1996,8 @@ namespace BasesDeDatos
                                     {
                                         if(tablaOrdenada[k][indiceColumna]!=null)
                                         {
-                                            int num1 = Convert.ToInt32(tablaOrdenada[k][indiceColumna]);
-                                            int num2 = Convert.ToInt32(conjuntoTemp[j][indiceColumna]);
+                                            int num1 = (Int32)(tablaOrdenada[k][indiceColumna]);
+                                            int num2 = (Int32)(conjuntoTemp[j][indiceColumna]);
                                             if(num1<num2)
                                             {
                                                 tablaOrdenada.Insert(k,conjuntoTemp[j]);
@@ -1684,8 +2024,8 @@ namespace BasesDeDatos
                                             k = tablaOrdenada.Count;
                                         }
                                         else{
-                                            float num1 = Convert.ToSingle(tablaOrdenada[k][indiceColumna]);
-                                            float num2 = Convert.ToSingle(conjuntoTemp[j][indiceColumna]);
+                                            float num1 = (Single)(tablaOrdenada[k][indiceColumna]);
+                                            float num2 = (Single)(conjuntoTemp[j][indiceColumna]);
                                             if(num1>num2)
                                             {
                                                 tablaOrdenada.Insert(k,conjuntoTemp[j]);
@@ -1711,8 +2051,8 @@ namespace BasesDeDatos
                                     {
                                         if(tablaOrdenada[k][indiceColumna]!=null)
                                         {
-                                            float num1 = Convert.ToSingle(tablaOrdenada[k][indiceColumna]);
-                                            float num2 = Convert.ToSingle(conjuntoTemp[j][indiceColumna]);
+                                            float num1 = (Single)(tablaOrdenada[k][indiceColumna]);
+                                            float num2 = (Single)(conjuntoTemp[j][indiceColumna]);
                                             if(num1<num2)
                                             {
                                                 tablaOrdenada.Insert(k,conjuntoTemp[j]);
@@ -1725,15 +2065,136 @@ namespace BasesDeDatos
                             }
                             
                         }
+                        else if(tipoC.Equals("date")){
+                            if(tipoOrdenamiento[i].Equals("asc")){
+                                if(conjuntoTemp[j][indiceColumna]==null){
+                                    tablaOrdenada.Add(conjuntoTemp[j]);
+                                }
+                                else{
+                                    for (int k = 0; k < tablaOrdenada.Count; k++)
+                                    {
+                                        if(tablaOrdenada[k][indiceColumna]==null)
+                                        {
+                                            tablaOrdenada.Insert(k,conjuntoTemp[j]);
+                                            k = tablaOrdenada.Count;
+                                        }
+                                        else{
+                                            DateTime fecha1 = (DateTime)(tablaOrdenada[k][indiceColumna]);
+                                            DateTime fecha2 = (DateTime)(conjuntoTemp[j][indiceColumna]);
+                                            if(fecha1>fecha2)
+                                            {
+                                                tablaOrdenada.Insert(k,conjuntoTemp[j]);
+                                                k = tablaOrdenada.Count;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else{
+                                if(conjuntoTemp[j][indiceColumna]==null){
+                                    for (int k = 0; k < tablaOrdenada.Count; k++)
+                                    {
+                                        if(tablaOrdenada[k][indiceColumna]!=null)
+                                        {
+                                            tablaOrdenada.Insert(k,conjuntoTemp[j]);
+                                            k = tablaOrdenada.Count;
+                                        }
+                                    }
+                                }
+                                else{
+                                    for (int k = 0; k < tablaOrdenada.Count; k++)
+                                    {
+                                        if(tablaOrdenada[k][indiceColumna]!=null)
+                                        {
+                                            DateTime fecha1 = (DateTime)(tablaOrdenada[k][indiceColumna]);
+                                            DateTime fecha2 = (DateTime)(conjuntoTemp[j][indiceColumna]);
+                                            if(fecha1<fecha2)
+                                            {
+                                                tablaOrdenada.Insert(k,conjuntoTemp[j]);
+                                                k = tablaOrdenada.Count;
+                                            }
+                                        }
+                                    }
+                                }
+
+                            }
+                            
+                        }
+                        else
+                        {
+                            if (tipoOrdenamiento[i].Equals("asc"))
+                            {
+                                if (conjuntoTemp[j][indiceColumna] == null)
+                                {
+                                    tablaOrdenada.Add(conjuntoTemp[j]);
+                                }
+                                else
+                                {
+                                    for (int k = 0; k < tablaOrdenada.Count; k++)
+                                    {
+                                        if (tablaOrdenada[k][indiceColumna] == null)
+                                        {
+                                            tablaOrdenada.Insert(k, conjuntoTemp[j]);
+                                            k = tablaOrdenada.Count;
+                                        }
+                                        else
+                                        {
+                                            String varchar1 = ((String)tablaOrdenada[k][indiceColumna]).Replace("'", "");
+                                            String varchar2 = ((String)conjuntoTemp[j][indiceColumna]).Replace("'", "");
+                                            if (String.Compare(varchar1, varchar2) > 0)
+                                            {
+                                                tablaOrdenada.Insert(k, conjuntoTemp[j]);
+                                                k = tablaOrdenada.Count;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (conjuntoTemp[j][indiceColumna] == null)
+                                {
+                                    for (int k = 0; k < tablaOrdenada.Count; k++)
+                                    {
+                                        if (tablaOrdenada[k][indiceColumna] != null)
+                                        {
+                                            tablaOrdenada.Insert(k, conjuntoTemp[j]);
+                                            k = tablaOrdenada.Count;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    for (int k = 0; k < tablaOrdenada.Count; k++)
+                                    {
+                                        if (tablaOrdenada[k][indiceColumna] != null)
+                                        {
+                                            String varchar1 = ((String)tablaOrdenada[k][indiceColumna]).Replace("'", "");
+                                            String varchar2 = ((String)conjuntoTemp[j][indiceColumna]).Replace("'", "");
+                                            if (String.Compare(varchar1, varchar2) < 0)
+                                            {
+                                                tablaOrdenada.Insert(k, conjuntoTemp[j]);
+                                                k = tablaOrdenada.Count;
+                                            }
+                                        }
+                                    }
+                                }
+
+                            }
+
+                        }
                         
                     }
                 }
             }
+
+            return tablaOrdenada;
         }
 
         public List<List<Object>> obtenerSelect(List<List<Object>> tablaCompleta, List<String> columnasMostrar, List<String> nombreColumnas, List<String> tablaColumnas)
         {
             //Obtener indices
+            tituloColumnas = new List<String>();
             List<int> indicesMostrar = new List<int>();
             for (int i = 0; i < columnasMostrar.Count; i++)
             {
@@ -1747,6 +2208,7 @@ namespace BasesDeDatos
                         if (nombreColumna2.Equals(nombreColumnas[j])&&nombreTabla.Equals(tablaColumnas[j]))
                         {
                             indicesMostrar.Add(j);
+                            tituloColumnas.Add(nombreColumnas[j] + "." + tablaColumnas[j]);
                         }
                     }
                 }
@@ -1758,6 +2220,7 @@ namespace BasesDeDatos
                         if (nombreColumna2.Equals(nombreColumnas[j]))
                         {
                             indicesMostrar.Add(j);
+                            tituloColumnas.Add(nombreColumnas[j] + "." + tablaColumnas[j]);
                         }
                     }
                 }
@@ -2009,7 +2472,7 @@ namespace BasesDeDatos
                         }
                         else if (tipoElemento1.Contains("char") && tipoElemento2.Equals("date"))
                         {
-                            op1 = ((String)elemento1).Equals(((DateTime)elemento2).ToString());
+                            op1 = ((((String)elemento1).Replace("'","")).Equals(((DateTime)elemento2).ToString()));
                         }
                         else if (tipoElemento1.Contains("char") && tipoElemento2.Contains("char"))
                         {
@@ -2041,7 +2504,7 @@ namespace BasesDeDatos
                         }
                         else if (tipoElemento1.Contains("char") && tipoElemento2.Equals("date"))
                         {
-                            op1 = !(((String)elemento1).Equals(((DateTime)elemento2).ToString()));
+                            op1 = !((((String)elemento1).Replace("'", "")).Equals(((DateTime)elemento2).ToString()));
                         }
                         else if (tipoElemento1.Contains("char") && tipoElemento2.Contains("char"))
                         {

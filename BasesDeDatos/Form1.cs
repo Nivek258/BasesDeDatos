@@ -95,6 +95,7 @@ namespace BasesDeDatos
                 textErrores.Text = miVisitor.mensajeInsert+"\n";
                 textErrores.Text += miVisitor.mensajeUpdate + "\n";
                 textErrores.Text += miVisitor.mensajeDelete + "\n";
+                textErrores.Text += miVisitor.mensajeSelect + " \n";
                 textErrores.Text += errores;
                 
             }

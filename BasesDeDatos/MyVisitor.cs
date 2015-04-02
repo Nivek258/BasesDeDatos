@@ -15,9 +15,11 @@ namespace BasesDeDatos
         public String mensajeInsert = "";
         public String mensajeUpdate = "";
         public String mensajeDelete = "";
+        public String mensajeSelect = "";
         int numeroInsert = 0;
         int numeroUpdate = 0;
         int numeroDelete = 0;
+        int numeroSelect = 0;
         ControlDirectorios miControl = new ControlDirectorios();
         Tabla tablaNueva = new Tabla();
         PrimaryConstraint tempPC = new PrimaryConstraint();
@@ -1333,7 +1335,7 @@ namespace BasesDeDatos
                 return error;
             }
 
-            if (context.GetChild(1).Equals("*"))
+            if (context.GetChild(1).GetText().Equals("*"))
             {
                 seleccionarTodo = true;
             }
@@ -1354,10 +1356,54 @@ namespace BasesDeDatos
                 if (seleccionarTodo)
                 {
                     //llamar metodo 1 parametros (nombreTablas)
+                    //aMostrar = new DataGridView();
+                    List<List<Object>> tablaParaMostrar = miControl.SelectFilas(nombresTabla, true);
+                    List<String> titulos = miControl.tituloColumnas;
+                    
+                    aMostrar.ColumnCount = titulos.Count;
+                    aMostrar.RowCount = tablaParaMostrar.Count+1;
+
+                    for (int i = 0; i < titulos.Count; i++)
+                    {
+                        aMostrar.Rows[0].Cells[i].Value = titulos[i];
+                    }
+                    for (int i = 1; i < aMostrar.RowCount; i++)
+                    {
+                        for (int j = 0; j < aMostrar.ColumnCount; j++)
+                        {
+                            aMostrar.Rows[i].Cells[j].Value = tablaParaMostrar[i-1][j];
+                            
+                        }
+                        
+                    }
+                    numeroSelect = tablaParaMostrar.Count;
+                    mensajeSelect = "Se muestran " + numeroSelect + " filas. ";
+                    
                 }
                 else
                 {
                     //llamar metodo 2 parametros (nombreTablas, select)
+                    List<List<Object>> tablaParaMostrar = miControl.SelectFilas(nombresTabla,nombresCol);
+                    List<String> titulos = miControl.tituloColumnas;
+
+                    aMostrar.ColumnCount = titulos.Count;
+                    aMostrar.RowCount = tablaParaMostrar.Count + 1;
+
+                    for (int i = 0; i < titulos.Count; i++)
+                    {
+                        aMostrar.Rows[0].Cells[i].Value = titulos[i];
+                    }
+                    for (int i = 1; i < aMostrar.RowCount; i++)
+                    {
+                        for (int j = 0; j < aMostrar.ColumnCount; j++)
+                        {
+                            aMostrar.Rows[i].Cells[j].Value = tablaParaMostrar[i - 1][j];
+
+                        }
+
+                    }
+                    numeroSelect = tablaParaMostrar.Count;
+                    mensajeSelect = "Se muestran " + numeroSelect + " filas. ";
                 }
                 
             }
@@ -1379,10 +1425,52 @@ namespace BasesDeDatos
                         if (seleccionarTodo)
                         {
                             //llamar a metodo que usa 2 parametros (nombreTablas y where)
+                            List<List<Object>> tablaParaMostrar = miControl.SelectFilas(nombresTabla, whereElements, true);
+                            List<String> titulos = miControl.tituloColumnas;
+
+                            aMostrar.ColumnCount = titulos.Count;
+                            aMostrar.RowCount = tablaParaMostrar.Count + 1;
+
+                            for (int i = 0; i < titulos.Count; i++)
+                            {
+                                aMostrar.Rows[0].Cells[i].Value = titulos[i];
+                            }
+                            for (int i = 1; i < aMostrar.RowCount; i++)
+                            {
+                                for (int j = 0; j < aMostrar.ColumnCount; j++)
+                                {
+                                    aMostrar.Rows[i].Cells[j].Value = tablaParaMostrar[i - 1][j];
+
+                                }
+
+                            }
+                            numeroSelect = tablaParaMostrar.Count;
+                            mensajeSelect = "Se muestran " + numeroSelect + " filas. ";
                         }
                         else
                         {
                             //llamar a metodo que usa 3 parametros (nombreTablas, select y where)
+                            List<List<Object>> tablaParaMostrar = miControl.SelectFilas(nombresTabla, nombresCol, whereElements);
+                            List<String> titulos = miControl.tituloColumnas;
+
+                            aMostrar.ColumnCount = titulos.Count;
+                            aMostrar.RowCount = tablaParaMostrar.Count + 1;
+
+                            for (int i = 0; i < titulos.Count; i++)
+                            {
+                                aMostrar.Rows[0].Cells[i].Value = titulos[i];
+                            }
+                            for (int i = 1; i < aMostrar.RowCount; i++)
+                            {
+                                for (int j = 0; j < aMostrar.ColumnCount; j++)
+                                {
+                                    aMostrar.Rows[i].Cells[j].Value = tablaParaMostrar[i - 1][j];
+
+                                }
+
+                            }
+                            numeroSelect = tablaParaMostrar.Count;
+                            mensajeSelect = "Se muestran " + numeroSelect + " filas. ";
                         }
                         
                     }
@@ -1399,10 +1487,52 @@ namespace BasesDeDatos
                         if (seleccionarTodo)
                         {
                             //llamar metodo que usa 4 parametros (nombre, where, tipoSort, columnaSort)
+                            List<List<Object>> tablaParaMostrar = miControl.SelectFilas(nombresTabla, whereElements, columnaSort, tipoSort, true);
+                            List<String> titulos = miControl.tituloColumnas;
+
+                            aMostrar.ColumnCount = titulos.Count;
+                            aMostrar.RowCount = tablaParaMostrar.Count + 1;
+
+                            for (int i = 0; i < titulos.Count; i++)
+                            {
+                                aMostrar.Rows[0].Cells[i].Value = titulos[i];
+                            }
+                            for (int i = 1; i < aMostrar.RowCount; i++)
+                            {
+                                for (int j = 0; j < aMostrar.ColumnCount; j++)
+                                {
+                                    aMostrar.Rows[i].Cells[j].Value = tablaParaMostrar[i - 1][j];
+
+                                }
+
+                            }
+                            numeroSelect = tablaParaMostrar.Count;
+                            mensajeSelect = "Se muestran " + numeroSelect + " filas. ";
                         }
                         else
                         {
                             //llamar metodo que usa 5 parametros (nombre, select, where, tipoSort, columnaSort)
+                            List<List<Object>> tablaParaMostrar = miControl.SelectFilas(nombresTabla, nombresCol, whereElements, columnaSort, tipoSort);
+                            List<String> titulos = miControl.tituloColumnas;
+
+                            aMostrar.ColumnCount = titulos.Count;
+                            aMostrar.RowCount = tablaParaMostrar.Count + 1;
+
+                            for (int i = 0; i < titulos.Count; i++)
+                            {
+                                aMostrar.Rows[0].Cells[i].Value = titulos[i];
+                            }
+                            for (int i = 1; i < aMostrar.RowCount; i++)
+                            {
+                                for (int j = 0; j < aMostrar.ColumnCount; j++)
+                                {
+                                    aMostrar.Rows[i].Cells[j].Value = tablaParaMostrar[i - 1][j];
+
+                                }
+
+                            }
+                            numeroSelect = tablaParaMostrar.Count;
+                            mensajeSelect = "Se muestran " + numeroSelect + " filas. ";
                         }
                         
 
@@ -1420,17 +1550,57 @@ namespace BasesDeDatos
                     if (seleccionarTodo)
                     {
                         //llamar metodo que usa 3 parametros (nombre, tipoSort, columnaSort)
+                        List<List<Object>> tablaParaMostrar = miControl.SelectFilas(nombresTabla, columnaSort, tipoSort, true);
+                        List<String> titulos = miControl.tituloColumnas;
+
+                        aMostrar.ColumnCount = titulos.Count;
+                        aMostrar.RowCount = tablaParaMostrar.Count + 1;
+
+                        for (int i = 0; i < titulos.Count; i++)
+                        {
+                            aMostrar.Rows[0].Cells[i].Value = titulos[i];
+                        }
+                        for (int i = 1; i < aMostrar.RowCount; i++)
+                        {
+                            for (int j = 0; j < aMostrar.ColumnCount; j++)
+                            {
+                                aMostrar.Rows[i].Cells[j].Value = tablaParaMostrar[i - 1][j];
+
+                            }
+
+                        }
+                        numeroSelect = tablaParaMostrar.Count;
+                        mensajeSelect = "Se muestran " + numeroSelect + " filas. ";
                     }
                     else
                     {
                         //llamar metodo que usa 4 parametros (nombre, select, tipoSort, columnaSort)
+                        List<List<Object>> tablaParaMostrar = miControl.SelectFilas(nombresTabla,columnaSort, tipoSort);
+                        List<String> titulos = miControl.tituloColumnas;
+
+                        aMostrar.ColumnCount = titulos.Count;
+                        aMostrar.RowCount = tablaParaMostrar.Count + 1;
+
+                        for (int i = 0; i < titulos.Count; i++)
+                        {
+                            aMostrar.Rows[0].Cells[i].Value = titulos[i];
+                        }
+                        for (int i = 1; i < aMostrar.RowCount; i++)
+                        {
+                            for (int j = 0; j < aMostrar.ColumnCount; j++)
+                            {
+                                aMostrar.Rows[i].Cells[j].Value = tablaParaMostrar[i - 1][j];
+
+                            }
+
+                        }
+                        numeroSelect = tablaParaMostrar.Count;
+                        mensajeSelect = "Se muestran " + numeroSelect + " filas. ";
                     }
                     
                 }
             }
-            
-
-
+            return "void";
         }
 
         public override string VisitListaColumna2_nombreColumna(gramSQLParser.ListaColumna2_nombreColumnaContext context)

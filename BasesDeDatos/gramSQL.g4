@@ -136,7 +136,7 @@ useExpression: USE DATABASE ID;
 showColumnsExpression: SHOW COLUMNS FROM ID;
 
 // GRAMATICA PARTE DML
-insertExpression: INSERT TO ID '('listaColumna1 ')' VALUES '('listaValores1 ')';
+insertExpression: INSERT INTO ID '('listaColumna1 ')' VALUES '('listaValores1 ')';
 listaColumna1: listaColumna2;
 listaColumna2: nombreColumna ',' listaColumna2        #listaColumna2_comita
 				|nombreColumna                        #listaColumna2_nombreColumna;
