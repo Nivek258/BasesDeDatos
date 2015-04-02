@@ -1146,8 +1146,6 @@ namespace BasesDeDatos
                 }
             }
 
-            
-
             if (coleccionContenido.Count == 1)
             {
                 productoCartesiano = coleccionContenido[0].listObj;
@@ -1180,7 +1178,7 @@ namespace BasesDeDatos
                 }
             }
             
-
+            //
             try
             {
                 contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
@@ -1190,6 +1188,9 @@ namespace BasesDeDatos
             {
 
             }
+
+            List<String> listaColumnas = new 
+
         }
         
     }
