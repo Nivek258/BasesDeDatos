@@ -800,24 +800,24 @@ namespace BasesDeDatos
         public void agregarFilaTabla(String nombreTabla, List<Object> fila)
         {
             String contenido;
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
-                miContenido = DeSerializarContenido(contenido);
-            }
-            catch (Exception e)
-            {
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
+            //    miContenido = DeSerializarContenido(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
-            }
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-                tablasCreadas = DeSerializarTabla(contenido);
-            }
-            catch (Exception e)
-            {
+            //}
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+            //    tablasCreadas = DeSerializarTabla(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
-            }
+            //}
             tablasCreadas.agregarRegistro(nombreTabla);
             miContenido.agregarFila(fila);
             contenido = SerializarTabla(tablasCreadas);
@@ -829,25 +829,25 @@ namespace BasesDeDatos
 
         public Boolean existePrimaryKey(String nombreTabla, List<Object> fila)
         {
-            String contenido;
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
-                miContenido = DeSerializarContenido(contenido);
-            }
-            catch (Exception e)
-            {
+            //String contenido;
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
+            //    miContenido = DeSerializarContenido(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
-            }
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-                tablasCreadas = DeSerializarTabla(contenido);
-            }
-            catch (Exception e)
-            {
+            //}
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+            //    tablasCreadas = DeSerializarTabla(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
-            }
+            //}
            List<PrimaryConstraint> tempPConstraint = tablasCreadas.obtenerTabla(nombreTabla).pConstraint;
             if (tempPConstraint.Count == 0)
             {
@@ -904,15 +904,15 @@ namespace BasesDeDatos
             {
 
             }
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-                tablasCreadas = DeSerializarTabla(contenido);
-            }
-            catch (Exception e)
-            {
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+            //    tablasCreadas = DeSerializarTabla(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
-            }
+            //}
             List<PrimaryConstraint> tempPConstraint = tablasCreadas.obtenerTabla(nombreTabla).pConstraint;
             if (tempPConstraint.Count == 0)
             {
