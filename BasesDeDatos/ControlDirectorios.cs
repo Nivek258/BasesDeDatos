@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -320,6 +321,7 @@ namespace BasesDeDatos
         public String SerializarDB(ControlDB Obj)
         {
             XmlSerializer serializer = new XmlSerializer(Obj.GetType());
+            BinaryFormatter formatter = new BinaryFormatter();
             using (StringWriter writer = new StringWriter())
             {
                 serializer.Serialize(writer, Obj);
