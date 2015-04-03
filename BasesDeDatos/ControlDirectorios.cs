@@ -22,7 +22,6 @@ namespace BasesDeDatos
             {
                 File.Create("DataDB\\archivoM.dat").Dispose();
             }
-            Console.WriteLine("paso1");
         }
         public String obtenerTipoCol(String nombreTabla, String idCol)
         {
@@ -2407,24 +2406,25 @@ namespace BasesDeDatos
             Boolean op1 = false;
             Boolean op2 = false;
             Boolean elem1 = true;
-
+            Boolean esfloat = false;
+            float numeroF;
             for (int i = 0; i < expresionWhere.Count; i++)
             {
                 if (expresionWhere[i].Contains("."))
                 {
                     if(elem1){
-                        try
+                        esfloat = Single.TryParse(expresionWhere[i], System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.CreateSpecificCulture("es-ES"),out numeroF);
+                        if (esfloat)
                         {
-
-                            elemento1 = Convert.ToSingle(expresionWhere[i]);
+                            elemento1 = numeroF;
                             tipoElemento1 = "float";
                             elem1 = false;
                         }
-                        catch (FormatException e)
+                        else
                         {
                             int indiceElemento = 0;
                             String nombreTabla = expresionWhere[i].Substring(0, expresionWhere[i].IndexOf("."));
-                            String nombreColumna2 = expresionWhere[i].Substring(expresionWhere[i].IndexOf(".") + 1, expresionWhere[i].Length - (expresionWhere[i].IndexOf(".")+1));
+                            String nombreColumna2 = expresionWhere[i].Substring(expresionWhere[i].IndexOf(".") + 1, expresionWhere[i].Length - (expresionWhere[i].IndexOf(".") + 1));
                             for (int j = 0; j < nombresCol.Count; j++)
                             {
                                 if (nombreColumna2.Equals(nombresCol[j]) && nombreTabla.Equals(TablaCol[j]))
@@ -2440,15 +2440,17 @@ namespace BasesDeDatos
                             tipoElemento1 = tipoCol[indiceElemento];
                             elem1 = false;
                         }
+                        
                     }
                     else{
-                        try
+                        esfloat = Single.TryParse(expresionWhere[i], System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.CreateSpecificCulture("es-ES"), out numeroF);
+                        if (esfloat)
                         {
-                            elemento2 = Convert.ToSingle(expresionWhere[i]);
+                            elemento2 = numeroF;
                             tipoElemento2 = "float";
                             elem1 = true;
                         }
-                        catch (FormatException e)
+                        else
                         {
                             int indiceElemento = 0;
                             String nombreTabla = expresionWhere[i].Substring(0, expresionWhere[i].IndexOf("."));

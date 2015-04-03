@@ -234,7 +234,6 @@ namespace BasesDeDatos
         {
             if (context.ChildCount == 7)
             {
-                Console.WriteLine(miControl.getDBActual());
                 if (miControl.getDBActual().Equals(""))
                 {
                     mensajeError += "No se ha especificado la base de datos a usar. \n";
@@ -260,7 +259,6 @@ namespace BasesDeDatos
             }
             else
             {
-                Console.WriteLine(miControl.getDBActual());
                 if (miControl.getDBActual().Equals(""))
                 {
                     mensajeError += "No se ha especificado la base de datos a usar. \n";
@@ -539,13 +537,31 @@ namespace BasesDeDatos
             String tipoCol = "";
             if (expWhere)
             {
-                existeCol = miControl.existeColumna(refNombreTabla, nombreCol);
-                if (!existeCol)
+                if (expConstraint)
                 {
+                    existeCol = miControl.existeColumna(refNombreTabla, nombreCol);
+                    if (!existeCol)
+                    {
+                        mensajeError += "no existe la columna " + nombreCol + ". \n";
+                        return error;
+                    }
+                    tipoCol = miControl.obtenerTipoCol(refNombreTabla, nombreCol);
+                }
+                else
+                {
+                    for (int i = 0; i < nombresTabla.Count; i++)
+                    {
+                        existeCol = miControl.existeColumna(nombresTabla[i], nombreCol);
+                        if (existeCol)
+                        {
+                            return miControl.obtenerTipoCol(nombresTabla[i], nombreCol);
+                        }
+                        
+                    }
                     mensajeError += "no existe la columna " + nombreCol + ". \n";
                     return error;
                 }
-                tipoCol = miControl.obtenerTipoCol(refNombreTabla, nombreCol);
+                
             }
             else
             {
@@ -1806,7 +1822,6 @@ namespace BasesDeDatos
         public override string VisitExpression(gramSQLParser.ExpressionContext context)
         {
             String retorno = Visit(context.GetChild(0));
-            Console.WriteLine(retorno+" "+mensajeError);
             return retorno;
         }
 

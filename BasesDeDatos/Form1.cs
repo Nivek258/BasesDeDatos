@@ -82,8 +82,6 @@ namespace BasesDeDatos
             parser.AddErrorListener(ea);
             IParseTree tree = parser.program();
             textErrores.Text = "";
-            Console.WriteLine(textQuery.Text);
-            Console.WriteLine(tree.ToStringTree(parser));
 
             if (ea.getIError() == false)
             {
