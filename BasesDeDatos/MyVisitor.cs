@@ -162,6 +162,8 @@ namespace BasesDeDatos
 
         public override string VisitProgram(gramSQLParser.ProgramContext context)
         {
+            Console.WriteLine("Inicia visitors");
+            miControl.inicializar();
             Boolean terminar = false;
             int hijo = 0;
             String retorno = "";
@@ -182,6 +184,7 @@ namespace BasesDeDatos
                     hijo = hijo + 2;
                 }
             }
+            miControl.terminar();
             return "void";
         }
 
@@ -1734,7 +1737,7 @@ namespace BasesDeDatos
 
         public override string VisitCreate_Database(gramSQLParser.Create_DatabaseContext context)
         {
-            miControl.inicializar();
+            
             String nombreDB = context.GetChild(2).GetText();
             Boolean existe = miControl.existeDB(nombreDB);
             if (!existe)

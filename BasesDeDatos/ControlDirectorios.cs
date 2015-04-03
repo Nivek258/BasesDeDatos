@@ -16,84 +16,131 @@ namespace BasesDeDatos
         public ControlTB tablasCreadas = new ControlTB();
         ControlContenido miContenido = new ControlContenido();
         public List<String> tituloColumnas = new List<String>();
+        String contenidoBase = "";
+        String contenidoTabla = "";
         public void inicializar()
         {
             if (File.Exists("DataDB\\archivoM.dat") == false)
             {
                 File.Create("DataDB\\archivoM.dat").Dispose();
             }
-        }
-        public String obtenerTipoCol(String nombreTabla, String idCol)
-        {
             String contenido;
             try
             {
-                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-                tablasCreadas = DeSerializarTabla(contenido);
+                contenido = File.ReadAllText("DataDB\\archivoM.dat");
+                basesCreadas = DeSerializarDB(contenido);
             }
             catch (Exception e)
             {
 
             }
+        }
+
+        public void terminar()
+        {
+            String contenido;
+            try
+            {
+                contenido = SerializarTabla(tablasCreadas);
+                File.WriteAllText("DataDB\\" + DBactual + "\\controlTablas.dat", contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            try
+            {
+                contenido = SerializarDB(basesCreadas);
+                File.WriteAllText("DataDB\\archivoM.dat", contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            try
+            {
+                contenido = SerializarContenido(miContenido);
+                File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            
+        }
+
+        public String obtenerTipoCol(String nombreTabla, String idCol)
+        {
+            //String contenido;
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+            //    tablasCreadas = DeSerializarTabla(contenido);
+            //}
+            //catch (Exception e)
+            //{
+
+            //}
             String tipoCol = tablasCreadas.tipoColumna(nombreTabla, idCol);
             return tipoCol;
         }
         public int obtenerIndiceCol(String nombreTabla, String idCol)
         {
-            String contenido;
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-                tablasCreadas = DeSerializarTabla(contenido);
-            }
-            catch (Exception e)
-            {
+            //String contenido;
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+            //    tablasCreadas = DeSerializarTabla(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
-            }
+            //}
             int indiceCol = tablasCreadas.indiceColumna(nombreTabla, idCol);
             return indiceCol;
         }
         public int numRegistrosDB(String nombreDB)
         {
-            String contenido;
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\archivoM.dat");
-                basesCreadas = DeSerializarDB(contenido);
-            }
-            catch (Exception e)
-            {
+            //String contenido;
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\archivoM.dat");
+            //    basesCreadas = DeSerializarDB(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
-            }
+            //}
             return basesCreadas.numRegistros(nombreDB);
         }
         public int obtenerNumColumnas(String nombreTabla)
         {
-            String contenido;
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-                tablasCreadas = DeSerializarTabla(contenido);
-            }
-            catch (Exception e)
-            {
+            //String contenido;
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+            //    tablasCreadas = DeSerializarTabla(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
-            }
+            //}
             int numColumnas = tablasCreadas.numColumnas(nombreTabla);
             return numColumnas;
         }
         public Boolean existeDB(String nombreDB)
         {
-            String contenido;
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\archivoM.dat");
-                basesCreadas = DeSerializarDB(contenido);
-            }
-            catch (Exception e)
-            {
+            //String contenido;
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\archivoM.dat");
+            //    basesCreadas = DeSerializarDB(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
-            }
+            //}
 
             Boolean existe = basesCreadas.existeDataBase(nombreDB);
             if (existe)
@@ -108,77 +155,77 @@ namespace BasesDeDatos
         public void cambiarNombreDB(String nombreViejo, String nombreNuevo)
         {
             String contenido;
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\archivoM.dat");
-                basesCreadas = DeSerializarDB(contenido);
-            }
-            catch (Exception e)
-            {
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\archivoM.dat");
+            //    basesCreadas = DeSerializarDB(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
-            }
+            //}
             basesCreadas.cambiarNombreDB(nombreViejo, nombreNuevo);
-            contenido = SerializarDB(basesCreadas);
-            File.WriteAllText("DataDB\\archivoM.dat", contenido);
+            //contenido = SerializarDB(basesCreadas);
+            //File.WriteAllText("DataDB\\archivoM.dat", contenido);
             Directory.Move("DataDB\\" + nombreViejo, "DataDB\\" + nombreNuevo);
         }
         public Tabla obtenerTabla(String nombreTabla)
         {
-            String contenido;
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-                tablasCreadas = DeSerializarTabla(contenido);
-            }
-            catch (Exception e)
-            {
+            //String contenido;
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+            //    tablasCreadas = DeSerializarTabla(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
-            }
+            //}
             return tablasCreadas.obtenerTabla(nombreTabla);
         }
         public void sustituirTabla(String nombreTabla, Tabla nuevaTB) {
             String contenido;
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-                tablasCreadas = DeSerializarTabla(contenido);
-            }
-            catch (Exception e)
-            {
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+            //    tablasCreadas = DeSerializarTabla(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
-            }
+            //}
             tablasCreadas.sustituirTabla(nombreTabla, nuevaTB);
-            contenido = SerializarTabla(tablasCreadas);
-            File.WriteAllText("DataDB\\" + DBactual + "\\controlTablas.dat", contenido);
+            //contenido = SerializarTabla(tablasCreadas);
+            //File.WriteAllText("DataDB\\" + DBactual + "\\controlTablas.dat", contenido);
         }
         public Boolean columnaEnConstraint(String nombreTabla, String idCol)
         {
-            String contenido;
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-                tablasCreadas = DeSerializarTabla(contenido);
-            }
-            catch (Exception e)
-            {
+            //String contenido;
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+            //    tablasCreadas = DeSerializarTabla(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
-            }
+            //}
             Boolean existeColenConstraint = tablasCreadas.columnaEnCostraint(nombreTabla, idCol);
             return existeColenConstraint;
 
         }
         public Boolean tablaEnReferencia(String nombreTabla)
         {
-            String contenido;
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-                tablasCreadas = DeSerializarTabla(contenido);
-            }
-            catch (Exception e)
-            {
+            //String contenido;
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+            //    tablasCreadas = DeSerializarTabla(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
-            }
+            //}
             Boolean existeColenConstraint = tablasCreadas.tablaEnReferencia(nombreTabla);
             return existeColenConstraint;
 
@@ -186,134 +233,134 @@ namespace BasesDeDatos
         public void cambiarNombreTabla(String nombreViejo, String nombreNuevo)
         {
             String contenido;
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-                tablasCreadas = DeSerializarTabla(contenido);
-            }
-            catch (Exception e)
-            {
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+            //    tablasCreadas = DeSerializarTabla(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
-            }
+            //}
             tablasCreadas.cambiarNombreTabla(nombreViejo, nombreNuevo);
             tablasCreadas.cambiarRefTabla(nombreViejo, nombreNuevo);
-            contenido = SerializarTabla(tablasCreadas);
-            File.WriteAllText("DataDB\\" + DBactual + "\\controlTablas.dat", contenido);
+            //contenido = SerializarTabla(tablasCreadas);
+            //File.WriteAllText("DataDB\\" + DBactual + "\\controlTablas.dat", contenido);
         }
 
         public void agregarDB(String nombreDB)
         {
             String contenido;
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\archivoM.dat");
-                basesCreadas = DeSerializarDB(contenido);
-            }
-            catch (Exception e)
-            {
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\archivoM.dat");
+            //    basesCreadas = DeSerializarDB(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
-            }
+            //}
             DataBase nuevaDB = new DataBase();
             nuevaDB.setNombre(nombreDB);
             nuevaDB.setNumTablas(0);
             basesCreadas.agregarDataBase(nuevaDB);
             Directory.CreateDirectory("DataDB\\" + nombreDB);
             File.Create("DataDB\\" + nombreDB + "\\controlTablas.dat").Dispose();
-            contenido = SerializarDB(basesCreadas);
-            File.WriteAllText("DataDB\\archivoM.dat", contenido);
+            //contenido = SerializarDB(basesCreadas);
+            //File.WriteAllText("DataDB\\archivoM.dat", contenido);
         }
         public void removerDB(String nombreDB)
         {
-            String contenido;
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\archivoM.dat");
-                basesCreadas = DeSerializarDB(contenido);
-            }
-            catch (Exception e)
-            {
+            //String contenido;
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\archivoM.dat");
+            //    basesCreadas = DeSerializarDB(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
-            }
+            //}
             basesCreadas.removerDataBase(nombreDB);
             System.IO.DirectoryInfo directory = new System.IO.DirectoryInfo("DataDB\\" + nombreDB);
             foreach (System.IO.FileInfo file in directory.GetFiles()) file.Delete();
             Directory.Delete("DataDB\\" + nombreDB);
-            contenido = SerializarDB(basesCreadas);
-            File.WriteAllText("DataDB\\archivoM.dat", contenido);
+            //contenido = SerializarDB(basesCreadas);
+            //File.WriteAllText("DataDB\\archivoM.dat", contenido);
         }
         public void removerTabla(String nombreTabla)
         {
-            String contenido;
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-                tablasCreadas = DeSerializarTabla(contenido);
-            }
-            catch (Exception e)
-            {
+            //String contenido;
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+            //    tablasCreadas = DeSerializarTabla(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
-            }
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\archivoM.dat");
-                basesCreadas = DeSerializarDB(contenido);
-            }
-            catch (Exception e)
-            {
+            //}
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\archivoM.dat");
+            //    basesCreadas = DeSerializarDB(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
-            }
+            //}
             File.Delete("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
             tablasCreadas.removerTabla(nombreTabla);
             basesCreadas.restarCountTabla(DBactual);
-            contenido = SerializarTabla(tablasCreadas);
-            File.WriteAllText("DataDB\\" + DBactual + "\\controlTablas.dat", contenido);
-            contenido = SerializarDB(basesCreadas);
-            File.WriteAllText("DataDB\\archivoM.dat", contenido);
+            //contenido = SerializarTabla(tablasCreadas);
+            //File.WriteAllText("DataDB\\" + DBactual + "\\controlTablas.dat", contenido);
+            //contenido = SerializarDB(basesCreadas);
+            //File.WriteAllText("DataDB\\archivoM.dat", contenido);
         }
         public Boolean existeTabla(String nombreTabla)
         {  
-            String contenido;
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-                tablasCreadas = DeSerializarTabla(contenido);
-            }
-            catch (Exception e)
-            {
+            //String contenido;
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+            //    tablasCreadas = DeSerializarTabla(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
-            }
+            //}
 
             return tablasCreadas.existeTabla(nombreTabla);
          
         }
         public void agregarTabla(Tabla nuevaTabla)
         {
-            String contenido;
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-                tablasCreadas = DeSerializarTabla(contenido);
-            }
-            catch (Exception e)
-            {
+            //String contenido;
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+            //    tablasCreadas = DeSerializarTabla(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
-            }
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\archivoM.dat");
-                basesCreadas = DeSerializarDB(contenido);
-            }
-            catch (Exception e)
-            {
+            //}
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\archivoM.dat");
+            //    basesCreadas = DeSerializarDB(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
-            }
+            //}
             File.Create("DataDB\\" + DBactual + "\\" + nuevaTabla.getNombre()+".dat").Dispose();
             tablasCreadas.agregarTabla(nuevaTabla);
             basesCreadas.agregarCountTabla(DBactual);
-            contenido = SerializarTabla (tablasCreadas);
-            File.WriteAllText("DataDB\\" + DBactual + "\\controlTablas.dat", contenido);
-            contenido = SerializarDB(basesCreadas);
-            File.WriteAllText("DataDB\\archivoM.dat", contenido);
+            //contenido = SerializarTabla (tablasCreadas);
+            //File.WriteAllText("DataDB\\" + DBactual + "\\controlTablas.dat", contenido);
+            //contenido = SerializarDB(basesCreadas);
+            //File.WriteAllText("DataDB\\archivoM.dat", contenido);
 
         }
         
@@ -357,7 +404,20 @@ namespace BasesDeDatos
 
         public void setDBActual(String nombreDB)
         {
+
+            String contenido = SerializarDB(basesCreadas);
+            File.WriteAllText("DataDB\\archivoM.dat", contenido);
             DBactual = nombreDB;
+            try
+            {
+                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+                tablasCreadas = DeSerializarTabla(contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            contenidoBase = DBactual;
         }
 
         public String getDBActual()
@@ -368,30 +428,30 @@ namespace BasesDeDatos
         public ControlDB getBasesCreadas()
         {
             String contenido;
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\archivoM.dat");
-                basesCreadas = DeSerializarDB(contenido);
-            }
-            catch (Exception e)
-            {
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\archivoM.dat");
+            //    basesCreadas = DeSerializarDB(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
-            }
+            //}
             return basesCreadas;
         }
 
         public ControlTB getTablasCreadas()
         {
-            String contenido;
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-                tablasCreadas = DeSerializarTabla(contenido);
-            }
-            catch (Exception e)
-            {
+            //String contenido;
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+            //    tablasCreadas = DeSerializarTabla(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
-            }
+            //}
             return tablasCreadas;
         }
         public String SerializarContenido(ControlContenido contenidoObj)
@@ -412,16 +472,16 @@ namespace BasesDeDatos
 
         public Boolean revisarConstraint(List<Object> elementosIngreso, String nombreTabla)
         {
-            String contenido;
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-                tablasCreadas = DeSerializarTabla(contenido);
-            }
-            catch (Exception e)
-            {
+            //String contenido;
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+            //    tablasCreadas = DeSerializarTabla(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
-            }
+            //}
             
             for (int i = 0; i < tablasCreadas.obtenerTabla(nombreTabla).chConstraint.Count; i++)
             {
@@ -821,10 +881,10 @@ namespace BasesDeDatos
             //}
             tablasCreadas.agregarRegistro(nombreTabla);
             miContenido.agregarFila(fila);
-            contenido = SerializarTabla(tablasCreadas);
-            File.WriteAllText("DataDB\\" + DBactual + "\\controlTablas.dat", contenido);
-            contenido = SerializarContenido(miContenido);
-            File.WriteAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat", contenido);
+            //contenido = SerializarTabla(tablasCreadas);
+            //File.WriteAllText("DataDB\\" + DBactual + "\\controlTablas.dat", contenido);
+            //contenido = SerializarContenido(miContenido);
+            //File.WriteAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat", contenido);
 
         }
 
@@ -896,15 +956,37 @@ namespace BasesDeDatos
         public Boolean primaryNull(String nombreTabla, List<Object> fila)
         {
             String contenido;
-            try
+            if (!(contenidoBase.Equals(DBactual) && contenidoTabla.Equals(nombreTabla)))
             {
-                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
-                miContenido = DeSerializarContenido(contenido);
-            }
-            catch (Exception e)
-            {
+                try
+                {
+                    contenido = SerializarContenido(miContenido);
+                    File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla+ ".dat", contenido);
+                }
+                catch (Exception e)
+                {
+                    
+                }
+                try
+                {
+                    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
+                    miContenido = DeSerializarContenido(contenido);
+                }
+                catch (Exception e)
+                {
 
+                }
             }
+            contenidoTabla = nombreTabla;
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
+            //    miContenido = DeSerializarContenido(contenido);
+            //}
+            //catch (Exception e)
+            //{
+
+            //}
             //try
             //{
             //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
@@ -946,15 +1028,37 @@ namespace BasesDeDatos
         {
             String contenido;
             int columnasUpdate = 0;
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
-                miContenido = DeSerializarContenido(contenido);
-            }
-            catch (Exception e)
-            {
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
+            //    miContenido = DeSerializarContenido(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
+            //}
+            if (!(contenidoBase.Equals(DBactual) && contenidoTabla.Equals(nombreTabla)))
+            {
+                try
+                {
+                    contenido = SerializarContenido(miContenido);
+                    File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                }
+                catch (Exception e)
+                {
+
+                }
+                try
+                {
+                    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
+                    miContenido = DeSerializarContenido(contenido);
+                }
+                catch (Exception e)
+                {
+
+                }
             }
+            contenidoTabla = nombreTabla;
             List<int> indicesACambiar = new List<int>();
             //Guardar los indices a cambiar
             for (int i = 0; i < elementosIngreso.Count; i++)
@@ -985,8 +1089,8 @@ namespace BasesDeDatos
             }
             //se guarda matriz
             miContenido.setListObj(contenidoFilas);
-            contenido = SerializarContenido(miContenido);
-            File.WriteAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat", contenido);
+            //contenido = SerializarContenido(miContenido);
+            //File.WriteAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat", contenido);
             return columnasUpdate;
 
             
@@ -996,15 +1100,37 @@ namespace BasesDeDatos
         {
             int columnasUpdate = 0;
             String contenido;
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
-                miContenido = DeSerializarContenido(contenido);
-            }
-            catch (Exception e)
-            {
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
+            //    miContenido = DeSerializarContenido(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
+            //}
+            if (!(contenidoBase.Equals(DBactual) && contenidoTabla.Equals(nombreTabla)))
+            {
+                try
+                {
+                    contenido = SerializarContenido(miContenido);
+                    File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                }
+                catch (Exception e)
+                {
+
+                }
+                try
+                {
+                    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
+                    miContenido = DeSerializarContenido(contenido);
+                }
+                catch (Exception e)
+                {
+
+                }
             }
+            contenidoTabla = nombreTabla;
             List<int> indicesACambiar = new List<int>();
             //Guardar los indices a cambiar
             for (int i = 0; i < elementosIngreso.Count; i++)
@@ -1030,8 +1156,8 @@ namespace BasesDeDatos
             }
             //se guarda matriz
             miContenido.setListObj(contenidoFilas);
-            contenido = SerializarContenido(miContenido);
-            File.WriteAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat", contenido);
+            //contenido = SerializarContenido(miContenido);
+            //File.WriteAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat", contenido);
             return columnasUpdate;
         }
 
@@ -1039,25 +1165,47 @@ namespace BasesDeDatos
         {
             String contenido;
             int columnasDelete = 0;
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
-                miContenido = DeSerializarContenido(contenido);
-            }
-            catch (Exception e)
-            {
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
+            //    miContenido = DeSerializarContenido(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
-            }
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-                tablasCreadas = DeSerializarTabla(contenido);
-            }
-            catch (Exception e)
-            {
+            //}
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+            //    tablasCreadas = DeSerializarTabla(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
+            //}
+
+            if (!(contenidoBase.Equals(DBactual) && contenidoTabla.Equals(nombreTabla)))
+            {
+                try
+                {
+                    contenido = SerializarContenido(miContenido);
+                    File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                }
+                catch (Exception e)
+                {
+
+                }
+                try
+                {
+                    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
+                    miContenido = DeSerializarContenido(contenido);
+                }
+                catch (Exception e)
+                {
+
+                }
             }
-            
+            contenidoTabla = nombreTabla;
             //eliminar elementos de la lista
             List<List<Object>> contenidoFilas = miContenido.listObj;
             List<List<Object>> nuevoContenido = new List<List<Object>>();
@@ -1078,11 +1226,11 @@ namespace BasesDeDatos
             }
             //se guarda matriz
             miContenido.setListObj(nuevoContenido);
-            contenido = SerializarContenido(miContenido);
-            File.WriteAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat", contenido);
+            //contenido = SerializarContenido(miContenido);
+            //File.WriteAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat", contenido);
             tablasCreadas.removerRegistro(nombreTabla, columnasDelete);
-            contenido = SerializarTabla(tablasCreadas);
-            File.WriteAllText("DataDB\\" + DBactual + "\\controlTablas.dat", contenido);
+            //contenido = SerializarTabla(tablasCreadas);
+            //File.WriteAllText("DataDB\\" + DBactual + "\\controlTablas.dat", contenido);
             return columnasDelete;
 
 
@@ -1092,24 +1240,47 @@ namespace BasesDeDatos
         {
             int columnasDelete = 0;
             String contenido;
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
-                miContenido = DeSerializarContenido(contenido);
-            }
-            catch (Exception e)
-            {
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
+            //    miContenido = DeSerializarContenido(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
-            }
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-                tablasCreadas = DeSerializarTabla(contenido);
-            }
-            catch (Exception e)
-            {
+            //}
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+            //    tablasCreadas = DeSerializarTabla(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
+            //}
+
+            if (!(contenidoBase.Equals(DBactual) && contenidoTabla.Equals(nombreTabla)))
+            {
+                try
+                {
+                    contenido = SerializarContenido(miContenido);
+                    File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                }
+                catch (Exception e)
+                {
+
+                }
+                try
+                {
+                    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
+                    miContenido = DeSerializarContenido(contenido);
+                }
+                catch (Exception e)
+                {
+
+                }
             }
+            contenidoTabla = nombreTabla;
             //elimina elementos de la lista
             List<List<Object>> contenidoFilas = miContenido.listObj;
             List<List<Object>> nuevoContenido = new List<List<Object>>();
@@ -1117,11 +1288,11 @@ namespace BasesDeDatos
 
             //se guarda matriz
             miContenido.setListObj(nuevoContenido);
-            contenido = SerializarContenido(miContenido);
-            File.WriteAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat", contenido);
+            //contenido = SerializarContenido(miContenido);
+            //File.WriteAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat", contenido);
             tablasCreadas.removerRegistro(nombreTabla, columnasDelete);
-            contenido = SerializarTabla(tablasCreadas);
-            File.WriteAllText("DataDB\\" + DBactual + "\\controlTablas.dat", contenido);
+            //contenido = SerializarTabla(tablasCreadas);
+            //File.WriteAllText("DataDB\\" + DBactual + "\\controlTablas.dat", contenido);
             return columnasDelete;
         }
 
@@ -1135,6 +1306,16 @@ namespace BasesDeDatos
             List<ControlContenido> coleccionContenido = new List<ControlContenido>();
             List<List<Object>> productoCartesiano = new List<List<Object>>();
 
+            try
+            {
+                contenido = SerializarContenido(miContenido);
+                File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            contenidoTabla = "";
             //Lista de contenidos
             for (int i = 0; i < nombreTablas.Count; i++)
             {
@@ -1151,7 +1332,7 @@ namespace BasesDeDatos
                     coleccionContenido.Add(miContenido);
                 }
             }
-
+            
             if (coleccionContenido.Count == 1)
             {
                 productoCartesiano = coleccionContenido[0].listObj;
@@ -1191,15 +1372,15 @@ namespace BasesDeDatos
                 }
             }
 
-            try
-            {
-                contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-                tablasCreadas = DeSerializarTabla(contenido);
-            }
-            catch (Exception e)
-            {
+            //try
+            //{
+            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
+            //    tablasCreadas = DeSerializarTabla(contenido);
+            //}
+            //catch (Exception e)
+            //{
 
-            }
+            //}
 
 
             //Realizar listas para conocer nombre y tabla
@@ -1233,6 +1414,17 @@ namespace BasesDeDatos
             String contenido;
             List<ControlContenido> coleccionContenido = new List<ControlContenido>();
             List<List<Object>> productoCartesiano = new List<List<Object>>();
+
+            try
+            {
+                contenido = SerializarContenido(miContenido);
+                File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            contenidoTabla = "";
 
             //Lista de contenidos
             for (int i = 0; i < nombreTablas.Count; i++)
@@ -1334,6 +1526,17 @@ namespace BasesDeDatos
             String contenido;
             List<ControlContenido> coleccionContenido = new List<ControlContenido>();
             List<List<Object>> productoCartesiano = new List<List<Object>>();
+
+            try
+            {
+                contenido = SerializarContenido(miContenido);
+                File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            contenidoTabla = "";
 
             //Lista de contenidos
             for (int i = 0; i < nombreTablas.Count; i++)
@@ -1451,6 +1654,17 @@ namespace BasesDeDatos
             List<ControlContenido> coleccionContenido = new List<ControlContenido>();
             List<List<Object>> productoCartesiano = new List<List<Object>>();
 
+            try
+            {
+                contenido = SerializarContenido(miContenido);
+                File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            contenidoTabla = "";
+
             //Lista de contenidos
             for (int i = 0; i < nombreTablas.Count; i++)
             {
@@ -1565,6 +1779,17 @@ namespace BasesDeDatos
             String contenido;
             List<ControlContenido> coleccionContenido = new List<ControlContenido>();
             List<List<Object>> productoCartesiano = new List<List<Object>>();
+
+            try
+            {
+                contenido = SerializarContenido(miContenido);
+                File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            contenidoTabla = "";
 
             //Lista de contenidos
             for (int i = 0; i < nombreTablas.Count; i++)
@@ -1682,6 +1907,17 @@ namespace BasesDeDatos
             String contenido;
             List<ControlContenido> coleccionContenido = new List<ControlContenido>();
             List<List<Object>> productoCartesiano = new List<List<Object>>();
+
+            try
+            {
+                contenido = SerializarContenido(miContenido);
+                File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            contenidoTabla = "";
 
             //Lista de contenidos
             for (int i = 0; i < nombreTablas.Count; i++)
@@ -1803,6 +2039,17 @@ namespace BasesDeDatos
             List<ControlContenido> coleccionContenido = new List<ControlContenido>();
             List<List<Object>> productoCartesiano = new List<List<Object>>();
 
+            try
+            {
+                contenido = SerializarContenido(miContenido);
+                File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            contenidoTabla = "";
+
             //Lista de contenidos
             for (int i = 0; i < nombreTablas.Count; i++)
             {
@@ -1906,6 +2153,17 @@ namespace BasesDeDatos
             String contenido;
             List<ControlContenido> coleccionContenido = new List<ControlContenido>();
             List<List<Object>> productoCartesiano = new List<List<Object>>();
+
+            try
+            {
+                contenido = SerializarContenido(miContenido);
+                File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+            }
+            catch (Exception e)
+            {
+
+            }
+            contenidoTabla = "";
 
             //Lista de contenidos
             for (int i = 0; i < nombreTablas.Count; i++)
