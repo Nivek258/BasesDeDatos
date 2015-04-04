@@ -1050,6 +1050,11 @@ namespace BasesDeDatos
                 filasUpdate = miControl.UpdateColumnas(filaObjetos, nombreTabla);
                 numeroUpdate = numeroUpdate + filasUpdate;
                 mensajeUpdate = "Update " + numeroUpdate + " con exito. \n";
+                if (miControl.falloUpdate)
+                {
+                    mensajeError += miControl.mensajeFallo2;
+                    return error;
+                }
             }
             else
             {
@@ -1066,6 +1071,11 @@ namespace BasesDeDatos
                 filasUpdate = miControl.UpdateColumnas(filaObjetos, nombreTabla, whereElements);
                 numeroUpdate = numeroUpdate + filasUpdate;
                 mensajeUpdate = "Update " + numeroUpdate + " con exito. \n";
+                if (miControl.falloUpdate)
+                {
+                    mensajeError += miControl.mensajeFallo2;
+                    return error;
+                }
                 
             }
             return "void";
@@ -1252,7 +1262,8 @@ namespace BasesDeDatos
                 if (!pKeyNulo)
                 {
                     Boolean existePKey = miControl.existePrimaryKey(nombreTabla, filaObjetos);
-                    if (!existePKey)
+                    Boolean ExisteFKey = miControl.existeForeignKey(nombreTabla, filaObjetos);
+                    if (!existePKey && ExisteFKey)
                     {
                         miControl.agregarFilaTabla(nombreTabla, filaObjetos);
                         numeroInsert = numeroInsert + 1;
@@ -2024,6 +2035,13 @@ namespace BasesDeDatos
             if (context.ChildCount == 3)
             {
                 filasDelete = miControl.DeleteFilas(nombreTabla);
+                if (miControl.falloEliminacion)
+                {
+                    mensajeError += miControl.mensajeFallo;
+                    numeroDelete = numeroDelete + filasDelete;
+                    mensajeDelete = "Delete " + numeroDelete + " con exito. \n";
+                    return error;
+                }
                 numeroDelete = numeroDelete + filasDelete;
                 mensajeDelete = "Delete " + numeroDelete + " con exito. \n";
             }
@@ -2041,6 +2059,12 @@ namespace BasesDeDatos
                 }
                 List<string> whereElements = retorno.Split(new char[] { ' ' }).ToList();
                 filasDelete = miControl.DeleteFilas(nombreTabla, whereElements);
+                {
+                    mensajeError = +miControl.mensajeFallo;
+                    numeroDelete = numeroDelete + filasDelete;
+                    mensajeDelete = "Delete " + numeroDelete + " con exito. \n";
+                    return error;
+                }
                 numeroDelete = numeroDelete + filasDelete;
                 mensajeDelete = "Delete " + numeroDelete + " con exito. \n";
 

@@ -18,6 +18,11 @@ namespace BasesDeDatos
         public List<String> tituloColumnas = new List<String>();
         String contenidoBase = "";
         String contenidoTabla = "";
+        Boolean deUpdate = false;
+        public Boolean falloEliminacion = false;
+        public String mensajeFallo = "";
+        public Boolean falloUpdate = false;
+        public String mensajeFallo2 = "";
         public void inicializar()
         {
             if (File.Exists("DataDB\\archivoM.dat") == false)
@@ -832,24 +837,32 @@ namespace BasesDeDatos
                     String Fecha = elemento.Replace("\'", "");
                     List<string> dateElements = Fecha.Split(new char[] { '-' }).ToList();
                     Fecha = dateElements[0] + "-";
-                    if (dateElements[1].Length == 1)
+                    if (dateElements.Count == 3)
                     {
-                        Fecha += 0 + dateElements[1] + "-";
+                        if (dateElements[1].Length == 1)
+                        {
+                            Fecha += 0 + dateElements[1] + "-";
+                        }
+                        else
+                        {
+                            Fecha += dateElements[1] + "-";
+                        }
+                        if (dateElements[2].Length == 1)
+                        {
+                            Fecha += 0 + dateElements[2];
+                        }
+                        else
+                        {
+                            Fecha += dateElements[2];
+                        }
+                        DateTime date = DateTime.ParseExact(Fecha, "yyyy-MM-dd", null);
+                        return "date";
                     }
                     else
                     {
-                        Fecha += dateElements[1] + "-";
+                        return "char";
                     }
-                    if (dateElements[2].Length == 1)
-                    {
-                        Fecha += 0 + dateElements[2];
-                    }
-                    else
-                    {
-                        Fecha += dateElements[2];
-                    }
-                    DateTime date = DateTime.ParseExact(Fecha, "yyyy-MM-dd", null);
-                    return "date";
+                    
                 }
                 catch (Exception e)
                 {
@@ -930,7 +943,7 @@ namespace BasesDeDatos
                 String filaEntrante = "";
                 for (int i = 0; i < indicesPConstraints.Count; i++)
                 {
-                    filaEntrante += fila[i].ToString()+" ";
+                    filaEntrante += fila[indicesPConstraints[i]].ToString()+" ";
                 }
                 
                 List<List<Object>> contenidoFilas = miContenido.listObj;
@@ -940,7 +953,7 @@ namespace BasesDeDatos
                     String FilaComparar = "";
                     for (int j = 0; j < indicesPConstraints.Count; j++)
                     {
-                        FilaComparar += filaTemp[j].ToString()+" ";
+                        FilaComparar += filaTemp[indicesPConstraints[j]].ToString() + " ";
                     }
                     if (filaEntrante.Equals(FilaComparar))
                     {
@@ -951,6 +964,193 @@ namespace BasesDeDatos
                 return false;
             }
 
+        }
+
+        public Boolean existeForeignKey(String nombreTabla, List<Object> fila)
+        {
+            List<ForeignConstraint> tempFConstraint = tablasCreadas.obtenerTabla(nombreTabla).fConstraint;
+            if (tempFConstraint.Count == 0)
+            {
+                return true;
+            }
+            else
+            {
+                Boolean bandera = true;
+                for (int k = 0; k < tempFConstraint.Count; k++)
+                {
+                    if (bandera)
+                    {
+                        bandera = false;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                    List<String> columnasRefConstraint = tempFConstraint[k].refCol;
+                    List<String> columnasConstraint = tempFConstraint[k].idCol;
+                    String nombreTablaConstraint = tempFConstraint[k].getTablaRefNombre();
+                    List<int> indicesKConstraints = new List<int>();
+                    List<int> indicesTablaC = new List<int>();
+                    List<String> tiposKConstraints = new List<String>();
+                    List<String> tiposTablaC = new List<String>();
+                    for (int i = 0; i < columnasRefConstraint.Count; i++)
+                    {
+                        int indice = tablasCreadas.indiceColumna(nombreTablaConstraint, columnasRefConstraint[i]);
+                        String tipo = tablasCreadas.tipoColumna(nombreTablaConstraint, columnasRefConstraint[i]);
+                        indicesKConstraints.Add(indice);
+                        tiposKConstraints.Add(tipo);
+                        indice = tablasCreadas.indiceColumna(nombreTabla, columnasConstraint[i]);
+                        tipo = tablasCreadas.tipoColumna(nombreTabla, columnasConstraint[i]);
+                        indicesTablaC.Add(indice);
+                        tiposTablaC.Add(tipo);
+
+                    }
+                    String filaEntrante = "";
+                    //Se podria ver que coincidan los tipos en caso se haya hecho referencia de una tabla int a una float
+                    //
+                    //
+                    for (int i = 0; i < indicesTablaC.Count; i++)
+                    {
+                        filaEntrante += fila[indicesTablaC[i]].ToString() + " ";
+                    }
+                    ControlContenido contenidoTemp = new ControlContenido();
+                    String contenido;
+                    try
+                    {
+                        contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTablaConstraint + ".dat");
+                        contenidoTemp = DeSerializarContenido(contenido);
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+
+                    List<List<Object>> contenidoFilas = contenidoTemp.listObj;
+                    for (int i = 0; i < contenidoFilas.Count; i++)
+                    {
+                        List<Object> filaTemp = contenidoFilas[i];
+                        String FilaComparar = "";
+                        for (int j = 0; j < indicesKConstraints.Count; j++)
+                        {
+                            FilaComparar += filaTemp[indicesTablaC[j]].ToString() + " ";
+                        }
+                        if (filaEntrante.Equals(FilaComparar))
+                        {
+                            bandera = true;
+                        }
+
+                    }
+                }
+                
+                return bandera;
+            }
+
+        }
+
+        public Boolean permitirEliminacion(String nombreTabla, List<Object> fila)
+        {
+            List<String> nombresTablasRevisar = new List<String>();
+            List<Tabla> tablasRevisar = new List<Tabla>();
+            String tempNombre = "";
+            String tempNombre2 = "";
+            Boolean esForaneo = false;
+            for (int i = 0; i < tablasCreadas.listaTB.Count; i++)
+            {
+                tempNombre2 = tablasCreadas.listaTB[i].getNombre();
+                for (int j = 0; j < tablasCreadas.listaTB[i].fConstraint.Count; j++)
+                {   
+                    tempNombre = tablasCreadas.listaTB[i].fConstraint[j].nombreTabla;
+                    
+                    if (!nombresTablasRevisar.Contains(tempNombre2)&&tempNombre.Equals(nombreTabla))
+                    {
+                        nombresTablasRevisar.Add(tempNombre2);
+                        esForaneo = esForeignKey(nombreTabla, tempNombre2, fila);
+                        if (esForaneo)
+                        {
+                            mensajeFallo = "No se puede eliminar el elemento debido a que es referenciado por la tabla " + tempNombre2 + ".\n";
+                            return false;
+                        }
+
+                    }
+                }
+            }
+            return true;
+        }
+
+        public Boolean esForeignKey(String nombreTabla1, String nombreTabla2, List<Object> fila)
+        {
+            List<ForeignConstraint> tempFConstraint = tablasCreadas.obtenerTabla(nombreTabla2).fConstraint;
+            
+            
+            
+            for (int k = 0; k < tempFConstraint.Count; k++)
+            {
+                if (tempFConstraint[k].getTablaRefNombre().Equals(nombreTabla1))
+                {
+                    List<String> columnasRefConstraint = tempFConstraint[k].refCol;
+                    List<String> columnasConstraint = tempFConstraint[k].idCol;
+                    //String nombreTablaConstraint = tempFConstraint[k].getTablaRefNombre();
+                    List<int> indicesKConstraints = new List<int>();
+                    List<int> indicesTablaC = new List<int>();
+                    List<String> tiposKConstraints = new List<String>();
+                    List<String> tiposTablaC = new List<String>();
+                    for (int i = 0; i < columnasRefConstraint.Count; i++)
+                    {
+                        int indice = tablasCreadas.indiceColumna(nombreTabla1, columnasRefConstraint[i]);
+                        String tipo = tablasCreadas.tipoColumna(nombreTabla1, columnasRefConstraint[i]);
+                        indicesKConstraints.Add(indice);
+                        tiposKConstraints.Add(tipo);
+                        indice = tablasCreadas.indiceColumna(nombreTabla2, columnasConstraint[i]);
+                        tipo = tablasCreadas.tipoColumna(nombreTabla2, columnasConstraint[i]);
+                        indicesTablaC.Add(indice);
+                        tiposTablaC.Add(tipo);
+
+                    }
+                    String filaEntrante = "";
+                    //Se podria ver que coincidan los tipos en caso se haya hecho referencia de una tabla int a una float
+                    //
+                    //
+                    for (int i = 0; i < indicesKConstraints.Count; i++)
+                    {
+                        filaEntrante += fila[indicesKConstraints[i]].ToString() + " ";
+                    }
+                    ControlContenido contenidoTemp = new ControlContenido();
+                    String contenido;
+                    try
+                    {
+                        contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla2 + ".dat");
+                        contenidoTemp = DeSerializarContenido(contenido);
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+
+                    List<List<Object>> contenidoFilas = contenidoTemp.listObj;
+                    for (int i = 0; i < contenidoFilas.Count; i++)
+                    {
+                        List<Object> filaTemp = contenidoFilas[i];
+                        String FilaComparar = "";
+                        for (int j = 0; j < indicesTablaC.Count; j++)
+                        {
+                            FilaComparar += filaTemp[indicesTablaC[j]].ToString() + " ";
+                        }
+                        if (filaEntrante.Equals(FilaComparar))
+                        {
+                            return true;
+                        }
+
+                    }
+                }
+                else
+                {
+
+                }
+                
+            }
+
+            return false;
+            
         }
 
         public Boolean primaryNull(String nombreTabla, List<Object> fila)
@@ -1069,6 +1269,11 @@ namespace BasesDeDatos
                 }
             }
             //cambia elementos de la lista
+            Boolean cumpleFKey = false;
+            Boolean noesFKey = false;
+            Boolean nocumplePKey = false;
+            falloUpdate = false;
+            mensajeFallo2 = "";
             List<List<Object>> contenidoFilas = miContenido.listObj;
             for (int i = 0; i < contenidoFilas.Count; i++)
             {
@@ -1081,8 +1286,45 @@ namespace BasesDeDatos
                         filaTemp[indicesACambiar[j]] = elementosIngreso[indicesACambiar[j]];
                     }
 
-                    contenidoFilas[i] = filaTemp;
-                    columnasUpdate = columnasUpdate + 1;
+                    //verificacion linea
+                    deUpdate = true;
+                    nocumplePKey = existePrimaryKey(nombreTabla, filaTemp);
+                    if (nocumplePKey)
+                    {
+                        falloUpdate = true;
+                        deUpdate = false;
+                        mensajeFallo2 = "No se puede continuar con el update ya que se viola la llave primaria. \n";
+                        i = contenidoFilas.Count;
+
+                    }
+                    else
+                    {
+                        cumpleFKey = existeForeignKey(nombreTabla, filaTemp);
+                        if (!cumpleFKey)
+                        {
+                            falloUpdate = true;
+                            deUpdate = false;
+                            mensajeFallo2 = "No se puede continuar con el update ya que se viola el primary key. \n";
+                            i = contenidoFilas.Count;
+                        }
+                        else
+                        {
+                            noesFKey = permitirEliminacion(nombreTabla, filaTemp);
+                            if (noesFKey)
+                            {
+                                falloUpdate = true;
+                                deUpdate = false;
+                                mensajeFallo2 = "No se puede continuar con el update ya que un elemento de la fila es referenciado por una foreign key. \n";
+                                i = contenidoFilas.Count;
+                            }
+                            else
+                            {
+                                contenidoFilas[i] = filaTemp;
+                                miContenido.setListObj(contenidoFilas);
+                                columnasUpdate = columnasUpdate + 1;
+                            }
+                        }
+                    }
                 }
                 
 
@@ -1141,6 +1383,11 @@ namespace BasesDeDatos
                 }
             }
             //cambia elementos de la lista
+            Boolean cumpleFKey = false;
+            Boolean noesFKey = false;
+            Boolean nocumplePKey = false;
+            falloUpdate = false;
+            mensajeFallo2 = "";
             List<List<Object>> contenidoFilas = miContenido.listObj;
             for (int i = 0; i < contenidoFilas.Count; i++)
             {
@@ -1149,9 +1396,47 @@ namespace BasesDeDatos
                 {
                     filaTemp[indicesACambiar[j]] = elementosIngreso[indicesACambiar[j]];
                 }
+                //verificacion linea
+                deUpdate = true;
+                nocumplePKey = existePrimaryKey(nombreTabla, filaTemp);
+                if (nocumplePKey)
+                {
+                    falloUpdate = true;
+                    deUpdate = false;
+                    mensajeFallo2 = "No se puede continuar con el update ya que se viola la llave primaria. \n";
+                    i = contenidoFilas.Count;
 
-                contenidoFilas[i] = filaTemp;
-                columnasUpdate = columnasUpdate + 1;
+                }
+                else
+                {
+                    cumpleFKey = existeForeignKey(nombreTabla, filaTemp);
+                    if (!cumpleFKey)
+                    {
+                        falloUpdate = true;
+                        deUpdate = false;
+                        mensajeFallo2 = "No se puede continuar con el update ya que se viola el primary key. \n";
+                        i = contenidoFilas.Count;
+                    }
+                    else
+                    {
+                        noesFKey = permitirEliminacion(nombreTabla, filaTemp);
+                        if (noesFKey)
+                        {
+                            falloUpdate = true;
+                            deUpdate = false;
+                            mensajeFallo2 = "No se puede continuar con el update ya que un elemento de la fila es referenciado por una foreign key. \n";
+                            i = contenidoFilas.Count;
+                        }
+                        else
+                        {
+                            contenidoFilas[i] = filaTemp;
+                            miContenido.setListObj(contenidoFilas);
+                            columnasUpdate = columnasUpdate + 1;
+                        }
+                    }
+                }
+                
+                
 
             }
             //se guarda matriz
@@ -1207,23 +1492,42 @@ namespace BasesDeDatos
             }
             contenidoTabla = nombreTabla;
             //eliminar elementos de la lista
+            mensajeFallo = "";
+            falloEliminacion = false;
+            int indiceFallo = 0;
             List<List<Object>> contenidoFilas = miContenido.listObj;
             List<List<Object>> nuevoContenido = new List<List<Object>>();
             for (int i = 0; i < contenidoFilas.Count; i++)
             {
                 List<Object> filaTemp = contenidoFilas[i];
                 Boolean cumple = cumpleConstraint(filaTemp, condicionWhere, nombreTabla);
+                
                 if (cumple)
                 {
-                    columnasDelete = columnasDelete + 1;
+                    Boolean hayReferencia = permitirEliminacion(nombreTabla, filaTemp);
+                    if (!hayReferencia)
+                    {
+                        columnasDelete = columnasDelete + 1;
+                    }
+                    else
+                    {
+                        falloEliminacion = true;
+                        indiceFallo = i;
+                        i = contenidoFilas.Count;
+                    }
+                    
                 }
                 else
                 {
                     nuevoContenido.Add(contenidoFilas[i]);
                 }
-
-
             }
+
+            for (int i = indiceFallo; i < contenidoFilas.Count; i++)
+            {
+                nuevoContenido.Add(contenidoFilas[i]);
+            }
+
             //se guarda matriz
             miContenido.setListObj(nuevoContenido);
             //contenido = SerializarContenido(miContenido);
@@ -1284,6 +1588,35 @@ namespace BasesDeDatos
             //elimina elementos de la lista
             List<List<Object>> contenidoFilas = miContenido.listObj;
             List<List<Object>> nuevoContenido = new List<List<Object>>();
+
+            mensajeFallo = "";
+            //eliminar elementos de la lista
+            falloEliminacion = false;
+            int indiceProblema = 0;
+            for (int i = 0; i < contenidoFilas.Count; i++)
+            {
+                List<Object> filaTemp = contenidoFilas[i];
+                
+                Boolean hayReferencia = permitirEliminacion(nombreTabla, filaTemp);
+                if (!hayReferencia)
+                {
+                    columnasDelete = columnasDelete + 1;
+                }
+                else
+                {
+                    falloEliminacion = true;
+                    indiceProblema = i;
+                    i = contenidoFilas.Count;
+                }
+                    
+            }
+            for (int i = indiceProblema; i < contenidoFilas.Count; i++)
+            {
+                nuevoContenido.Add(contenidoFilas[i]);
+            }
+                
+
+
             columnasDelete = contenidoFilas.Count;
 
             //se guarda matriz
@@ -2631,7 +2964,7 @@ namespace BasesDeDatos
                         if (nombreColumna2.Equals(nombreColumnas[j]))
                         {
                             indicesMostrar.Add(j);
-                            tituloColumnas.Add(nombreColumnas[j] + "." + tablaColumnas[j]);
+                            tituloColumnas.Add(tablaColumnas[j] + "." + nombreColumnas[j]);
                         }
                     }
                 }
