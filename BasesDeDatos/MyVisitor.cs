@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Proyecto 1
+// Kevin Avenaño - 12151
+// Ernesto Solis - 12286
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -162,7 +166,6 @@ namespace BasesDeDatos
 
         public override string VisitProgram(gramSQLParser.ProgramContext context)
         {
-            Console.WriteLine("Inicia visitors");
             miControl.inicializar();
             Boolean terminar = false;
             int hijo = 0;
@@ -172,6 +175,7 @@ namespace BasesDeDatos
                 retorno = Visit(context.GetChild(hijo));
                 if (retorno.Equals(error))
                 {
+                    miControl.terminar();
                     return error;
                 }
                
@@ -1262,27 +1266,40 @@ namespace BasesDeDatos
                 if (!pKeyNulo)
                 {
                     Boolean existePKey = miControl.existePrimaryKey(nombreTabla, filaObjetos);
-                    Boolean ExisteFKey = miControl.existeForeignKey(nombreTabla, filaObjetos);
-                    if (!existePKey && ExisteFKey)
+                    
+                    if (!existePKey)
                     {
-                        miControl.agregarFilaTabla(nombreTabla, filaObjetos);
-                        numeroInsert = numeroInsert + 1;
-                        mensajeInsert = "Insert " + numeroInsert + " con exito. \n";
+                        Boolean ExisteFKey = miControl.existeForeignKey(nombreTabla, filaObjetos);
+                        if (ExisteFKey)
+                        {
+                            miControl.agregarFilaTabla(nombreTabla, filaObjetos);
+                            numeroInsert = numeroInsert + 1;
+                            mensajeInsert = "Insert " + numeroInsert + " con exito. \n";
+                        }
+                        else
+                        {
+                            mensajeError += "Se viola la primary key ya que no existe el elemento que se esta referenciando. \n";
+                            return error; 
+                        }
+                       
                     }
                     else
                     {
                         mensajeError += "Ya existe la llave primaria que se trata de agregar. \n";
+                        return error;
                     }
                 }
                 else
                 {
                     mensajeError += "Una de las llaves primarias no puede ser null. \n";
+                    return error;
                 }
                 
             }
             else
             {
                 mensajeError += "No se pudo agregar la fila en "+nombreTabla+". \n";
+                return error;
             }
 
             return "void";
@@ -2059,8 +2076,8 @@ namespace BasesDeDatos
                 }
                 List<string> whereElements = retorno.Split(new char[] { ' ' }).ToList();
                 filasDelete = miControl.DeleteFilas(nombreTabla, whereElements);
-                {
-                    mensajeError = +miControl.mensajeFallo;
+                if(miControl.falloEliminacion){
+                    mensajeError += miControl.mensajeFallo;
                     numeroDelete = numeroDelete + filasDelete;
                     mensajeDelete = "Delete " + numeroDelete + " con exito. \n";
                     return error;

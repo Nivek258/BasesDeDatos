@@ -1,3 +1,7 @@
+// Proyecto 1
+// Kevin Avenaño - 12151
+// Ernesto Solis - 12286
+
 grammar gramSQL;
 
 

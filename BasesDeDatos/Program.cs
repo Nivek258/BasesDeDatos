@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Proyecto 1
+// Kevin Avenaño - 12151
+// Ernesto Solis - 12286
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

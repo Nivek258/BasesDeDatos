@@ -1,4 +1,8 @@
-﻿using System;
+﻿// Proyecto 1
+// Kevin Avenaño - 12151
+// Ernesto Solis - 12286
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -23,6 +27,9 @@ namespace BasesDeDatos
         public String mensajeFallo = "";
         public Boolean falloUpdate = false;
         public String mensajeFallo2 = "";
+
+
+        //Metodo que revisa si existe el archivo maestro de bases de datos, si no existe lo crea, de lo contrario lee la informacion del archivo maestro.
         public void inicializar()
         {
             if (File.Exists("DataDB\\archivoM.dat") == false)
@@ -41,6 +48,7 @@ namespace BasesDeDatos
             }
         }
 
+        //Metodo que almancena la informacion de bases de datos, datos de tablas e informacion de los registros al finalizar la ejecucion del programa.
         public void terminar()
         {
             String contenido;
@@ -75,78 +83,34 @@ namespace BasesDeDatos
             
         }
 
+
+        //Metodo que obtiene el tipo de una columna.
         public String obtenerTipoCol(String nombreTabla, String idCol)
         {
-            //String contenido;
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-            //    tablasCreadas = DeSerializarTabla(contenido);
-            //}
-            //catch (Exception e)
-            //{
 
-            //}
             String tipoCol = tablasCreadas.tipoColumna(nombreTabla, idCol);
             return tipoCol;
         }
+        //Metodo que obtiene el indice de una columna.
         public int obtenerIndiceCol(String nombreTabla, String idCol)
         {
-            //String contenido;
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-            //    tablasCreadas = DeSerializarTabla(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
             int indiceCol = tablasCreadas.indiceColumna(nombreTabla, idCol);
             return indiceCol;
         }
+        //Metodo que obtiene la cantidad de registros que posee una base de datos.
         public int numRegistrosDB(String nombreDB)
         {
-            //String contenido;
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\archivoM.dat");
-            //    basesCreadas = DeSerializarDB(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
             return basesCreadas.numRegistros(nombreDB);
         }
+        //Metodo que obtiene la cantidad de columnas que posee una tabla.
         public int obtenerNumColumnas(String nombreTabla)
         {
-            //String contenido;
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-            //    tablasCreadas = DeSerializarTabla(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
             int numColumnas = tablasCreadas.numColumnas(nombreTabla);
             return numColumnas;
         }
+        //Metodo que revisa la existencia de una base de datos.
         public Boolean existeDB(String nombreDB)
         {
-            //String contenido;
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\archivoM.dat");
-            //    basesCreadas = DeSerializarDB(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
-
             Boolean existe = basesCreadas.existeDataBase(nombreDB);
             if (existe)
             {
@@ -157,218 +121,83 @@ namespace BasesDeDatos
                 return false;
             }
         }
+        //Metodo que cambia el nombre de una base de datos existente.
         public void cambiarNombreDB(String nombreViejo, String nombreNuevo)
         {
             String contenido;
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\archivoM.dat");
-            //    basesCreadas = DeSerializarDB(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
             basesCreadas.cambiarNombreDB(nombreViejo, nombreNuevo);
-            //contenido = SerializarDB(basesCreadas);
-            //File.WriteAllText("DataDB\\archivoM.dat", contenido);
             Directory.Move("DataDB\\" + nombreViejo, "DataDB\\" + nombreNuevo);
         }
+        //Metodo que obtiene toda una tabla en la base de datos actual.
         public Tabla obtenerTabla(String nombreTabla)
         {
-            //String contenido;
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-            //    tablasCreadas = DeSerializarTabla(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
             return tablasCreadas.obtenerTabla(nombreTabla);
         }
+        //Metodo que sustituye una tabla, es decir crear una nueva tabla con la informacion de la tabla anterior.
         public void sustituirTabla(String nombreTabla, Tabla nuevaTB) {
             String contenido;
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-            //    tablasCreadas = DeSerializarTabla(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
             tablasCreadas.sustituirTabla(nombreTabla, nuevaTB);
-            //contenido = SerializarTabla(tablasCreadas);
-            //File.WriteAllText("DataDB\\" + DBactual + "\\controlTablas.dat", contenido);
         }
+        //Metodo que revista la constraint que posee la columna especificada.
         public Boolean columnaEnConstraint(String nombreTabla, String idCol)
         {
-            //String contenido;
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-            //    tablasCreadas = DeSerializarTabla(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
             Boolean existeColenConstraint = tablasCreadas.columnaEnCostraint(nombreTabla, idCol);
             return existeColenConstraint;
 
         }
+        //Metodo que revisa si la tabla esta siendo referenciada por otra tabla en una foreing key.
         public Boolean tablaEnReferencia(String nombreTabla)
         {
-            //String contenido;
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-            //    tablasCreadas = DeSerializarTabla(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
             Boolean existeColenConstraint = tablasCreadas.tablaEnReferencia(nombreTabla);
             return existeColenConstraint;
 
         }
+        //Metodo que cambia el nombre de una tabla.
         public void cambiarNombreTabla(String nombreViejo, String nombreNuevo)
         {
             String contenido;
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-            //    tablasCreadas = DeSerializarTabla(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
             tablasCreadas.cambiarNombreTabla(nombreViejo, nombreNuevo);
             tablasCreadas.cambiarRefTabla(nombreViejo, nombreNuevo);
-            //contenido = SerializarTabla(tablasCreadas);
-            //File.WriteAllText("DataDB\\" + DBactual + "\\controlTablas.dat", contenido);
         }
-
+        //Metodo que crea una base de datos.
         public void agregarDB(String nombreDB)
         {
             String contenido;
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\archivoM.dat");
-            //    basesCreadas = DeSerializarDB(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
             DataBase nuevaDB = new DataBase();
             nuevaDB.setNombre(nombreDB);
             nuevaDB.setNumTablas(0);
             basesCreadas.agregarDataBase(nuevaDB);
             Directory.CreateDirectory("DataDB\\" + nombreDB);
             File.Create("DataDB\\" + nombreDB + "\\controlTablas.dat").Dispose();
-            //contenido = SerializarDB(basesCreadas);
-            //File.WriteAllText("DataDB\\archivoM.dat", contenido);
         }
+        //Metodo que elimina una base de datos.
         public void removerDB(String nombreDB)
         {
-            //String contenido;
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\archivoM.dat");
-            //    basesCreadas = DeSerializarDB(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
             basesCreadas.removerDataBase(nombreDB);
             System.IO.DirectoryInfo directory = new System.IO.DirectoryInfo("DataDB\\" + nombreDB);
             foreach (System.IO.FileInfo file in directory.GetFiles()) file.Delete();
             Directory.Delete("DataDB\\" + nombreDB);
-            //contenido = SerializarDB(basesCreadas);
-            //File.WriteAllText("DataDB\\archivoM.dat", contenido);
         }
+        //Metodo que elimina una tabla.
         public void removerTabla(String nombreTabla)
         {
-            //String contenido;
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-            //    tablasCreadas = DeSerializarTabla(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\archivoM.dat");
-            //    basesCreadas = DeSerializarDB(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
             File.Delete("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
             tablasCreadas.removerTabla(nombreTabla);
             basesCreadas.restarCountTabla(DBactual);
-            //contenido = SerializarTabla(tablasCreadas);
-            //File.WriteAllText("DataDB\\" + DBactual + "\\controlTablas.dat", contenido);
-            //contenido = SerializarDB(basesCreadas);
-            //File.WriteAllText("DataDB\\archivoM.dat", contenido);
         }
+        //Metodo que verifica la existencia de una tabla.
         public Boolean existeTabla(String nombreTabla)
         {  
-            //String contenido;
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-            //    tablasCreadas = DeSerializarTabla(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
-
-            return tablasCreadas.existeTabla(nombreTabla);
-         
+            return tablasCreadas.existeTabla(nombreTabla);         
         }
+        //Metodo que afrega una nueva tabla a la base de datos actual.
         public void agregarTabla(Tabla nuevaTabla)
         {
-            //String contenido;
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-            //    tablasCreadas = DeSerializarTabla(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\archivoM.dat");
-            //    basesCreadas = DeSerializarDB(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
             File.Create("DataDB\\" + DBactual + "\\" + nuevaTabla.getNombre()+".dat").Dispose();
             tablasCreadas.agregarTabla(nuevaTabla);
             basesCreadas.agregarCountTabla(DBactual);
-            //contenido = SerializarTabla (tablasCreadas);
-            //File.WriteAllText("DataDB\\" + DBactual + "\\controlTablas.dat", contenido);
-            //contenido = SerializarDB(basesCreadas);
-            //File.WriteAllText("DataDB\\archivoM.dat", contenido);
-
         }
-        
+        //Metodo que serializa las bases de datos en el archivo maestro.
         public String SerializarDB(ControlDB Obj)
         {
             XmlSerializer serializer = new XmlSerializer(Obj.GetType());
@@ -379,12 +208,14 @@ namespace BasesDeDatos
                 return writer.ToString();
             }
         }
+        //Metodo que deserializa las bases de datos en el archivo maestro.
         public ControlDB DeSerializarDB(String XmlText)
         {
             XmlSerializer x = new XmlSerializer(typeof(ControlDB));
             ControlDB miControlTemp = (ControlDB)x.Deserialize(new StringReader(XmlText));
             return miControlTemp;
         }
+        //Metodo que serializa la informacion de una tabla.
         public String SerializarTabla(ControlTB Obj)
         {
             XmlSerializer serializer = new XmlSerializer(Obj.GetType());
@@ -394,22 +225,22 @@ namespace BasesDeDatos
                 return writer.ToString();
             }
         }
+        //Metodo que deserializa la informacion de una tabla.
         public ControlTB DeSerializarTabla(String XmlText)
         {
             XmlSerializer x = new XmlSerializer(typeof(ControlTB));
             ControlTB miControlTemp = (ControlTB)x.Deserialize(new StringReader(XmlText));
             return miControlTemp;
         }
-
+        //Metodo que verifica la existencia de una columna en una tabla.
         public Boolean existeColumna(String nombreTabl, String nombreCol)
         {
             Boolean respuesta = tablasCreadas.existeColumna(nombreTabl, nombreCol);
             return respuesta;
         }
-
+        //Metodo que setea la base de datos en la cual se esta trabajando.
         public void setDBActual(String nombreDB)
         {
-
             String contenido = SerializarDB(basesCreadas);
             File.WriteAllText("DataDB\\archivoM.dat", contenido);
             DBactual = nombreDB;
@@ -424,41 +255,23 @@ namespace BasesDeDatos
             }
             contenidoBase = DBactual;
         }
-
+        //Metodo que obtiene la base de datos actual.
         public String getDBActual()
         {
             return DBactual;
         }
-
+        //Metodo que obtiene las bases de datos existentes en el sistema.
         public ControlDB getBasesCreadas()
         {
             String contenido;
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\archivoM.dat");
-            //    basesCreadas = DeSerializarDB(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
             return basesCreadas;
         }
-
+        //Metodo que obtiene las tablas de una base de datos.
         public ControlTB getTablasCreadas()
         {
-            //String contenido;
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-            //    tablasCreadas = DeSerializarTabla(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
             return tablasCreadas;
         }
+        //Metodo que serializa la informacion (registros, valores, etc) de una tabla.
         public String SerializarContenido(ControlContenido contenidoObj)
         {
             XmlSerializer serializer = new XmlSerializer(contenidoObj.GetType());
@@ -468,26 +281,16 @@ namespace BasesDeDatos
                 return writer.ToString();
             }
         }
+        //Metodo que deserializa la informacion (registros, valores, etc) de una tabla.
         public ControlContenido DeSerializarContenido(String XmlText)
         {
             XmlSerializer x = new XmlSerializer(typeof(ControlContenido));
             ControlContenido miControlTemp = (ControlContenido)x.Deserialize(new StringReader(XmlText));
             return miControlTemp;
         }
-
+        //Metodo que revisa las constraints de una tabla.
         public Boolean revisarConstraint(List<Object> elementosIngreso, String nombreTabla)
-        {
-            //String contenido;
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-            //    tablasCreadas = DeSerializarTabla(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
-            
+        {            
             for (int i = 0; i < tablasCreadas.obtenerTabla(nombreTabla).chConstraint.Count; i++)
             {
                 String check = tablasCreadas.obtenerTabla(nombreTabla).chConstraint[i].restriccionExp;
@@ -501,7 +304,7 @@ namespace BasesDeDatos
             }
             return true;
         }
-
+        //Metodo que verifica que los datos que se ingresen cumplan con las constraint especificadas en una tabla.
         public Boolean cumpleConstraint(List<Object> elementosIngreso, List<String> elementosCheck, String nombreTabla)
         {
             Stack<Boolean> stack = new Stack<Boolean>();
@@ -816,7 +619,7 @@ namespace BasesDeDatos
             }
             return stack.Pop();
         }
-
+        //Metodo que obtiene el tipo de un elemento a ingresar (e.g:  5 es int)
         public String tipoElemento(String elemento)
         {
             if (!(elemento[0].Equals('\'')))
@@ -870,58 +673,16 @@ namespace BasesDeDatos
                 }
             }
         }
-
+        //Metodo que agrega una fila a una tabla.
         public void agregarFilaTabla(String nombreTabla, List<Object> fila)
         {
             String contenido;
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
-            //    miContenido = DeSerializarContenido(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-            //    tablasCreadas = DeSerializarTabla(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
             tablasCreadas.agregarRegistro(nombreTabla);
             miContenido.agregarFila(fila);
-            //contenido = SerializarTabla(tablasCreadas);
-            //File.WriteAllText("DataDB\\" + DBactual + "\\controlTablas.dat", contenido);
-            //contenido = SerializarContenido(miContenido);
-            //File.WriteAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat", contenido);
-
         }
-
+        //Metodo que verifica la unicidad de una primary key.
         public Boolean existePrimaryKey(String nombreTabla, List<Object> fila)
         {
-            //String contenido;
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
-            //    miContenido = DeSerializarContenido(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-            //    tablasCreadas = DeSerializarTabla(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
            List<PrimaryConstraint> tempPConstraint = tablasCreadas.obtenerTabla(nombreTabla).pConstraint;
             if (tempPConstraint.Count == 0)
             {
@@ -965,7 +726,56 @@ namespace BasesDeDatos
             }
 
         }
+        //Metodo que verifica que se cumpla la llave primaria en la tabla, ignorando la fila indicada
+        public Boolean existePrimaryKey(String nombreTabla, List<Object> fila, int ignorarEn)
+        {
+            List<PrimaryConstraint> tempPConstraint = tablasCreadas.obtenerTabla(nombreTabla).pConstraint;
+            if (tempPConstraint.Count == 0)
+            {
+                return false;
+            }
+            else
+            {
+                List<String> columnasConstraint = tempPConstraint[0].idCol;
+                List<int> indicesPConstraints = new List<int>();
+                List<String> tiposPConstraints = new List<String>();
+                for (int i = 0; i < columnasConstraint.Count; i++)
+                {
+                    int indice = tablasCreadas.indiceColumna(nombreTabla, columnasConstraint[i]);
+                    String tipo = tablasCreadas.tipoColumna(nombreTabla, columnasConstraint[i]);
+                    indicesPConstraints.Add(indice);
+                    tiposPConstraints.Add(tipo);
 
+                }
+                String filaEntrante = "";
+                for (int i = 0; i < indicesPConstraints.Count; i++)
+                {
+                    filaEntrante += fila[indicesPConstraints[i]].ToString() + " ";
+                }
+
+                List<List<Object>> contenidoFilas = miContenido.listObj;
+                for (int i = 0; i < contenidoFilas.Count; i++)
+                {
+                    if (i != ignorarEn)
+                    {
+                        List<Object> filaTemp = contenidoFilas[i];
+                        String FilaComparar = "";
+                        for (int j = 0; j < indicesPConstraints.Count; j++)
+                        {
+                            FilaComparar += filaTemp[indicesPConstraints[j]].ToString() + " ";
+                        }
+                        if (filaEntrante.Equals(FilaComparar))
+                        {
+                            return true;
+                        }
+
+                    }
+                }
+                return false;
+            }
+
+        }
+        //Metodo que verifica la existencia de una llave foranea en la fila.
         public Boolean existeForeignKey(String nombreTabla, List<Object> fila)
         {
             List<ForeignConstraint> tempFConstraint = tablasCreadas.obtenerTabla(nombreTabla).fConstraint;
@@ -1046,7 +856,7 @@ namespace BasesDeDatos
             }
 
         }
-
+        //Metodo que verifica si se puede eliminar una fila de la tabla especificada.
         public Boolean permitirEliminacion(String nombreTabla, List<Object> fila)
         {
             List<String> nombresTablasRevisar = new List<String>();
@@ -1076,13 +886,40 @@ namespace BasesDeDatos
             }
             return true;
         }
+        //Metodo que verifica si se puede hacer update a una fila de una tabla.
+        public Boolean permitirUpdate(String nombreTabla, List<Object> fila, List<String> columnasCambiar)
+        {
+            List<String> nombresTablasRevisar = new List<String>();
+            List<Tabla> tablasRevisar = new List<Tabla>();
+            String tempNombre = "";
+            String tempNombre2 = "";
+            Boolean esForaneo = false;
+            for (int i = 0; i < tablasCreadas.listaTB.Count; i++)
+            {
+                tempNombre2 = tablasCreadas.listaTB[i].getNombre();
+                for (int j = 0; j < tablasCreadas.listaTB[i].fConstraint.Count; j++)
+                {
+                    tempNombre = tablasCreadas.listaTB[i].fConstraint[j].nombreTabla;
 
+                    if (!nombresTablasRevisar.Contains(tempNombre2) && tempNombre.Equals(nombreTabla))
+                    {
+                        nombresTablasRevisar.Add(tempNombre2);
+                        esForaneo = esForeignKey(nombreTabla, tempNombre2, fila, columnasCambiar);
+                        if (esForaneo)
+                        {
+                            mensajeFallo = "No se puede eliminar el elemento debido a que es referenciado por la tabla " + tempNombre2 + ".\n";
+                            return false;
+                        }
+
+                    }
+                }
+            }
+            return true;
+        }
+        //Metodo que verifica que el foreing key de una fila cumpla para las tablas especificadas
         public Boolean esForeignKey(String nombreTabla1, String nombreTabla2, List<Object> fila)
         {
             List<ForeignConstraint> tempFConstraint = tablasCreadas.obtenerTabla(nombreTabla2).fConstraint;
-            
-            
-            
             for (int k = 0; k < tempFConstraint.Count; k++)
             {
                 if (tempFConstraint[k].getTablaRefNombre().Equals(nombreTabla1))
@@ -1152,7 +989,86 @@ namespace BasesDeDatos
             return false;
             
         }
+        //Metodo que verifica si se puede updatear una fila cumpliendo la foreing key en ambas tablas.
+        public Boolean esForeignKey(String nombreTabla1, String nombreTabla2, List<Object> fila, List<String> updateColumnas)
+        {
+            List<ForeignConstraint> tempFConstraint = tablasCreadas.obtenerTabla(nombreTabla2).fConstraint;
+            for (int k = 0; k < tempFConstraint.Count; k++)
+            {
+                if (tempFConstraint[k].getTablaRefNombre().Equals(nombreTabla1))
+                {
+                    List<String> columnasRefConstraint = tempFConstraint[k].refCol;
+                    List<String> columnasConstraint = tempFConstraint[k].idCol;
+                    //String nombreTablaConstraint = tempFConstraint[k].getTablaRefNombre();
+                    List<int> indicesKConstraints = new List<int>();
+                    List<int> indicesTablaC = new List<int>();
+                    List<String> tiposKConstraints = new List<String>();
+                    List<String> tiposTablaC = new List<String>();
+                    for (int i = 0; i < columnasRefConstraint.Count; i++)
+                    {
+                        if (updateColumnas.Contains(columnasRefConstraint[i]))
+                        {
+                            int indice = tablasCreadas.indiceColumna(nombreTabla1, columnasRefConstraint[i]);
+                            String tipo = tablasCreadas.tipoColumna(nombreTabla1, columnasRefConstraint[i]);
+                            indicesKConstraints.Add(indice);
+                            tiposKConstraints.Add(tipo);
+                            indice = tablasCreadas.indiceColumna(nombreTabla2, columnasConstraint[i]);
+                            tipo = tablasCreadas.tipoColumna(nombreTabla2, columnasConstraint[i]);
+                            indicesTablaC.Add(indice);
+                            tiposTablaC.Add(tipo);
+                        }
+                    }
+                    String filaEntrante = "";
+                    //Se podria ver que coincidan los tipos en caso se haya hecho referencia de una tabla int a una float
+                    //
+                    //
+                    if (indicesKConstraints.Count == 0)
+                    {
+                        return false;
+                    }
+                    for (int i = 0; i < indicesKConstraints.Count; i++)
+                    {
+                        filaEntrante += fila[indicesKConstraints[i]].ToString() + " ";
+                    }
+                    ControlContenido contenidoTemp = new ControlContenido();
+                    String contenido;
+                    try
+                    {
+                        contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla2 + ".dat");
+                        contenidoTemp = DeSerializarContenido(contenido);
+                    }
+                    catch (Exception e)
+                    {
 
+                    }
+
+                    List<List<Object>> contenidoFilas = contenidoTemp.listObj;
+                    for (int i = 0; i < contenidoFilas.Count; i++)
+                    {
+                        List<Object> filaTemp = contenidoFilas[i];
+                        String FilaComparar = "";
+                        for (int j = 0; j < indicesTablaC.Count; j++)
+                        {
+                            FilaComparar += filaTemp[indicesTablaC[j]].ToString() + " ";
+                        }
+                        if (filaEntrante.Equals(FilaComparar))
+                        {
+                            return true;
+                        }
+
+                    }
+                }
+                else
+                {
+
+                }
+
+            }
+
+            return false;
+
+        }
+        //Metodo que verifica que la primary key no sea null.
         public Boolean primaryNull(String nombreTabla, List<Object> fila)
         {
             String contenido;
@@ -1178,24 +1094,6 @@ namespace BasesDeDatos
                 }
             }
             contenidoTabla = nombreTabla;
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
-            //    miContenido = DeSerializarContenido(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-            //    tablasCreadas = DeSerializarTabla(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
             List<PrimaryConstraint> tempPConstraint = tablasCreadas.obtenerTabla(nombreTabla).pConstraint;
             if (tempPConstraint.Count == 0)
             {
@@ -1223,20 +1121,11 @@ namespace BasesDeDatos
             }
 
         }
-
+        //Metodo que updatea la informacion de una columna cuando se utiliza una condicion.
         public int UpdateColumnas(List<Object> elementosIngreso, String nombreTabla, List<String> condicionWhere)
         {
             String contenido;
             int columnasUpdate = 0;
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
-            //    miContenido = DeSerializarContenido(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
             if (!(contenidoBase.Equals(DBactual) && contenidoTabla.Equals(nombreTabla)))
             {
                 try
@@ -1268,6 +1157,10 @@ namespace BasesDeDatos
                     indicesACambiar.Add(i);
                 }
             }
+            List<String> columnasAUpdatear = new List<String>();
+            for(int i=0;i<indicesACambiar.Count;i++){
+                columnasAUpdatear.Add(tablasCreadas.obtenerTabla(nombreTabla).columnasTB[indicesACambiar[i]].getNombre());
+            }
             //cambia elementos de la lista
             Boolean cumpleFKey = false;
             Boolean noesFKey = false;
@@ -1277,18 +1170,138 @@ namespace BasesDeDatos
             List<List<Object>> contenidoFilas = miContenido.listObj;
             for (int i = 0; i < contenidoFilas.Count; i++)
             {
-                List<Object> filaTemp = contenidoFilas[i];
+                List<Object> filaTemp = new List<Object>();
+                for (int j = 0; j < contenidoFilas[i].Count; j++)
+                {
+                    filaTemp.Add(contenidoFilas[i][j]);
+                }
                 Boolean cumple = cumpleConstraint(filaTemp, condicionWhere, nombreTabla);
                 if (cumple)
+                {
+                    noesFKey = permitirUpdate(nombreTabla, filaTemp, columnasAUpdatear);
+                    if (!noesFKey)
+                    {
+                        falloUpdate = true;
+                        deUpdate = false;
+                        mensajeFallo2 = "No se puede continuar con el update ya que un elemento de la fila es referenciado por una foreign key. \n";
+                        i = contenidoFilas.Count;
+                    }
+                    else
+                    {
+                        for (int j = 0; j < indicesACambiar.Count; j++)
+                        {
+                            filaTemp[indicesACambiar[j]] = elementosIngreso[indicesACambiar[j]];
+                        }
+
+                        //verificacion linea
+                        deUpdate = true;
+                        nocumplePKey = existePrimaryKey(nombreTabla, filaTemp, i);
+                        if (nocumplePKey)
+                        {
+                            falloUpdate = true;
+                            deUpdate = false;
+                            mensajeFallo2 = "No se puede continuar con el update ya que se viola la llave primaria. \n";
+                            i = contenidoFilas.Count;
+
+                        }
+                        else
+                        {
+                            cumpleFKey = existeForeignKey(nombreTabla, filaTemp);
+                            if (!cumpleFKey)
+                            {
+                                falloUpdate = true;
+                                deUpdate = false;
+                                mensajeFallo2 = "No se puede continuar con el update ya que se viola la llave foranea. \n";
+                                i = contenidoFilas.Count;
+                            }
+                            else
+                            {
+                                contenidoFilas[i] = filaTemp;
+                                miContenido.setListObj(contenidoFilas);
+                                columnasUpdate = columnasUpdate + 1;
+                            }
+                        }
+                    }
+                }
+            }
+            //se guarda matriz
+            miContenido.setListObj(contenidoFilas);
+            return columnasUpdate;
+
+            
+        }
+        //Metodo que updatea la informacion de las columnas cuando no viene una condicion.
+        public int UpdateColumnas(List<Object> elementosIngreso, String nombreTabla)
+        {
+            int columnasUpdate = 0;
+            String contenido;
+            if (!(contenidoBase.Equals(DBactual) && contenidoTabla.Equals(nombreTabla)))
+            {
+                try
+                {
+                    contenido = SerializarContenido(miContenido);
+                    File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                }
+                catch (Exception e)
+                {
+
+                }
+                try
+                {
+                    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
+                    miContenido = DeSerializarContenido(contenido);
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+            contenidoTabla = nombreTabla;
+            List<int> indicesACambiar = new List<int>();
+            //Guardar los indices a cambiar
+            for (int i = 0; i < elementosIngreso.Count; i++)
+            {
+                if (elementosIngreso[i] != null)
+                {
+                    indicesACambiar.Add(i);
+                }
+            }
+            List<String> columnasAUpdatear = new List<String>();
+            for (int i = 0; i < indicesACambiar.Count; i++)
+            {
+                columnasAUpdatear.Add(tablasCreadas.obtenerTabla(nombreTabla).columnasTB[indicesACambiar[i]].getNombre());
+            }
+            //cambia elementos de la lista
+            Boolean cumpleFKey = false;
+            Boolean noesFKey = false;
+            Boolean nocumplePKey = false;
+            falloUpdate = false;
+            mensajeFallo2 = "";
+            List<List<Object>> contenidoFilas = miContenido.listObj;
+            for (int i = 0; i < contenidoFilas.Count; i++)
+            {
+                List<Object> filaTemp = new List<Object>();
+                for (int j = 0; j < contenidoFilas[i].Count; j++)
+                {
+                    filaTemp.Add(contenidoFilas[i][j]);
+                }
+                noesFKey = permitirUpdate(nombreTabla, filaTemp, columnasAUpdatear);
+                if (!noesFKey)
+                {
+                    falloUpdate = true;
+                    deUpdate = false;
+                    mensajeFallo2 = "No se puede continuar con el update ya que un elemento de la fila es referenciado por una foreign key. \n";
+                    i = contenidoFilas.Count;
+                }
+                else
                 {
                     for (int j = 0; j < indicesACambiar.Count; j++)
                     {
                         filaTemp[indicesACambiar[j]] = elementosIngreso[indicesACambiar[j]];
                     }
-
                     //verificacion linea
                     deUpdate = true;
-                    nocumplePKey = existePrimaryKey(nombreTabla, filaTemp);
+                    nocumplePKey = existePrimaryKey(nombreTabla, filaTemp, i);
                     if (nocumplePKey)
                     {
                         falloUpdate = true;
@@ -1304,171 +1317,28 @@ namespace BasesDeDatos
                         {
                             falloUpdate = true;
                             deUpdate = false;
-                            mensajeFallo2 = "No se puede continuar con el update ya que se viola el primary key. \n";
+                            mensajeFallo2 = "No se puede continuar con el update ya que se viola la llave foranea. \n";
                             i = contenidoFilas.Count;
                         }
                         else
                         {
-                            noesFKey = permitirEliminacion(nombreTabla, filaTemp);
-                            if (noesFKey)
-                            {
-                                falloUpdate = true;
-                                deUpdate = false;
-                                mensajeFallo2 = "No se puede continuar con el update ya que un elemento de la fila es referenciado por una foreign key. \n";
-                                i = contenidoFilas.Count;
-                            }
-                            else
-                            {
-                                contenidoFilas[i] = filaTemp;
-                                miContenido.setListObj(contenidoFilas);
-                                columnasUpdate = columnasUpdate + 1;
-                            }
-                        }
-                    }
-                }
-                
 
-            }
-            //se guarda matriz
-            miContenido.setListObj(contenidoFilas);
-            //contenido = SerializarContenido(miContenido);
-            //File.WriteAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat", contenido);
-            return columnasUpdate;
-
-            
-        }
-
-        public int UpdateColumnas(List<Object> elementosIngreso, String nombreTabla)
-        {
-            int columnasUpdate = 0;
-            String contenido;
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
-            //    miContenido = DeSerializarContenido(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
-            if (!(contenidoBase.Equals(DBactual) && contenidoTabla.Equals(nombreTabla)))
-            {
-                try
-                {
-                    contenido = SerializarContenido(miContenido);
-                    File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
-                }
-                catch (Exception e)
-                {
-
-                }
-                try
-                {
-                    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
-                    miContenido = DeSerializarContenido(contenido);
-                }
-                catch (Exception e)
-                {
-
-                }
-            }
-            contenidoTabla = nombreTabla;
-            List<int> indicesACambiar = new List<int>();
-            //Guardar los indices a cambiar
-            for (int i = 0; i < elementosIngreso.Count; i++)
-            {
-                if (elementosIngreso[i] != null)
-                {
-                    indicesACambiar.Add(i);
-                }
-            }
-            //cambia elementos de la lista
-            Boolean cumpleFKey = false;
-            Boolean noesFKey = false;
-            Boolean nocumplePKey = false;
-            falloUpdate = false;
-            mensajeFallo2 = "";
-            List<List<Object>> contenidoFilas = miContenido.listObj;
-            for (int i = 0; i < contenidoFilas.Count; i++)
-            {
-                List<Object> filaTemp = contenidoFilas[i];
-                for (int j = 0; j < indicesACambiar.Count; j++)
-                {
-                    filaTemp[indicesACambiar[j]] = elementosIngreso[indicesACambiar[j]];
-                }
-                //verificacion linea
-                deUpdate = true;
-                nocumplePKey = existePrimaryKey(nombreTabla, filaTemp);
-                if (nocumplePKey)
-                {
-                    falloUpdate = true;
-                    deUpdate = false;
-                    mensajeFallo2 = "No se puede continuar con el update ya que se viola la llave primaria. \n";
-                    i = contenidoFilas.Count;
-
-                }
-                else
-                {
-                    cumpleFKey = existeForeignKey(nombreTabla, filaTemp);
-                    if (!cumpleFKey)
-                    {
-                        falloUpdate = true;
-                        deUpdate = false;
-                        mensajeFallo2 = "No se puede continuar con el update ya que se viola el primary key. \n";
-                        i = contenidoFilas.Count;
-                    }
-                    else
-                    {
-                        noesFKey = permitirEliminacion(nombreTabla, filaTemp);
-                        if (noesFKey)
-                        {
-                            falloUpdate = true;
-                            deUpdate = false;
-                            mensajeFallo2 = "No se puede continuar con el update ya que un elemento de la fila es referenciado por una foreign key. \n";
-                            i = contenidoFilas.Count;
-                        }
-                        else
-                        {
                             contenidoFilas[i] = filaTemp;
                             miContenido.setListObj(contenidoFilas);
                             columnasUpdate = columnasUpdate + 1;
                         }
                     }
                 }
-                
-                
-
             }
             //se guarda matriz
             miContenido.setListObj(contenidoFilas);
-            //contenido = SerializarContenido(miContenido);
-            //File.WriteAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat", contenido);
             return columnasUpdate;
         }
-
+        //Metodo que elimina filas de una tabla cuando cumplen la condicion.
         public int DeleteFilas(String nombreTabla, List<String> condicionWhere)
         {
             String contenido;
             int columnasDelete = 0;
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
-            //    miContenido = DeSerializarContenido(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-            //    tablasCreadas = DeSerializarTabla(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
-
             if (!(contenidoBase.Equals(DBactual) && contenidoTabla.Equals(nombreTabla)))
             {
                 try
@@ -1505,7 +1375,7 @@ namespace BasesDeDatos
                 if (cumple)
                 {
                     Boolean hayReferencia = permitirEliminacion(nombreTabla, filaTemp);
-                    if (!hayReferencia)
+                    if (hayReferencia)
                     {
                         columnasDelete = columnasDelete + 1;
                     }
@@ -1522,47 +1392,27 @@ namespace BasesDeDatos
                     nuevoContenido.Add(contenidoFilas[i]);
                 }
             }
-
-            for (int i = indiceFallo; i < contenidoFilas.Count; i++)
+            if (falloEliminacion)
             {
-                nuevoContenido.Add(contenidoFilas[i]);
+                for (int i = indiceFallo; i < contenidoFilas.Count; i++)
+                {
+                    nuevoContenido.Add(contenidoFilas[i]);
+                }
             }
+
 
             //se guarda matriz
             miContenido.setListObj(nuevoContenido);
-            //contenido = SerializarContenido(miContenido);
-            //File.WriteAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat", contenido);
             tablasCreadas.removerRegistro(nombreTabla, columnasDelete);
-            //contenido = SerializarTabla(tablasCreadas);
-            //File.WriteAllText("DataDB\\" + DBactual + "\\controlTablas.dat", contenido);
             return columnasDelete;
 
 
         }
-
+        //Metodo que elimina todas las filas de una tabla.
         public int DeleteFilas(String nombreTabla)
         {
             int columnasDelete = 0;
             String contenido;
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
-            //    miContenido = DeSerializarContenido(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-            //    tablasCreadas = DeSerializarTabla(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
-
             if (!(contenidoBase.Equals(DBactual) && contenidoTabla.Equals(nombreTabla)))
             {
                 try
@@ -1598,7 +1448,7 @@ namespace BasesDeDatos
                 List<Object> filaTemp = contenidoFilas[i];
                 
                 Boolean hayReferencia = permitirEliminacion(nombreTabla, filaTemp);
-                if (!hayReferencia)
+                if (hayReferencia)
                 {
                     columnasDelete = columnasDelete + 1;
                 }
@@ -1610,29 +1460,22 @@ namespace BasesDeDatos
                 }
                     
             }
-            for (int i = indiceProblema; i < contenidoFilas.Count; i++)
+            if (falloEliminacion)
             {
-                nuevoContenido.Add(contenidoFilas[i]);
+                for (int i = indiceProblema; i < contenidoFilas.Count; i++)
+                {
+                    nuevoContenido.Add(contenidoFilas[i]);
+                }
             }
-                
-
-
-            columnasDelete = contenidoFilas.Count;
-
             //se guarda matriz
             miContenido.setListObj(nuevoContenido);
-            //contenido = SerializarContenido(miContenido);
-            //File.WriteAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat", contenido);
             tablasCreadas.removerRegistro(nombreTabla, columnasDelete);
-            //contenido = SerializarTabla(tablasCreadas);
-            //File.WriteAllText("DataDB\\" + DBactual + "\\controlTablas.dat", contenido);
             return columnasDelete;
         }
 
         //Obtener lista con los nombres de las columnas
 
-
-        //Muestra todo de las tablas indicadas
+        //Metodo que muestra todo de las tablas indicadas
         public List<List<Object>> SelectFilas(List<String> nombreTablas, Boolean auxiliar)
         {
             String contenido;
@@ -1704,18 +1547,6 @@ namespace BasesDeDatos
                     }
                 }
             }
-
-            //try
-            //{
-            //    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\controlTablas.dat");
-            //    tablasCreadas = DeSerializarTabla(contenido);
-            //}
-            //catch (Exception e)
-            //{
-
-            //}
-
-
             //Realizar listas para conocer nombre y tabla
             List<String> nombresColumna = new List<String>();
             List<String> TablaColumna = new List<String>();
@@ -1741,7 +1572,7 @@ namespace BasesDeDatos
 
         }
         
-        //Muestra lo seleccionado de las tablas indicadas
+        //Metodo que muestra lo seleccionado de las tablas indicadas
         public List<List<Object>> SelectFilas(List<String> nombreTablas,  List<String>columnasSeleccionadas)
         {
             String contenido;
@@ -1853,7 +1684,7 @@ namespace BasesDeDatos
 
         }
 
-        //Muestra todo de las tablas indicadas cuando se cumple where
+        //Metodo que muestra todo de las tablas indicadas cuando se cumple la condicion
         public List<List<Object>> SelectFilas(List<String> nombreTablas, List<String> expWhere, Boolean auxiliar)
         {
             String contenido;
@@ -1980,7 +1811,7 @@ namespace BasesDeDatos
             return cumplenWhere;
         }
 
-        //Muestra lo seleccionado de las tablas indicadas cuando se cumple where
+        //Metodo que muestra lo seleccionado de las tablas indicadas cuando se cumple la condicion
         public List<List<Object>> SelectFilas(List<String> nombreTablas, List<String>columnasSeleccionadas, List<String> expWhere)
         {
             String contenido;
@@ -2105,8 +1936,7 @@ namespace BasesDeDatos
             return obtenerSelect(cumplenWhere, columnasSeleccionadas, nombresColumna, TablaColumna);
         }
 
-//
-        //Muestra todo de las tablas indicadas cuando se cumple where en el orden especificado
+        //Metodo que muestra todo de las tablas indicadas cuando se cumple where en el orden especificado
         public List<List<Object>> SelectFilas(List<String> nombreTablas, List<String> expWhere, List<String> columnasOrden, List<String> tipoOrden, Boolean auxiliar)
         {
             String contenido;
@@ -2234,7 +2064,7 @@ namespace BasesDeDatos
 
         }
 
-        //Muestra lo indicado de las tablas indicadas cuando se cumple where en el orden especificado
+        //Metodo que muestra lo indicado de las tablas indicadas cuando se cumple la condicion en el orden especificado
         public List<List<Object>> SelectFilas(List<String> nombreTablas, List<String> columnasSeleccionadas, List<String> expWhere, List<String> columnasOrden, List<String> tipoOrden)
         {
             String contenido;
@@ -2364,8 +2194,7 @@ namespace BasesDeDatos
             return obtenerSelect(ordenado, columnasSeleccionadas, nombresColumna, TablaColumna);
         }
 
-/////
-        //Muestra todo de las tablas indicadas en el orden especificado
+        //Metodo que muestra todo de las tablas indicadas en el orden especificado
         public List<List<Object>> SelectFilas(List<String> nombreTablas, List<String> columnasOrden, List<String> tipoOrden, Boolean auxiliar)
         {
             String contenido;
@@ -2480,7 +2309,7 @@ namespace BasesDeDatos
 
         }
 
-        //Muestra lo indicado de las tablas indicadas  en el orden especificado
+        //Metodo que muestra lo indicado de las tablas indicadas  en el orden especificado
         public List<List<Object>> SelectFilas(List<String> nombreTablas, List<String> columnasSeleccionadas, List<String> columnasOrden, List<String> tipoOrden)
         {
             String contenido;
@@ -2595,7 +2424,7 @@ namespace BasesDeDatos
             //Seleccionar columnas
             return obtenerSelect(ordenado, columnasSeleccionadas, nombresColumna, TablaColumna);
         }
-
+        //Metodo que ordena el contenido de una seleccion.
         public List<List<Object>> ordenarContenido(List<List<Object>> tablaCompleta, List<String> columnasOrdenar, List<String> tipoOrdenamiento, List<String> nombresCol, List<String> tipoCol, List<String> TablaCol)
         {
             List<List<Object>> tablaOrdenada = new List<List<Object>>();
@@ -2934,7 +2763,7 @@ namespace BasesDeDatos
 
             return tablaOrdenada;
         }
-
+        //Metodo que obtiene lo especificado en el select.
         public List<List<Object>> obtenerSelect(List<List<Object>> tablaCompleta, List<String> columnasMostrar, List<String> nombreColumnas, List<String> tablaColumnas)
         {
             //Obtener indices
@@ -2987,7 +2816,7 @@ namespace BasesDeDatos
 
         }
 
-
+        //Metodo que verifica que se cumplan las condiciones del where.
         public Boolean verificarWhere(List<Object> elementosFila, List<String> expresionWhere, List<String> nombresCol, List<String> tipoCol, List<String>TablaCol){
             Stack<Boolean> stack = new Stack<Boolean>();
             Object elemento1 = null;
