@@ -128,7 +128,7 @@ float_literal: NUM'.'NUM;
 alterExpression: ALTER DATABASE ID	RENAME TO ID      #alterExpression_database
 				| ALTER TABLE ID RENAME TO ID         #alterExpression_table
 				| ALTER TABLE ID accionTabla             #alterExpression_accion;
-accionTabla: ADD COLUMN ID TIPO declaracionConstraint1  #accionTabla_AddColumn
+accionTabla: ADD COLUMN ID TIPO declaracionConstraint1?  #accionTabla_AddColumn
 			| ADD declaracionConstraint					#accionTabla_AddConstraint
 			| DROP COLUMN ID							#accionTabla_DropColumn
 			| DROP CONSTRAINT ID						#accionTabla_DropConstraint;
