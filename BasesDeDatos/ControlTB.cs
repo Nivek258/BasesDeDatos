@@ -14,10 +14,12 @@ namespace BasesDeDatos
     {
         public List<Tabla> listaTB = new List<Tabla>();
 
+        //Metodo que agrega una tabla a la base de datos.
         public void agregarTabla(Tabla nuevaTB)
         {
             listaTB.Add(nuevaTB);
         }
+        //Metodo que devuelve un objeto tabla.
         public Tabla obtenerTabla(String nombreTabla)
         {
             for (int i = 0; i < listaTB.Count; i++)
@@ -29,6 +31,7 @@ namespace BasesDeDatos
             }
             return null;
         }
+        //Metodo que sustituye una tabla.
         public void sustituirTabla(String nombreTabla, Tabla nuevaTB)
         {
             for (int i = 0; i < listaTB.Count; i++)
@@ -39,6 +42,7 @@ namespace BasesDeDatos
                 }
             }
         }
+        //Metodo que cambia la referencia de una tabla a otra.
         public void cambiarRefTabla(String nombreTablaViejo, String nombreTablaNuevo)
         {
             for (int i = 0; i < listaTB.Count; i++)
@@ -52,6 +56,7 @@ namespace BasesDeDatos
                 }
             }
         }
+        //Metodo que verifica la constraint que posee una columna.
         public Boolean columnaEnCostraint(String nombreTabla, String idCol)
         {
             for (int i = 0; i < listaTB.Count; i++)
@@ -73,7 +78,7 @@ namespace BasesDeDatos
             return false;
         }
 
-        
+        //Metodo que verifica que una tabla esta siendo referenciada en otra tabla.
         public Boolean tablaEnReferencia(String nombreTabla)
         {
             for (int i = 0; i < listaTB.Count; i++)
@@ -88,6 +93,7 @@ namespace BasesDeDatos
             }
             return false;
         }
+        //Metodo que verifica la existencia de una tabla en la base de datos actual.
         public Boolean existeTabla(String nombreTabla)
         {
             for (int i = 0; i < listaTB.Count; i++)
@@ -99,7 +105,7 @@ namespace BasesDeDatos
             }
             return false;
         }
-
+        //Metodo que elimina una tabla.
         public void removerTabla(String nombreTabla)
         {
             for (int i = 0; i < listaTB.Count; i++)
@@ -110,7 +116,7 @@ namespace BasesDeDatos
                 }
             }
         }
-
+        //Metodo que devuelve la cantidad de columnas en una tabla.
         public int numColumnas(String nombreTabla)
         {
             for (int i = 0; i < listaTB.Count; i++)
@@ -122,7 +128,7 @@ namespace BasesDeDatos
             }
             return -1;
         }
-
+        //Metodo que verifica la existencia de una columna en una tabla.
         public Boolean existeColumna(String nombreTabl, String nombreCol)
         {
             for (int i = 0; i < listaTB.Count(); i++)
@@ -134,7 +140,7 @@ namespace BasesDeDatos
             }
             return false;
         }
-
+        //Metodo que obtiene el tipo de una columna.
         public String tipoColumna(String nombreTabl, String nombreCol)
         {
             for (int i = 0; i < listaTB.Count(); i++)
@@ -146,6 +152,7 @@ namespace BasesDeDatos
             }
             return "";
         }
+        //Metodo que devuelve el indice de una columna.
         public int indiceColumna(String nombreTabl, String nombreCol)
         {
             for (int i = 0; i < listaTB.Count(); i++)
@@ -157,6 +164,7 @@ namespace BasesDeDatos
             }
             return -1;
         }
+        //Metodo que cambia el nombre de una tabla.
         public void cambiarNombreTabla(String nombreViejo, String nombreNuevo)
         {
             for (int i = 0; i < listaTB.Count; i++)
@@ -171,6 +179,7 @@ namespace BasesDeDatos
         {
             return listaTB;
         }
+        //Metodo que agrega un registro a una tabla.
         public void agregarRegistro(String nombreTabla)
         {
             for (int i = 0; i < listaTB.Count; i++)
@@ -181,7 +190,7 @@ namespace BasesDeDatos
                 }
             }
         }
-
+        //Metodo que elimna un registro de una tabla.
         public void removerRegistro(String nombreTabla, int registrosEliminados)
         {
             for (int i = 0; i < listaTB.Count; i++)

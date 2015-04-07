@@ -14,6 +14,7 @@ namespace BasesDeDatos
     {
         public List<List<Object>> listObj = new List<List<Object>>();
 
+        //Metodo que adjunta una fila a la tabla.
         public void agregarFila(List<Object> objetos)
         {
             listObj.Add(objetos);
@@ -30,6 +31,7 @@ namespace BasesDeDatos
             return false;
         }
 
+        //Metodo que setea las filas a una tabla.
         public void setListObj(List<List<Object>> listObj)
         {
             this.listObj = listObj;

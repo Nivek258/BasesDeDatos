@@ -23,7 +23,7 @@ namespace BasesDeDatos
         {
             return pkNombre;
         }
-
+        //Metodo que verifica la existencia de una columna.
         public Boolean existeIdCol(String nombreCol)
         {
             for (int i = 0; i < idCol.Count(); i++)
@@ -35,7 +35,7 @@ namespace BasesDeDatos
             }
             return false;
         }
-
+        //Metodo que agrega una columna a la llave primaria.
         public void agregarPK(String nombreCol)
         {
             idCol.Add(nombreCol);

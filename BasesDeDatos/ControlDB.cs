@@ -14,11 +14,12 @@ namespace BasesDeDatos
     {
         public List<DataBase> listaDB = new List<DataBase>();
 
+        //Metodo que agrega una base de datos.
         public void agregarDataBase(DataBase nuevaDB)
         {
             listaDB.Add(nuevaDB);
         }
-
+        //Metodo que cambia el nombre de una base de datos.
         public void cambiarNombreDB(String nombreViejo, String nombreNuevo)
         {
             for (int i = 0; i < listaDB.Count; i++)
@@ -29,6 +30,7 @@ namespace BasesDeDatos
                 }
             }
         }
+        //Metodo que verifica la existencia de una base de datos.
         public Boolean existeDataBase(String nombreDataBase)
         {
             for (int i = 0; i < listaDB.Count; i++)
@@ -40,7 +42,7 @@ namespace BasesDeDatos
             }
             return false;
         }
-
+        //Metodo que elimina una base de datos.
         public void removerDataBase(String nombreDataBase)
         {
             for (int i = 0; i < listaDB.Count; i++)
@@ -51,7 +53,7 @@ namespace BasesDeDatos
                 }
             }
         }
-
+        //Metodo que devuelve la cantidad de registros de una base de datos.
         public int numRegistros(String nombreDataBase)
         {
             for (int i = 0; i < listaDB.Count; i++)
@@ -63,6 +65,7 @@ namespace BasesDeDatos
             }
             return -1;
         }
+        //Metodo que suma 1 a la cantidad de registros de una base de datos.
         public void agregarCountTabla(String nombreDataBase)
         {
             for (int i = 0; i < listaDB.Count; i++)
@@ -74,6 +77,7 @@ namespace BasesDeDatos
                 }
             }
         }
+        //Metodo que resta 1 a la cantidad de registros de una base de datos.
         public void restarCountTabla(String nombreDataBase)
         {
             for (int i = 0; i < listaDB.Count; i++)

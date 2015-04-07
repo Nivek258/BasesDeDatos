@@ -53,12 +53,12 @@ namespace BasesDeDatos
         {
             numRegistros = numRegistros + 1;
         }
-
+        //Metodo que elimina un registro de la tabla.
         public void removerRegistro(int registrosEliminados)
         {
             numRegistros = numRegistros - registrosEliminados;
         }
-
+        //Metodo que verifica la existencia de una columna en la tabla.
         public Boolean existeColumna(String nombreCol)
         {
             for (int i = 0; i < columnasTB.Count(); i++)
@@ -70,12 +70,13 @@ namespace BasesDeDatos
             }
             return false;
         }
-
+        //Metodo que agrega una columna a la tabla.
         public void agregarColumna(Columna nuevaCol)
         {
             columnasTB.Add(nuevaCol);
             numColumnas = numColumnas + 1;
         }
+        //Metodo que elimina una columna de una tabla.
         public void removerColumna(String idColumna)
         {
             for (int i = 0; i < columnasTB.Count; i++)
@@ -87,6 +88,7 @@ namespace BasesDeDatos
             }
             numColumnas = numColumnas - 1;
         }
+        //Metodo que elimina una constraint de una tabla.
         public void removerConstraint(String nombreConstraint)
         {
             for (int i = 0; i < pConstraint.Count(); i++)
@@ -112,7 +114,7 @@ namespace BasesDeDatos
                 }
             }
         }
-
+        //Metodo que verifica la existencia de una constraint en la tabla.
         public Boolean existeIdConstraint(String constraintId)
         {
             for (int i = 0; i < pConstraint.Count(); i++)
@@ -139,7 +141,7 @@ namespace BasesDeDatos
             }
             return false;
         }
-
+        //Metodo que obtiene el tipo de una columna en la tabla.
         public String tipoColumna(String nombreCol)
         {
             for (int i = 0; i < columnasTB.Count(); i++)
@@ -151,6 +153,7 @@ namespace BasesDeDatos
             }
             return "";
         }
+        //Metodo que obtiene el indice de la columna en la tabla.
         public int indiceColumna(String nombreCol)
         {
             for (int i = 0; i < columnasTB.Count(); i++)

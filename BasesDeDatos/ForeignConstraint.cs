@@ -37,7 +37,7 @@ namespace BasesDeDatos
             this.nombreTabla = nombreTabla;
         }
 
-
+        //Metodo que everifica la existencia de una columna en el constraint.
         public Boolean existeIdCol(String nombreCol)
         {
             for (int i = 0; i < idCol.Count(); i++)
@@ -49,13 +49,13 @@ namespace BasesDeDatos
             }
             return false;
         }
-
+        //Metodo que agrega una columna al constraint.
         public void agregarFK(String nombreCol)
         {
             idCol.Add(nombreCol);
         }
 
-
+        //Metodo que verifica la existencia de una columna referenciada.
         public Boolean existeRefCol(String nombreCol)
         {
             for (int i = 0; i < refCol.Count(); i++)
@@ -67,7 +67,7 @@ namespace BasesDeDatos
             }
             return false;
         }
-
+        //Metodo que agrega las columnas a la referencia.
         public void agregarRefCol(String nombreCol)
         {
             refCol.Add(nombreCol);
