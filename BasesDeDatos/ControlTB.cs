@@ -88,6 +88,24 @@ namespace BasesDeDatos
             }
             return false;
         }
+
+        public Boolean columnaEnPrimary(String nombreTabla, String nombreColumna)
+        {
+            for (int i = 0; i < listaTB.Count; i++)
+            {
+                if (listaTB[i].getNombre().Equals(nombreTabla))
+                {
+                    
+                    if (listaTB[i].pConstraint[0].existeIdCol(nombreColumna))
+                    {
+                        return true;
+                    }
+                }
+                
+            }
+            return false;
+        }
+
         public Boolean existeTabla(String nombreTabla)
         {
             for (int i = 0; i < listaTB.Count; i++)

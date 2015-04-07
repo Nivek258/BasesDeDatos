@@ -34,6 +34,7 @@ namespace BasesDeDatos
         Boolean expConstraint = false;
         Boolean expWhere = false;
         Boolean conTabla = false;
+        Boolean constraintContenido = false;
         public DataGridView aMostrar = new DataGridView();
         List<String> nombresCol = new List<String>();
         List<String> valuesCol = new List<String>();
@@ -222,8 +223,28 @@ namespace BasesDeDatos
             {
                 return error;
             }
-            tempCC.setRestriccionExp(retorno);
-            tablaNueva.chConstraint.Add(tempCC);
+            if (!constraintContenido)
+            {
+                tempCC.setRestriccionExp(retorno);
+                tablaNueva.chConstraint.Add(tempCC);
+            }
+            else
+            {
+                List<string> whereElements = retorno.Split(new char[] { ' ' }).ToList();
+                Boolean cumplenCheck = miControl.tablaCumpleCheck(tablaNueva.getNombre(), whereElements);
+                if (cumplenCheck)
+                {
+                    tempCC.setRestriccionExp(retorno);
+                    tablaNueva.chConstraint.Add(tempCC);
+                }
+                else
+                {
+                    mensajeError += "";
+                    return error;
+                }
+            }
+            
+            
             return "void";
 
 
@@ -320,10 +341,18 @@ namespace BasesDeDatos
             colTemp.setNombre(idCol);
             colTemp.setTipo(colTipo);
             tablaNueva.agregarColumna(colTemp);
-            String retorno = Visit(context.GetChild(4));
-            if(retorno.Equals(error)){
-                return error;
+            if (context.ChildCount == 5)
+            {
+                //Boolean para determinar que hay que revisar tabla existente
+                constraintContenido = true;
+                String retorno = Visit(context.GetChild(4));
+                if (retorno.Equals(error))
+                {
+                    return error;
+                }
+                constraintContenido = false;
             }
+            
             return "void";
         }
 
@@ -727,7 +756,23 @@ namespace BasesDeDatos
             {
                 return error;
             }
-            tablaNueva.pConstraint.Add(tempPC);
+            if (!constraintContenido)
+            {
+                tablaNueva.pConstraint.Add(tempPC);
+            }
+            else
+            {
+                Boolean unique = miControl.unicidadEnTabla(tablaNueva.getNombre(), tempPC.idCol);
+                if(unique)
+                {
+                    tablaNueva.pConstraint.Add(tempPC);
+                }
+                else
+                {
+                    mensajeError += "Se viola la unicidad de la Primary Key en la tabla. \n";
+                    return error;
+                }
+            }
             return "void";
         }
 
@@ -1946,6 +1991,7 @@ namespace BasesDeDatos
             String idNombre = context.GetChild(0).GetText();
             Boolean idRepetido = false;
             Boolean columnaExiste = false;
+            Boolean esPrimary = false;
             if (TipoConstraint == 1)
             {
                 idRepetido = tempPC.existeIdCol(idNombre);
@@ -1980,6 +2026,7 @@ namespace BasesDeDatos
                     if (columnaExiste)
                     {
                         tempFC.agregarFK(idNombre);
+                        
                     }
                     else
                     {
@@ -2004,7 +2051,16 @@ namespace BasesDeDatos
                     columnaExiste = miControl.existeColumna(refNombreTabla, idNombre);
                     if (columnaExiste)
                     {
-                        tempFC.agregarRefCol(idNombre);
+                        esPrimary = miControl.columnaEnPrimaryK(refNombreTabla,idNombre);
+                        if (esPrimary)
+                        {
+                            tempFC.agregarFK(idNombre);
+                        }
+                        else
+                        {
+                            mensajeError += "La columna " + idNombre + " debe ser primaria.\n";
+                            return error;
+                        }
                     }
                     else
                     {

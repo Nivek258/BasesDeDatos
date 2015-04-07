@@ -238,6 +238,12 @@ namespace BasesDeDatos
             Boolean respuesta = tablasCreadas.existeColumna(nombreTabl, nombreCol);
             return respuesta;
         }
+        //Metodo que verifica que una columna determinada sea primary key en la tabla determinada
+        public Boolean columnaEnPrimaryK(String nombreTabl, String nombreCol)
+        {
+            Boolean respuesta = tablasCreadas.columnaEnPrimary(nombreTabl, nombreCol);
+            return respuesta;
+        }
         //Metodo que setea la base de datos en la cual se esta trabajando.
         public void setDBActual(String nombreDB)
         {
@@ -304,6 +310,48 @@ namespace BasesDeDatos
             }
             return true;
         }
+
+        //Metodo que determina si todos los elementos de la tabla cumplen con el check
+        public Boolean tablaCumpleCheck(String nombreTabla, List<String> elementosCheck)
+        {
+            String contenido;
+            if (!(contenidoBase.Equals(DBactual) && contenidoTabla.Equals(nombreTabla)))
+            {
+                try
+                {
+                    contenido = SerializarContenido(miContenido);
+                    File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                }
+                catch (Exception e)
+                {
+
+                }
+                try
+                {
+                    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
+                    miContenido = DeSerializarContenido(contenido);
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+            contenidoTabla = nombreTabla;
+            //recorrer lineas para verificar que cumpla check
+            for (int i = 0; i < miContenido.listObj.Count; i++)
+            {
+                List<Object> filaTemp = miContenido.listObj[i];
+                Boolean cumple = cumpleConstraint(filaTemp, elementosCheck, nombreTabla);
+                if (!cumple)
+                {
+                    return false;
+                }
+                
+            }
+            return true;
+
+        }
+
         //Metodo que verifica que los datos que se ingresen cumplan con las constraint especificadas en una tabla.
         public Boolean cumpleConstraint(List<Object> elementosIngreso, List<String> elementosCheck, String nombreTabla)
         {
@@ -726,6 +774,8 @@ namespace BasesDeDatos
             }
 
         }
+
+
         //Metodo que verifica que se cumpla la llave primaria en la tabla, ignorando la fila indicada
         public Boolean existePrimaryKey(String nombreTabla, List<Object> fila, int ignorarEn)
         {
@@ -775,6 +825,78 @@ namespace BasesDeDatos
             }
 
         }
+
+        //Metodo que verifica que en las columnas dadas no se repitan elementos para determinar unicidad
+        public Boolean unicidadEnTabla(String nombreTabla, List<String> columnasPKey)
+        {
+            String contenido;
+            if (!(contenidoBase.Equals(DBactual) && contenidoTabla.Equals(nombreTabla)))
+            {
+                try
+                {
+                    contenido = SerializarContenido(miContenido);
+                    File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                }
+                catch (Exception e)
+                {
+
+                }
+                try
+                {
+                    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
+                    miContenido = DeSerializarContenido(contenido);
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+            contenidoTabla = nombreTabla;
+
+            List<int> indicesPConstraints = new List<int>();
+            List<String> tiposPConstraints = new List<String>();
+            for (int i = 0; i < columnasPKey.Count; i++)
+            {
+                int indice = tablasCreadas.indiceColumna(nombreTabla, columnasPKey[i]);
+                String tipo = tablasCreadas.tipoColumna(nombreTabla, columnasPKey[i]);
+                indicesPConstraints.Add(indice);
+                tiposPConstraints.Add(tipo);
+
+            }
+            String filaPrincipal = "";
+
+            for (int i = 0; i < miContenido.listObj.Count; i++)
+            {
+                filaPrincipal = "";
+                //armar linea a comparar
+                for (int j = 0; j < indicesPConstraints.Count; j++)
+                {
+                    filaPrincipal += columnasPKey[indicesPConstraints[i]].ToString() + " ";
+                }
+
+                //recorrer lineas posteriores
+                for (int j = i+1; j < miContenido.listObj.Count; j++)
+                {
+
+                    List<Object> filaTemp = miContenido.listObj[j];
+                    String FilaComparar = "";
+                    for (int k = 0; k < indicesPConstraints.Count; k++)
+                    {
+                        FilaComparar += filaTemp[indicesPConstraints[k]].ToString() + " ";
+                    }
+                    if (filaPrincipal.Equals(FilaComparar))
+                    {
+                        return false;
+                    }
+
+                }
+
+            }
+
+            return false;
+
+        }
+
         //Metodo que verifica la existencia de una llave foranea en la fila.
         public Boolean existeForeignKey(String nombreTabla, List<Object> fila)
         {
