@@ -623,6 +623,11 @@ namespace BasesDeDatos
             return tipoCol;
         }
 
+        public override string VisitColumnaDatos_null(gramSQLParser.ColumnaDatos_nullContext context)
+        {
+            return "null";
+        }
+
         public override string VisitNombreTablaColumna_id(gramSQLParser.NombreTablaColumna_idContext context)
         {
             //columna
@@ -894,6 +899,14 @@ namespace BasesDeDatos
         {
             String retorno1 = context.GetChild(0).GetText();
             String retorno2 = context.GetChild(2).GetText();
+            if (retorno1.ToLower().Equals("null"))
+            {
+                retorno1 = null;
+            }
+            if (retorno2.ToLower().Equals("null"))
+            {
+                retorno2 = null;
+            }
             String opSimb = context.GetChild(1).GetText();
             String type1 = Visit(context.GetChild(0));
             String type2 = Visit(context.GetChild(2));
@@ -911,7 +924,7 @@ namespace BasesDeDatos
             }
             else if (!(type1.Equals(type2)))
             {
-                if (!(((type1.Equals("int") || type1.Equals("float")) && (type2.Equals("int") || type2.Equals("float"))) || (type1.Contains("char") && type2.Equals("date")) || (type1.Contains("char") && type2.Contains("char"))))
+                if (!(((type1.Equals("int") || type1.Equals("float")) && (type2.Equals("int") || type2.Equals("float"))) || (type1.Contains("char") && type2.Equals("date")) || (type1.Contains("char") && type2.Contains("char"))||(type1.Equals("null")||type2.Equals("null"))))
                 {
                     mensajeError += "No se puede relacionar un " + type1 + " con un " + type2 + ".\n";
                     return error;

@@ -498,7 +498,11 @@ namespace BasesDeDatos
                 {
                     if (elementosCheck[i].Equals("="))
                     {
-                        if (tipoElemento1.Equals("int") && tipoElemento2.Equals("int"))
+                        if (tipoElemento1.Equals("null") || tipoElemento2.Equals("null"))
+                        {
+                            op1 = false;
+                        }
+                        else if (tipoElemento1.Equals("int") && tipoElemento2.Equals("int"))
                         {
                             op1 = (Int32)elemento1 == (Int32)elemento2;
                         }
@@ -530,7 +534,11 @@ namespace BasesDeDatos
                     }
                     else if (elementosCheck[i].Equals("<>"))
                     {
-                        if (tipoElemento1.Equals("int") && tipoElemento2.Equals("int"))
+                        if (tipoElemento1.Equals("null") || tipoElemento2.Equals("null"))
+                        {
+                            op1 = false;
+                        } 
+                        else if (tipoElemento1.Equals("int") && tipoElemento2.Equals("int"))
                         {
                             op1 = (Int32)elemento1 != (Int32)elemento2;
                         }
@@ -583,7 +591,11 @@ namespace BasesDeDatos
                     if (elem1)
                     {
                         tipoElemento1 = tipoElemento(elementosCheck[i]);
-                        if(tipoElemento1.Equals("int")){
+                        if (tipoElemento1.Equals("null"))
+                        {
+                            elemento1 = null;
+                        }
+                        else if(tipoElemento1.Equals("int")){
                             elemento1 = Convert.ToInt32(elementosCheck[i]);
                         }
                         else if (tipoElemento1.Equals("float"))
@@ -623,7 +635,11 @@ namespace BasesDeDatos
                     else
                     {
                         tipoElemento2 = tipoElemento(elementosCheck[i]);
-                        if (tipoElemento2.Equals("int"))
+                        if (tipoElemento2.Equals("null"))
+                        {
+                            elemento2 = null;
+                        }
+                        else if (tipoElemento2.Equals("int"))
                         {
                             elemento2 = Convert.ToInt32(elementosCheck[i]);
                         }
@@ -670,6 +686,10 @@ namespace BasesDeDatos
         //Metodo que obtiene el tipo de un elemento a ingresar (e.g:  5 es int)
         public String tipoElemento(String elemento)
         {
+            if (elemento.Equals("null"))
+            {
+                return "null";
+            }
             if (!(elemento[0].Equals('\'')))
             {
                 if (elemento.Contains("."))
@@ -3148,7 +3168,11 @@ namespace BasesDeDatos
                 {
                     if (expresionWhere[i].Equals("="))
                     {
-                        if (tipoElemento1.Equals("int") && tipoElemento2.Equals("int"))
+                        if (tipoElemento1.Equals("null") || tipoElemento2.Equals("null"))
+                        {
+                            op1 = false;
+                        }
+                        else if (tipoElemento1.Equals("int") && tipoElemento2.Equals("int"))
                         {
                             op1 = (Int32)elemento1 == (Int32)elemento2;
                         }
@@ -3180,7 +3204,11 @@ namespace BasesDeDatos
                     }
                     else if (expresionWhere[i].Equals("<>"))
                     {
-                        if (tipoElemento1.Equals("int") && tipoElemento2.Equals("int"))
+                        if (tipoElemento1.Equals("null") || tipoElemento2.Equals("null"))
+                        {
+                            op1 = false;
+                        }
+                        else if (tipoElemento1.Equals("int") && tipoElemento2.Equals("int"))
                         {
                             op1 = (Int32)elemento1 != (Int32)elemento2;
                         }
@@ -3233,7 +3261,11 @@ namespace BasesDeDatos
                     if (elem1)
                     {
                         tipoElemento1 = tipoElemento(expresionWhere[i]);
-                        if (tipoElemento1.Equals("int"))
+                        if (tipoElemento1.Equals("null"))
+                        {
+                            elemento1 = null;
+                        }
+                        else if (tipoElemento1.Equals("int"))
                         {
                             elemento1 = Convert.ToInt32(expresionWhere[i]);
                         }
@@ -3270,7 +3302,11 @@ namespace BasesDeDatos
                     else
                     {
                         tipoElemento2 = tipoElemento(expresionWhere[i]);
-                        if (tipoElemento2.Equals("int"))
+                        if (tipoElemento2.Equals("null"))
+                        {
+                            elemento2 = null;
+                        }
+                        else if (tipoElemento2.Equals("int"))
                         {
                             elemento2 = Convert.ToInt32(expresionWhere[i]);
                         }

@@ -117,7 +117,8 @@ expBooleana4: expRelacion                  #expBooleana4_relacion
 expRelacion: columnaDatos relOperator columnaDatos;
 columnaDatos: literal  #columnaDatos_literal
 			| ID       #columnaDatos_id
-			| ID'.'ID  #columnaDatos_referencia;
+			| ID'.'ID  #columnaDatos_referencia
+			| NULL     #columnaDatos_null;
 relOperator: '<' | '>' | '<=' | '>=' | '<>' | '=';
 literal: int_literal | varchar_literal | date_literal | float_literal;
 int_literal: NUM;
