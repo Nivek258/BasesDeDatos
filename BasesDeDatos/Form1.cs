@@ -19,9 +19,11 @@ namespace BasesDeDatos
 {
     public partial class Form1 : Form
     {
+        String textoVerbose = "";
         public Form1()
         {
             InitializeComponent();
+            
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -99,6 +101,7 @@ namespace BasesDeDatos
                 textErrores.Text += miVisitor.mensajeDelete + "\n";
                 textErrores.Text += miVisitor.mensajeSelect + " \n";
                 textErrores.Text += errores;
+                textoVerbose += miVisitor.verbose+" \r\n";
                 
             }
             else
@@ -107,6 +110,23 @@ namespace BasesDeDatos
                 ea.setIError(false);
                 ea.setErrores("");
             }	
+        }
+
+        private void splitContainer2_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+
+        }
+
+        private void checkVerbose_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkVerbose.Checked)
+            {
+                textVerbose.Text = textoVerbose;
+            }
+            else
+            {
+                textVerbose.Text = "";
+            }
         }
     }
 }

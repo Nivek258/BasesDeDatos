@@ -32,6 +32,7 @@ namespace BasesDeDatos
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.btnCargar = new System.Windows.Forms.Button();
             this.btnGuardar = new System.Windows.Forms.Button();
             this.btnEjecutar = new System.Windows.Forms.Button();
@@ -39,11 +40,18 @@ namespace BasesDeDatos
             this.textQuery = new System.Windows.Forms.TextBox();
             this.gridTabla = new System.Windows.Forms.DataGridView();
             this.textErrores = new System.Windows.Forms.TextBox();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.textVerbose = new System.Windows.Forms.TextBox();
+            this.checkVerbose = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridTabla)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).BeginInit();
+            this.splitContainer2.Panel1.SuspendLayout();
+            this.splitContainer2.Panel2.SuspendLayout();
+            this.splitContainer2.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnCargar
@@ -117,9 +125,19 @@ namespace BasesDeDatos
             this.gridTabla.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.gridTabla.BackgroundColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridTabla.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.gridTabla.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.gridTabla.Location = new System.Drawing.Point(-1, 0);
             this.gridTabla.Name = "gridTabla";
+            this.gridTabla.ReadOnly = true;
             this.gridTabla.Size = new System.Drawing.Size(384, 238);
             this.gridTabla.TabIndex = 0;
             // 
@@ -127,21 +145,66 @@ namespace BasesDeDatos
             // 
             this.textErrores.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textErrores.Location = new System.Drawing.Point(39, 289);
+            this.textErrores.Location = new System.Drawing.Point(0, 0);
             this.textErrores.Multiline = true;
             this.textErrores.Name = "textErrores";
             this.textErrores.ReadOnly = true;
             this.textErrores.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textErrores.Size = new System.Drawing.Size(766, 138);
+            this.textErrores.Size = new System.Drawing.Size(375, 147);
             this.textErrores.TabIndex = 4;
             this.textErrores.WordWrap = false;
+            // 
+            // splitContainer2
+            // 
+            this.splitContainer2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.splitContainer2.Location = new System.Drawing.Point(39, 280);
+            this.splitContainer2.Name = "splitContainer2";
+            // 
+            // splitContainer2.Panel1
+            // 
+            this.splitContainer2.Panel1.Controls.Add(this.textErrores);
+            // 
+            // splitContainer2.Panel2
+            // 
+            this.splitContainer2.Panel2.Controls.Add(this.textVerbose);
+            this.splitContainer2.Size = new System.Drawing.Size(766, 147);
+            this.splitContainer2.SplitterDistance = 378;
+            this.splitContainer2.TabIndex = 4;
+            this.splitContainer2.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer2_SplitterMoved);
+            // 
+            // textVerbose
+            // 
+            this.textVerbose.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textVerbose.Location = new System.Drawing.Point(0, 0);
+            this.textVerbose.Multiline = true;
+            this.textVerbose.Name = "textVerbose";
+            this.textVerbose.ReadOnly = true;
+            this.textVerbose.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.textVerbose.Size = new System.Drawing.Size(384, 147);
+            this.textVerbose.TabIndex = 0;
+            this.textVerbose.WordWrap = false;
+            // 
+            // checkVerbose
+            // 
+            this.checkVerbose.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.checkVerbose.AutoSize = true;
+            this.checkVerbose.Location = new System.Drawing.Point(553, 11);
+            this.checkVerbose.Name = "checkVerbose";
+            this.checkVerbose.Size = new System.Drawing.Size(65, 17);
+            this.checkVerbose.TabIndex = 5;
+            this.checkVerbose.Text = "Verbose";
+            this.checkVerbose.UseVisualStyleBackColor = true;
+            this.checkVerbose.CheckedChanged += new System.EventHandler(this.checkVerbose_CheckedChanged);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(835, 439);
-            this.Controls.Add(this.textErrores);
+            this.Controls.Add(this.checkVerbose);
+            this.Controls.Add(this.splitContainer2);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.btnEjecutar);
             this.Controls.Add(this.btnGuardar);
@@ -155,6 +218,12 @@ namespace BasesDeDatos
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridTabla)).EndInit();
+            this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel1.PerformLayout();
+            this.splitContainer2.Panel2.ResumeLayout(false);
+            this.splitContainer2.Panel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
+            this.splitContainer2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -169,6 +238,9 @@ namespace BasesDeDatos
         private System.Windows.Forms.TextBox textQuery;
         private System.Windows.Forms.DataGridView gridTabla;
         private System.Windows.Forms.TextBox textErrores;
+        private System.Windows.Forms.SplitContainer splitContainer2;
+        private System.Windows.Forms.TextBox textVerbose;
+        private System.Windows.Forms.CheckBox checkVerbose;
     }
 }
 

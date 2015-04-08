@@ -380,9 +380,12 @@ namespace BasesDeDatos
                         elemento1 = elementosIngreso[indice];
                         if (elemento1 == null)
                         {
-                            return false;
+                            tipoElemento1 = "null";
                         }
-                        tipoElemento1 = tiposColumna[indice];
+                        else
+                        {
+                            tipoElemento1 = tiposColumna[indice];
+                        }
                         elem1 = false;
                     }
                     else
@@ -390,9 +393,12 @@ namespace BasesDeDatos
                         elemento2 = elementosIngreso[indice];
                         if (elemento2 == null)
                         {
-                            return false;
+                            tipoElemento2 = "null";
                         }
-                        tipoElemento2 = tiposColumna[indice];
+                        else
+                        {
+                            tipoElemento2 = tiposColumna[indice];
+                        }
                         elem1 = true;
                     }
                 }
@@ -3049,9 +3055,12 @@ namespace BasesDeDatos
                         elemento1 = elementosFila[indiceElemento];
                         if (elemento1 == null)
                         {
-                            return false;
+                            tipoElemento1 = "null";
                         }
-                        tipoElemento1 = tipoCol[indiceElemento];
+                        else
+                        {
+                            tipoElemento1 = tipoCol[indiceElemento];
+                        }
                         elem1 = false;
                     }
                     else
@@ -3059,9 +3068,12 @@ namespace BasesDeDatos
                         elemento2 = elementosFila[indiceElemento];
                         if (elemento2 == null)
                         {
-                            return false;
+                            tipoElemento2 = "null";
                         }
-                        tipoElemento2 = tipoCol[indiceElemento];
+                        else
+                        {
+                            tipoElemento2 = tipoCol[indiceElemento];
+                        }
                         elem1 = true;
                     }
                 }
