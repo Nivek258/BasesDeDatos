@@ -74,7 +74,10 @@ namespace BasesDeDatos
             try
             {
                 contenido = SerializarContenido(miContenido);
-                File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                if(!contenidoTabla.Equals(""))
+                {
+                    File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                }
             }
             catch (Exception e)
             {
@@ -320,7 +323,10 @@ namespace BasesDeDatos
                 try
                 {
                     contenido = SerializarContenido(miContenido);
-                    File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                    if (!contenidoTabla.Equals(""))
+                    {
+                        File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                    }
                 }
                 catch (Exception e)
                 {
@@ -861,7 +867,10 @@ namespace BasesDeDatos
                 try
                 {
                     contenido = SerializarContenido(miContenido);
-                    File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                    if (!contenidoTabla.Equals(""))
+                    {
+                        File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                    }
                 }
                 catch (Exception e)
                 {
@@ -1279,7 +1288,10 @@ namespace BasesDeDatos
                 try
                 {
                     contenido = SerializarContenido(miContenido);
-                    File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                    if (!contenidoTabla.Equals(""))
+                    {
+                        File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                    }
                 }
                 catch (Exception e)
                 {
@@ -1388,7 +1400,10 @@ namespace BasesDeDatos
                 try
                 {
                     contenido = SerializarContenido(miContenido);
-                    File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                    if (!contenidoTabla.Equals(""))
+                    {
+                        File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                    }
                 }
                 catch (Exception e)
                 {
@@ -1492,7 +1507,10 @@ namespace BasesDeDatos
                 try
                 {
                     contenido = SerializarContenido(miContenido);
-                    File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                    if (!contenidoTabla.Equals(""))
+                    {
+                        File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                    }
                 }
                 catch (Exception e)
                 {
@@ -1566,7 +1584,10 @@ namespace BasesDeDatos
                 try
                 {
                     contenido = SerializarContenido(miContenido);
-                    File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                    if (!contenidoTabla.Equals(""))
+                    {
+                        File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                    }
                 }
                 catch (Exception e)
                 {
@@ -1633,7 +1654,10 @@ namespace BasesDeDatos
             try
             {
                 contenido = SerializarContenido(miContenido);
-                File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                if (!contenidoTabla.Equals(""))
+                {
+                    File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                }
             }
             catch (Exception e)
             {
@@ -1730,7 +1754,10 @@ namespace BasesDeDatos
             try
             {
                 contenido = SerializarContenido(miContenido);
-                File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                if (!contenidoTabla.Equals(""))
+                {
+                    File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                }
             }
             catch (Exception e)
             {
@@ -1842,7 +1869,10 @@ namespace BasesDeDatos
             try
             {
                 contenido = SerializarContenido(miContenido);
-                File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                if (!contenidoTabla.Equals(""))
+                {
+                    File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                }
             }
             catch (Exception e)
             {
@@ -1969,7 +1999,10 @@ namespace BasesDeDatos
             try
             {
                 contenido = SerializarContenido(miContenido);
-                File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                if (!contenidoTabla.Equals(""))
+                {
+                    File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                }
             }
             catch (Exception e)
             {
@@ -2094,7 +2127,10 @@ namespace BasesDeDatos
             try
             {
                 contenido = SerializarContenido(miContenido);
-                File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                if (!contenidoTabla.Equals(""))
+                {
+                    File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                }
             }
             catch (Exception e)
             {
@@ -2222,7 +2258,10 @@ namespace BasesDeDatos
             try
             {
                 contenido = SerializarContenido(miContenido);
-                File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                if (!contenidoTabla.Equals(""))
+                {
+                    File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                }
             }
             catch (Exception e)
             {
@@ -2352,7 +2391,10 @@ namespace BasesDeDatos
             try
             {
                 contenido = SerializarContenido(miContenido);
-                File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                if (!contenidoTabla.Equals(""))
+                {
+                    File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                }
             }
             catch (Exception e)
             {
@@ -2467,7 +2509,10 @@ namespace BasesDeDatos
             try
             {
                 contenido = SerializarContenido(miContenido);
-                File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                if (!contenidoTabla.Equals(""))
+                {
+                    File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                }
             }
             catch (Exception e)
             {

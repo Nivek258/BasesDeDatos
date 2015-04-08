@@ -61,7 +61,7 @@ fragment COMMENTS : '//' .*? '\r'? '\n';
 fragment LETTER: [A-Z] | [a-z];
 fragment DIGIT: [0-9];
 
-ID : LETTER (LETTER | DIGIT)*;
+ID : LETTER (LETTER | DIGIT| '_')*;
 NUM: DIGIT (DIGIT)*;
 CHARACTER: '\'' ('\\\''|[ -~]|'\\"'|'\\t'|'\\n'|'\t'|'\\\\') '\'';
 CHARACTER2:   '\'' ('\\\''|[ -&]|[(-~]|'\\"'|'\\t'|'\\n'|'\t'|'\\\\')* '\'';
