@@ -53,22 +53,22 @@ namespace BasesDeDatos
             Boolean existeDB = miControl.existeDB(nombreViejo);
             if (!existeDB)
             {
-                mensajeError += "No existe la base de datos " + nombreViejo + " a la cual se le desea cambiar nombre. \n";
-                verbose += "No fue posible cambiar el nombre de la base de datos " + nombreViejo + " a " + nombreNuevo + " ya que no existe la base de datos. \n";
+                mensajeError += "No existe la base de datos " + nombreViejo + " a la cual se le desea cambiar nombre. \r\n";
+                verbose += "No fue posible cambiar el nombre de la base de datos " + nombreViejo + " a " + nombreNuevo + " ya que no existe la base de datos. \r\n";
                 return error;
             }
             existeDB = miControl.existeDB(nombreNuevo);
             if (existeDB)
             {
-                mensajeError += "Ya existe una base de datos con el nombre " + nombreNuevo + ".\n";
-                verbose += "No fue posible cambiar el nombre de la base de datos " + nombreViejo + " a "+ nombreNuevo + ". \n";
+                mensajeError += "Ya existe una base de datos con el nombre " + nombreNuevo + ".\r\n";
+                verbose += "No fue posible cambiar el nombre de la base de datos " + nombreViejo + " a "+ nombreNuevo + ". \r\n";
                 return error;
             }
             miControl.cambiarNombreDB(nombreViejo, nombreNuevo);
             if (miControl.getDBActual().Equals(nombreViejo)) {
                 miControl.setDBActual(nombreNuevo); 
             }
-            verbose += "Se cambio el nombre de la base de datos " + nombreViejo + " a " + nombreNuevo + ". \n";
+            verbose += "Se cambio el nombre de la base de datos " + nombreViejo + " a " + nombreNuevo + ". \r\n";
             return "void";
         }
 
@@ -78,8 +78,8 @@ namespace BasesDeDatos
             Boolean existeDB = miControl.existeDB(nombreDatabase);
             if (!existeDB)
             {
-                mensajeError += "No existe una base de datos con el nombre: " +nombreDatabase+".\n";
-                verbose += "No se pudo eliminar la base de datos " + nombreDatabase + " ya que no existe. \n";
+                mensajeError += "No existe una base de datos con el nombre: " +nombreDatabase+".\r\n";
+                verbose += "No se pudo eliminar la base de datos " + nombreDatabase + " ya que no existe. \r\n";
 
             }
             int numRegistros = miControl.numRegistrosDB(nombreDatabase);
@@ -88,7 +88,7 @@ namespace BasesDeDatos
             {
                 miControl.removerDB(nombreDatabase);
             }
-            verbose += "Se elimino la base de datos " + nombreDatabase + ". \n";
+            verbose += "Se elimino la base de datos " + nombreDatabase + ". \r\n";
             return "void";
 
         }
@@ -100,18 +100,18 @@ namespace BasesDeDatos
             Boolean existeCol = tablaNueva.existeColumna(idCol);
             if (existeCol)
             {
-                mensajeError += "No se puede borrar la columna: "+idCol+ " ya que no existe en la tabla. \n";
-                verbose += "No se pudo eliminar la columna " + idCol + " ya que la tabla " + refNombreTabla + " no existe. \n";
+                mensajeError += "No se puede borrar la columna: "+idCol+ " ya que no existe en la tabla. \r\n";
+                verbose += "No se pudo eliminar la columna " + idCol + " ya que la tabla " + refNombreTabla + " no existe. \r\n";
                 return error;
             }
             Boolean existeColEnConstraint = miControl.columnaEnConstraint(nombre, idCol);
             if (existeColEnConstraint)
             {
-                mensajeError += "No se puede borrar la columna: " + idCol + " ya que esta siendo referenciada en otra tabla.\n";
-                verbose += "No se pudo eliminar la columna " + idCol + " en la tabla " + refNombreTabla + " ya que esta siendo referenciada en otra tabla. \n";
+                mensajeError += "No se puede borrar la columna: " + idCol + " ya que esta siendo referenciada en otra tabla.\r\n";
+                verbose += "No se pudo eliminar la columna " + idCol + " en la tabla " + refNombreTabla + " ya que esta siendo referenciada en otra tabla. \r\n";
             }
             tablaNueva.removerColumna(idCol);
-            verbose += "Se elimino la columna " + idCol + " en la tabla " + refNombreTabla + ". \n";
+            verbose += "Se elimino la columna " + idCol + " en la tabla " + refNombreTabla + ". \r\n";
             return "void";
 
         }
@@ -220,7 +220,7 @@ namespace BasesDeDatos
             Boolean existeConstraint = tablaNueva.existeIdConstraint(nombreCC);
             if (existeConstraint)
             {
-                mensajeError += "La restriccion " + nombreCC + " ya existe.\n";
+                mensajeError += "La restriccion " + nombreCC + " ya existe.\r\n";
                 return error;
             }
             tempCC = new CheckConstraint();
@@ -249,7 +249,7 @@ namespace BasesDeDatos
                 }
                 else
                 {
-                    mensajeError += "El check no se cumple con todos los elementos de la tabla. \n";
+                    mensajeError += "El check no se cumple con todos los elementos de la tabla. \r\n";
                     return error;
                 }
             }
@@ -274,15 +274,15 @@ namespace BasesDeDatos
             {
                 if (miControl.getDBActual().Equals(""))
                 {
-                    mensajeError += "No se ha especificado la base de datos a usar. \n";
+                    mensajeError += "No se ha especificado la base de datos a usar. \r\n";
                     return error;
                 }
                 String nombreTabla = context.GetChild(2).GetText();
                 Boolean existeTabla = miControl.existeTabla(nombreTabla);
                 if (existeTabla)
                 {
-                    mensajeError += "Ya existe la tabla " + nombreTabla + " en la base de datos actual.\n";
-                    verbose += "No fue posible crear una tabla con el nombre " + nombreTabla + ". \n";
+                    mensajeError += "Ya existe la tabla " + nombreTabla + " en la base de datos actual.\r\n";
+                    verbose += "No fue posible crear una tabla con el nombre " + nombreTabla + ". \r\n";
                     return error;
                 }
                 tablaNueva = new Tabla();
@@ -291,26 +291,26 @@ namespace BasesDeDatos
                 String retorno2 = Visit(context.GetChild(5));
                 if (retorno.Equals(error) || retorno2.Equals(error))
                 {
-                    verbose += "No fue posible crear una tabla con el nombre " + nombreTabla + ". \n";
+                    verbose += "No fue posible crear una tabla con el nombre " + nombreTabla + ". \r\n";
                     return error;
                 }
                 miControl.agregarTabla(tablaNueva);
-                verbose += "Se creo una tabla con el nombre " + nombreTabla + ". \n";
+                verbose += "Se creo una tabla con el nombre " + nombreTabla + ". \r\n";
                 return "";
             }
             else
             {
                 if (miControl.getDBActual().Equals(""))
                 {
-                    mensajeError += "No se ha especificado la base de datos a usar. \n";
+                    mensajeError += "No se ha especificado la base de datos a usar. \r\n";
                     return error;
                 }
                 String nombreTabla = context.GetChild(2).GetText();
                 Boolean existeTabla = miControl.existeTabla(nombreTabla);
                 if (existeTabla)
                 {
-                    mensajeError += "Ya existe la tabla " + nombreTabla + " en la base de datos actual.\n";
-                    verbose += "No fue posible crear una tabla con el nombre " + nombreTabla + ". \n";
+                    mensajeError += "Ya existe la tabla " + nombreTabla + " en la base de datos actual.\r\n";
+                    verbose += "No fue posible crear una tabla con el nombre " + nombreTabla + ". \r\n";
                     return error;
                 }
                 tablaNueva = new Tabla();
@@ -318,11 +318,11 @@ namespace BasesDeDatos
                 String retorno = Visit(context.GetChild(4));
                 if (retorno.Equals(error))
                 {
-                    verbose += "No fue posible crear una tabla con el nombre " + nombreTabla + ". \n";
+                    verbose += "No fue posible crear una tabla con el nombre " + nombreTabla + ". \r\n";
                     return error;
                 }
                 miControl.agregarTabla(tablaNueva);
-                verbose += "Se creo una tabla con el nombre " + nombreTabla + ". \n";
+                verbose += "Se creo una tabla con el nombre " + nombreTabla + ". \r\n";
                 return "";
             }
 
@@ -350,8 +350,8 @@ namespace BasesDeDatos
             Boolean existeCol = tablaNueva.existeColumna(idCol);
             if (existeCol)
             {
-                mensajeError += "La columna: " + idCol + "ya existe en la tabla. \n";
-                verbose += "No fue posible agregar la columna " + idCol + " a la tabla"+ refNombreTabla + ".\n ";
+                mensajeError += "La columna: " + idCol + "ya existe en la tabla. \r\n";
+                verbose += "No fue posible agregar la columna " + idCol + " a la tabla"+ refNombreTabla + ".\r\n ";
                 return error;
             }
             Columna colTemp = new Columna();
@@ -365,12 +365,12 @@ namespace BasesDeDatos
                 String retorno = Visit(context.GetChild(4));
                 if (retorno.Equals(error))
                 {
-                    verbose += "No fue posible agregar la columna " + idCol + " a la tabla" + refNombreTabla + ".\n ";
+                    verbose += "No fue posible agregar la columna " + idCol + " a la tabla" + refNombreTabla + ".\r\n ";
                     return error;
                 }
                 constraintContenido = false;
             }
-            verbose += "Se agrego la columna " + idCol + " a la tabla" + refNombreTabla + ".\n ";
+            verbose += "Se agrego la columna " + idCol + " a la tabla" + refNombreTabla + ".\r\n ";
             return "void";
         }
 
@@ -392,13 +392,13 @@ namespace BasesDeDatos
                     }
                     else
                     {
-                        mensajeError += "La columna " + idNombre + " no existe en la tabla actual.\n";
+                        mensajeError += "La columna " + idNombre + " no existe en la tabla actual.\r\n";
                         return error;
                     }
                 }
                 else
                 {
-                    mensajeError += "El id " + idNombre + " se repite en la llave primaria.\n";
+                    mensajeError += "El id " + idNombre + " se repite en la llave primaria.\r\n";
                     return error;
                 }
 
@@ -416,13 +416,13 @@ namespace BasesDeDatos
                     }
                     else
                     {
-                        mensajeError += "La columna " + idNombre + " no existe en la tabla actual.\n";
+                        mensajeError += "La columna " + idNombre + " no existe en la tabla actual.\r\n";
                         return error;
                     }
                 }
                 else
                 {
-                    mensajeError += "El id " + idNombre + " se repite en la llave foranea.\n";
+                    mensajeError += "El id " + idNombre + " se repite en la llave foranea.\r\n";
                     return error;
                 }
 
@@ -444,19 +444,19 @@ namespace BasesDeDatos
                         }
                         else
                         {
-                            mensajeError += "La columna " + idNombre + " debe ser primaria.\n";
+                            mensajeError += "La columna " + idNombre + " debe ser primaria.\r\n";
                             return error;
                         }
                     }
                     else
                     {
-                        mensajeError += "La columna " + idNombre + " no existe en la tabla " + refNombreTabla + ".\n";
+                        mensajeError += "La columna " + idNombre + " no existe en la tabla " + refNombreTabla + ".\r\n";
                         return error;
                     }
                 }
                 else
                 {
-                    mensajeError += "El id " + idNombre + " se repite en las referencias.\n";
+                    mensajeError += "El id " + idNombre + " se repite en las referencias.\r\n";
                     return error;
                 }
 
@@ -471,7 +471,7 @@ namespace BasesDeDatos
             Boolean existeConstraint = tablaNueva.existeIdConstraint(nombreFK);
             if (existeConstraint)
             {
-                mensajeError += "La restriccion " + nombreFK + " ya existe.\n";
+                mensajeError += "La restriccion " + nombreFK + " ya existe.\r\n";
                 return error;
             }
             tempFC = new ForeignConstraint();
@@ -489,7 +489,7 @@ namespace BasesDeDatos
             Boolean existeTabla = miControl.existeTabla(nombreTabla);
             if (!existeTabla)
             {
-                mensajeError += "No existe la tabla " + nombreTabla + ".\n";
+                mensajeError += "No existe la tabla " + nombreTabla + ".\r\n";
                 return error;
             }
             refNombreTabla = nombreTabla;
@@ -504,7 +504,7 @@ namespace BasesDeDatos
 
             if (tempFC.idCol.Count() != tempFC.refCol.Count())
             {
-                mensajeError += "No coincide el numero de columnas referenciadas en las llaves foraneas con el numero de las referencias. \n";
+                mensajeError += "No coincide el numero de columnas referenciadas en las llaves foraneas con el numero de las referencias. \r\n";
                 return error;
             }
 
@@ -524,7 +524,7 @@ namespace BasesDeDatos
             Boolean existeCol = tablaNueva.existeColumna(nombreCol);
             if (existeCol)
             {
-                mensajeError += "La columna " + nombreCol + " ya ha sido especificada.\n";
+                mensajeError += "La columna " + nombreCol + " ya ha sido especificada.\r\n";
                 return error;
             }
 
@@ -539,7 +539,7 @@ namespace BasesDeDatos
             String nombreColumna = Visit(context.GetChild(0));
             if (nombreColumna.Equals(error))
             {
-                verbose += "No se realizo el ordenamiento debido a un error en la declaracion de columnas. \n";
+                verbose += "No se realizo el ordenamiento debido a un error en la declaracion de columnas. \r\n";
                 return error;
             }
             columnaSort.Add(nombreColumna);
@@ -552,7 +552,7 @@ namespace BasesDeDatos
             {
                 tipoSort.Add("asc");
             }
-            verbose += "Se realizo con el exito el ordenamiento de los datos en la consulta. \n";
+            verbose += "Se realizo con el exito el ordenamiento de los datos en la consulta. \r\n";
             return "void";
             
 
@@ -564,7 +564,7 @@ namespace BasesDeDatos
             Boolean existeColumna = miControl.existeColumna(refNombreTabla, nombreColumna);
             if(!existeColumna)
             {
-                mensajeError += "no existe la columna "+nombreColumna+" en la tabla "+refNombreTabla+". \n";
+                mensajeError += "no existe la columna "+nombreColumna+" en la tabla "+refNombreTabla+". \r\n";
                 return error;
             }
             String tipoColumna = miControl.obtenerTipoCol(refNombreTabla,nombreColumna);
@@ -577,7 +577,7 @@ namespace BasesDeDatos
             {
                  if (!(((tipoColumna.Equals("int") || tipoColumna.Equals("float")) && (retorno.Equals("int") || retorno.Equals("float"))) || (tipoColumna.Contains("char") && retorno.Equals("date")) || (tipoColumna.Contains("char") && retorno.Contains("char"))))
                 {
-                    mensajeError += "No se puede guardar un " + retorno + " como un " + tipoColumna + ".\n";
+                    mensajeError += "No se puede guardar un " + retorno + " como un " + tipoColumna + ".\r\n";
                     return error;
                 }
             }
@@ -606,7 +606,7 @@ namespace BasesDeDatos
                     existeCol = miControl.existeColumna(refNombreTabla, nombreCol);
                     if (!existeCol)
                     {
-                        mensajeError += "no existe la columna " + nombreCol + ". \n";
+                        mensajeError += "no existe la columna " + nombreCol + ". \r\n";
                         return error;
                     }
                     tipoCol = miControl.obtenerTipoCol(refNombreTabla, nombreCol);
@@ -622,7 +622,7 @@ namespace BasesDeDatos
                         }
                         
                     }
-                    mensajeError += "no existe la columna " + nombreCol + ". \n";
+                    mensajeError += "no existe la columna " + nombreCol + ". \r\n";
                     return error;
                 }
                 
@@ -632,7 +632,7 @@ namespace BasesDeDatos
                 existeCol = tablaNueva.existeColumna(nombreCol);
                 if (!existeCol)
                 {
-                    mensajeError += "no existe la columna " + nombreCol + ". \n";
+                    mensajeError += "no existe la columna " + nombreCol + ". \r\n";
                     return error;
                 }
                 tipoCol = tablaNueva.tipoColumna(nombreCol);
@@ -664,12 +664,12 @@ namespace BasesDeDatos
                 }
                 if (coincidencias == 0)
                 {
-                    mensajeError += "las tablas referenciadas no poseen una tabla de nombre " + nombreColumna + ". \n";
+                    mensajeError += "las tablas referenciadas no poseen una tabla de nombre " + nombreColumna + ". \r\n";
                     return error;
                 }
                 else if (coincidencias > 1)
                 {
-                    mensajeError += "existe ambiguedad al hacer uso de la columna " + nombreColumna + ". \n";
+                    mensajeError += "existe ambiguedad al hacer uso de la columna " + nombreColumna + ". \r\n";
                     return error;
                 }
 
@@ -686,7 +686,7 @@ namespace BasesDeDatos
                 }
                 else
                 {
-                    mensajeError += "no existe la tabla de nombre " + nombreTabla + ". \n";
+                    mensajeError += "no existe la tabla de nombre " + nombreTabla + ". \r\n";
                     return error;
                 }
 
@@ -699,25 +699,25 @@ namespace BasesDeDatos
             String nombreTabla = context.GetChild(2).GetText();
             if (miControl.getDBActual().Equals(""))
             {
-                mensajeError += "No ha seleccionado una base de datos en la cual trabajar.\n";
+                mensajeError += "No ha seleccionado una base de datos en la cual trabajar.\r\n";
                 return error;
             }
             Boolean existeTabla = miControl.existeTabla(nombreTabla);
             if (!existeTabla)
             {
-                mensajeError += "No existe la tabla " + nombreTabla + " en la base de datos. \n";
-                verbose += "No se pudo eliminar la tabla " + nombreTabla + " ya que no existe en la base de datos. \n";
+                mensajeError += "No existe la tabla " + nombreTabla + " en la base de datos. \r\n";
+                verbose += "No se pudo eliminar la tabla " + nombreTabla + " ya que no existe en la base de datos. \r\n";
                 return error;
             }
             Boolean tablaReferenciada = miControl.tablaEnReferencia(nombreTabla);
             if (tablaReferenciada)
             {
-                mensajeError += "La tabla " + nombreTabla + " no puede ser borrada ya que es referenciada en otra tabla. \n";
-                verbose += "No se pudo eliminar la tabla " + nombreTabla + " ya que es referenciada en otra tabla. \n";
+                mensajeError += "La tabla " + nombreTabla + " no puede ser borrada ya que es referenciada en otra tabla. \r\n";
+                verbose += "No se pudo eliminar la tabla " + nombreTabla + " ya que es referenciada en otra tabla. \r\n";
                 return error;
             }
             miControl.removerTabla(nombreTabla);
-            verbose += "Se elimino la tabla " + nombreTabla + ". \n";
+            verbose += "Se elimino la tabla " + nombreTabla + ". \r\n";
             return "void";
            
         }
@@ -744,15 +744,15 @@ namespace BasesDeDatos
         {
             if (miControl.getDBActual().Equals(""))
             {
-                mensajeError += "No se ha especificado la base de datos a usar. \n";
+                mensajeError += "No se ha especificado la base de datos a usar. \r\n";
                 return error;
             }
             String nombreTabla = context.GetChild(3).GetText();
             Boolean existeTabla = miControl.existeTabla(nombreTabla);
             if (!existeTabla)
             {
-                mensajeError += "No existe la tabla " + nombreTabla + " en esta base de datos. \n";
-                verbose += "No se mostro la tabla" + nombreTabla + " ya que no existe en la base de datos "+miControl.getDBActual()+". \n";
+                mensajeError += "No existe la tabla " + nombreTabla + " en esta base de datos. \r\n";
+                verbose += "No se mostro la tabla" + nombreTabla + " ya que no existe en la base de datos "+miControl.getDBActual()+". \r\n";
             }
             aMostrar.ColumnCount = 2;
             aMostrar.RowCount = miControl.getTablasCreadas().getListaTB().Count + 1;
@@ -765,7 +765,7 @@ namespace BasesDeDatos
                 aMostrar.Rows[i].Cells[1].Value = miControl.getTablasCreadas().obtenerTabla(nombreTabla).columnasTB[i - 1].getTipo() + "";
             }
             //mostrarDB = miControl.getBasesCreadas().listaDB;
-            verbose += "Se mostraron las columnas de la tabla " + nombreTabla + ". \n";
+            verbose += "Se mostraron las columnas de la tabla " + nombreTabla + ". \r\n";
             return "void";
         }
 
@@ -773,7 +773,7 @@ namespace BasesDeDatos
         {
             if (tablaNueva.pConstraint.Count() == 1)
             {
-                mensajeError += "No se permiten multiples llaves primarias.\n";
+                mensajeError += "No se permiten multiples llaves primarias.\r\n";
                 return error;
             }
             
@@ -781,7 +781,7 @@ namespace BasesDeDatos
             Boolean existeConstraint = tablaNueva.existeIdConstraint(nombrePK);
             if (existeConstraint)
             {
-                mensajeError += "La restriccion " + nombrePK + " ya existe.\n";
+                mensajeError += "La restriccion " + nombrePK + " ya existe.\r\n";
                 return error;
             } 
             tempPC = new PrimaryConstraint();
@@ -807,7 +807,7 @@ namespace BasesDeDatos
                 }
                 else
                 {
-                    mensajeError += "Se viola la unicidad de la Primary Key en la tabla. \n";
+                    mensajeError += "Se viola la unicidad de la Primary Key en la tabla. \r\n";
                     return error;
                 }
             }
@@ -818,7 +818,7 @@ namespace BasesDeDatos
         {
             if (miControl.getDBActual().Equals(""))
             {
-                mensajeError += "No se ha especificado la base de datos a usar. \n";
+                mensajeError += "No se ha especificado la base de datos a usar. \r\n";
                 return error;
             }
             aMostrar.ColumnCount = 3;
@@ -834,7 +834,7 @@ namespace BasesDeDatos
                 aMostrar.Rows[i].Cells[2].Value = miControl.getTablasCreadas().getListaTB()[i - 1].getNumColumnas() + "";
             }
             //mostrarDB = miControl.getBasesCreadas().listaDB;
-            verbose += "Se mostraron las tablas de la base de datos " + miControl.getDBActual()+ ". \n";
+            verbose += "Se mostraron las tablas de la base de datos " + miControl.getDBActual()+ ". \r\n";
             return "void";
         }
 
@@ -912,12 +912,12 @@ namespace BasesDeDatos
             Boolean existeConstraint = tablaNueva.existeIdConstraint(nombreConstraint);
             if (!existeConstraint)
             {
-                mensajeError += "El constraint: " + nombreConstraint + " no existe en la tabla.\n";
-                verbose += "No se pudo eliminar la constraint " + nombreConstraint + " en la tabla " + refNombreTabla + " ya que no existe la tabla. \n";
+                mensajeError += "El constraint: " + nombreConstraint + " no existe en la tabla.\r\n";
+                verbose += "No se pudo eliminar la constraint " + nombreConstraint + " en la tabla " + refNombreTabla + " ya que no existe la tabla. \r\n";
                 return error;
             }
             tablaNueva.removerConstraint(nombreConstraint);
-            verbose += "Se elimino la constraint " + nombreConstraint + " en la tabla " + refNombreTabla + ". \n";
+            verbose += "Se elimino la constraint " + nombreConstraint + " en la tabla " + refNombreTabla + ". \r\n";
             return "void";
         }
 
@@ -952,7 +952,7 @@ namespace BasesDeDatos
             {
                 if (!(((type1.Equals("int") || type1.Equals("float")) && (type2.Equals("int") || type2.Equals("float"))) || (type1.Contains("char") && type2.Equals("date")) || (type1.Contains("char") && type2.Contains("char"))||(type1.Equals("null")||type2.Equals("null"))))
                 {
-                    mensajeError += "No se puede relacionar un " + type1 + " con un " + type2 + ".\n";
+                    mensajeError += "No se puede relacionar un " + type1 + " con un " + type2 + ".\r\n";
                     return error;
                 }
             }
@@ -973,7 +973,7 @@ namespace BasesDeDatos
                 aMostrar.Rows[i].Cells[1].Value = miControl.getBasesCreadas().getListaDB()[i - 1].getNumTablas() + "";
             }
             //mostrarDB = miControl.getBasesCreadas().listaDB;
-            verbose += "Se mostraron todas las bases de datos en el sistema. \n ";
+            verbose += "Se mostraron todas las bases de datos en el sistema. \r\n ";
             return "void";
         }
 
@@ -1009,14 +1009,14 @@ namespace BasesDeDatos
             
             if (miControl.getDBActual().Equals(""))
             {
-                mensajeError += "No ha seleccionado una base de datos en la cual trabajar.\n";
+                mensajeError += "No ha seleccionado una base de datos en la cual trabajar.\r\n";
                 return error;
             }
             Boolean existeTabla = miControl.existeTabla(nombreTabla);
             if (!existeTabla)
             {
-                mensajeError += "No existe la tabla: " + nombreTabla + ".\n";
-                verbose += "No se actualizo en la tabla " + nombreTabla + " ya que no existe la tabla en la base de datos "+miControl.getDBActual()+". \n";
+                mensajeError += "No existe la tabla: " + nombreTabla + ".\r\n";
+                verbose += "No se actualizo en la tabla " + nombreTabla + " ya que no existe la tabla en la base de datos "+miControl.getDBActual()+". \r\n";
                 return error;
             }
             nombresCol = new List<String>();
@@ -1027,7 +1027,7 @@ namespace BasesDeDatos
             String retorno = Visit(context.GetChild(3));
             if (retorno.Equals(error))
             {
-                verbose += "No se actualizo en la tabla " + nombreTabla + " ya que hubo un error en el set de actualizaciones. \n";
+                verbose += "No se actualizo en la tabla " + nombreTabla + " ya que hubo un error en el set de actualizaciones. \r\n";
                 return error;
             }
 
@@ -1138,7 +1138,7 @@ namespace BasesDeDatos
                         else
                         {
                             int indice = i + 1;
-                            mensajeError += "El varchar en el valor " + indice + " supera el tamaño especificado. \n";
+                            mensajeError += "El varchar en el valor " + indice + " supera el tamaño especificado. \r\n";
                             return error;
                         }
 
@@ -1158,7 +1158,7 @@ namespace BasesDeDatos
             {
                 filasUpdate = miControl.UpdateColumnas(filaObjetos, nombreTabla);
                 numeroUpdate = numeroUpdate + filasUpdate;
-                mensajeUpdate = "Update " + numeroUpdate + " con exito. \n";
+                mensajeUpdate = "Update " + numeroUpdate + " con exito. \r\n";
                 if (miControl.falloUpdate)
                 {
                     mensajeError += miControl.mensajeFallo2;
@@ -1179,7 +1179,7 @@ namespace BasesDeDatos
                 List<string> whereElements = retorno.Split(new char[] { ' ' }).ToList();
                 filasUpdate = miControl.UpdateColumnas(filaObjetos, nombreTabla, whereElements);
                 numeroUpdate = numeroUpdate + filasUpdate;
-                mensajeUpdate = "Update " + numeroUpdate + " con exito. \n";
+                mensajeUpdate = "Update " + numeroUpdate + " con exito. \r\n";
                 if (miControl.falloUpdate)
                 {
                     mensajeError += miControl.mensajeFallo2;
@@ -1187,7 +1187,7 @@ namespace BasesDeDatos
                 }
                 
             }
-            verbose += "Se actualizo informacion en la tabla " + nombreTabla +". \n";
+            verbose += "Se actualizo informacion en la tabla " + nombreTabla +". \r\n";
             return "void";
         }
 
@@ -1197,12 +1197,12 @@ namespace BasesDeDatos
             Boolean existeDB = miControl.existeDB(nombreDataBase);
             if (!existeDB)
             {
-                mensajeError += "No existe la base de datos " + nombreDataBase + ". \n";
-                verbose += "No se pudo utilizar la base de datos " + nombreDataBase + " ya que no existe. \n";
+                mensajeError += "No existe la base de datos " + nombreDataBase + ". \r\n";
+                verbose += "No se pudo utilizar la base de datos " + nombreDataBase + " ya que no existe. \r\n";
                 return error;
             }
             miControl.setDBActual(nombreDataBase);
-            verbose += "La base de datos actual es " + nombreDataBase + ". \n";
+            verbose += "La base de datos actual es " + nombreDataBase + ". \r\n";
             return "void";
 
         }
@@ -1212,15 +1212,15 @@ namespace BasesDeDatos
             String nombreTabla = context.GetChild(2).GetText();
             if (miControl.getDBActual().Equals(""))
             {
-                mensajeError += "No ha seleccionado una base de datos en la cual trabajar.\n";
+                mensajeError += "No ha seleccionado una base de datos en la cual trabajar.\r\n";
                 return error;
             }
 
             Boolean existeTabla = miControl.existeTabla(nombreTabla);
             if (!existeTabla)
             {
-                mensajeError += "No existe la tabla: " + nombreTabla + ".\n";
-                verbose += "No se inserto en  la tabla" + nombreTabla + " ya que no existe en la base de datos " + miControl.getDBActual() + ". \n";
+                mensajeError += "No existe la tabla: " + nombreTabla + ".\r\n";
+                verbose += "No se inserto en  la tabla" + nombreTabla + " ya que no existe en la base de datos " + miControl.getDBActual() + ". \r\n";
                 return error;
             }
             nombresCol = new List<String>();
@@ -1229,7 +1229,7 @@ namespace BasesDeDatos
             String retorno1 = Visit(context.GetChild(4));
             if (retorno1.Equals(error))
             {
-                verbose += "No se inserto en  la tabla" + nombreTabla + " ya que hubo un error en la declaracion de columnas. \n";
+                verbose += "No se inserto en  la tabla" + nombreTabla + " ya que hubo un error en la declaracion de columnas. \r\n";
                 return error;
             }
             //Recorrer values
@@ -1239,14 +1239,14 @@ namespace BasesDeDatos
             String retorno2 = Visit(context.GetChild(8));
             if (retorno2.Equals(error))
             {
-                verbose += "No se inserto en  la tabla" + nombreTabla + " ya que hubo un error en la declaracion de valores. \n";
+                verbose += "No se inserto en  la tabla" + nombreTabla + " ya que hubo un error en la declaracion de valores. \r\n";
                 return error;
             }
             //Error 1 listas tamaños diferentes
             if (valuesCol.Count != nombresCol.Count)
             {
-                mensajeError += "El numero de los valores a ingresar no coincide con las columnas especificadas. \n";
-                verbose += "No se inserto en  la tabla" + nombreTabla + " ya que no coincide la cantidad de argumentos. \n";
+                mensajeError += "El numero de los valores a ingresar no coincide con las columnas especificadas. \r\n";
+                verbose += "No se inserto en  la tabla" + nombreTabla + " ya que no coincide la cantidad de argumentos. \r\n";
                 return error;
             }
             //Error 2 coincidencia de tipos
@@ -1368,7 +1368,7 @@ namespace BasesDeDatos
                         else
                         {
                             int indice = i + 1;
-                            mensajeError += "El varchar en el valor " + indice + " supera el tamaño especificado. \n";
+                            mensajeError += "El varchar en el valor " + indice + " supera el tamaño especificado. \r\n";
                             return error;
                         }
 
@@ -1402,34 +1402,34 @@ namespace BasesDeDatos
                         {
                             miControl.agregarFilaTabla(nombreTabla, filaObjetos);
                             numeroInsert = numeroInsert + 1;
-                            mensajeInsert = "Insert " + numeroInsert + " con exito. \n";
+                            mensajeInsert = "Insert " + numeroInsert + " con exito. \r\n";
                         }
                         else
                         {
-                            mensajeError += "Se viola la primary key ya que no existe el elemento que se esta referenciando. \n";
+                            mensajeError += "Se viola la primary key ya que no existe el elemento que se esta referenciando. \r\n";
                             return error; 
                         }
                        
                     }
                     else
                     {
-                        mensajeError += "Ya existe la llave primaria que se trata de agregar. \n";
+                        mensajeError += "Ya existe la llave primaria que se trata de agregar. \r\n";
                         return error;
                     }
                 }
                 else
                 {
-                    mensajeError += "Una de las llaves primarias no puede ser null. \n";
+                    mensajeError += "Una de las llaves primarias no puede ser null. \r\n";
                     return error;
                 }
                 
             }
             else
             {
-                mensajeError += "No se pudo agregar la fila en "+nombreTabla+". \n";
+                mensajeError += "No se pudo agregar la fila en "+nombreTabla+". \r\n";
                 return error;
             }
-            verbose += "Se inserto correctamente en  la tabla" + nombreTabla + ". \n";
+            verbose += "Se inserto correctamente en  la tabla" + nombreTabla + ". \r\n";
             return "void";
         }
 
@@ -1437,7 +1437,7 @@ namespace BasesDeDatos
         {
             if (expConstraint)
             {
-                mensajeError += "No se puede referenciar columnas de otras tablas en esta condicion. \n";
+                mensajeError += "No se puede referenciar columnas de otras tablas en esta condicion. \r\n";
                 return error;
             }
             //codigo del WHERE
@@ -1446,20 +1446,20 @@ namespace BasesDeDatos
             Boolean existeTabla = miControl.existeTabla(nombreTabla);
             if (!existeTabla)
             {
-                mensajeError += "no existe una tabla de nombre " + nombreTabla + ". \n";
+                mensajeError += "no existe una tabla de nombre " + nombreTabla + ". \r\n";
                 return error;
             }
 
             if (!nombresTabla.Contains(nombreTabla))
             {
-                mensajeError += "no se especifico hacer uso de la tabla " + nombreTabla + ". \n";
+                mensajeError += "no se especifico hacer uso de la tabla " + nombreTabla + ". \r\n";
                 return error;
             }
 
             Boolean existeCol = miControl.existeColumna(nombreTabla, nombreCol);
             if (!existeCol)
             {
-                mensajeError += "no existe la columna " + nombreCol + "en la tabla "+nombreTabla+". \n";
+                mensajeError += "no existe la columna " + nombreCol + "en la tabla "+nombreTabla+". \r\n";
                 return error;
             }
             String tipoCol = miControl.obtenerTipoCol(nombreTabla, nombreCol);
@@ -1477,13 +1477,13 @@ namespace BasesDeDatos
                 Boolean existe = miControl.existeTabla(nombreTabla);
                 if (!existe)
                 {
-                    mensajeError += "No existe la tabla de nombre " + nombreTabla + ". \n";
+                    mensajeError += "No existe la tabla de nombre " + nombreTabla + ". \r\n";
                     return error;
                 }
                 existe = miControl.existeColumna(nombreTabla, nombreColumna);
                 if (!existe)
                 {
-                    mensajeError += "No existe la columna de nombre " + nombreColumna + "en la tabla "+nombreTabla+". \n";
+                    mensajeError += "No existe la columna de nombre " + nombreColumna + "en la tabla "+nombreTabla+". \r\n";
                     return error;
                 }
                 return nombreTabla + "." + nombreColumna;
@@ -1492,7 +1492,7 @@ namespace BasesDeDatos
             //tabla
             else
             {
-                mensajeError += "se requiere el nombre de una tabla, no una referencia .\n";
+                mensajeError += "se requiere el nombre de una tabla, no una referencia .\r\n";
                 return error;
             }
         }
@@ -1507,7 +1507,7 @@ namespace BasesDeDatos
             Boolean seleccionarTodo = false;
             if (miControl.getDBActual().Equals(""))
             {
-                mensajeError += "No ha seleccionado una base de datos en la cual trabajar.\n";
+                mensajeError += "No ha seleccionado una base de datos en la cual trabajar.\r\n";
                 return error;
             }
 
@@ -1515,7 +1515,7 @@ namespace BasesDeDatos
 
             if (retorno.Equals(error))
             {
-                verbose += "No se pudo realizar el select debido a un error en la declaracion del FROM. \n";
+                verbose += "No se pudo realizar el select debido a un error en la declaracion del FROM. \r\n";
                 return error;
             }
 
@@ -1531,7 +1531,7 @@ namespace BasesDeDatos
                 conTabla = false;
                 if (retorno.Equals(error))
                 {
-                    verbose += "No se pudo realizar el select debido a un error en la especificacion de columnas. \n";
+                    verbose += "No se pudo realizar el select debido a un error en la especificacion de columnas. \r\n";
                     return error;
                 }
             }
@@ -1603,7 +1603,7 @@ namespace BasesDeDatos
                     expWhere = false;
                     if (retorno.Equals(error))
                     {
-                        verbose += "No se pudo realizar el select debido a un error en la condicion. \n";
+                        verbose += "No se pudo realizar el select debido a un error en la condicion. \r\n";
                         return error;
                     }
                     List<string> whereElements = retorno.Split(new char[] { ' ' }).ToList();
@@ -1670,7 +1670,7 @@ namespace BasesDeDatos
                         conTabla = false;
                         if (retorno.Equals(error))
                         {
-                            verbose += "No se pudo realizar el select debido a un error en la especificacion de orden. \n";
+                            verbose += "No se pudo realizar el select debido a un error en la especificacion de orden. \r\n";
                             return error;
                         }
 
@@ -1737,7 +1737,7 @@ namespace BasesDeDatos
                     conTabla = false;
                     if (retorno.Equals(error))
                     {
-                        verbose += "No se pudo realizar el select debido a un error en la especificacion del orden. \n";
+                        verbose += "No se pudo realizar el select debido a un error en la especificacion del orden. \r\n";
                         return error;
                     }
                     if (seleccionarTodo)
@@ -1793,7 +1793,7 @@ namespace BasesDeDatos
                     
                 }
             }
-            verbose += "Se realizo con exito la consulta. \n";
+            verbose += "Se realizo con exito la consulta. \r\n";
             return "void";
         }
 
@@ -1803,7 +1803,7 @@ namespace BasesDeDatos
             Boolean existeColumna = miControl.existeColumna(refNombreTabla, nombreColumna);
             if (!existeColumna)
             {
-                mensajeError += "No existe una columna de nombre " + nombreColumna + ".\n";
+                mensajeError += "No existe una columna de nombre " + nombreColumna + ".\r\n";
                 return error;
             }
             nombresCol.Add(nombreColumna);
@@ -1849,24 +1849,24 @@ namespace BasesDeDatos
             Boolean existeTabla = miControl.existeTabla(nombreViejo);
             if (miControl.getDBActual().Equals(""))
             {
-                mensajeError += "No ha seleccionado una base de datos en la cual trabajar.\n";
+                mensajeError += "No ha seleccionado una base de datos en la cual trabajar.\r\n";
                 return error;
             }
             if (!existeTabla)
             {
-                mensajeError += "No existe la tabla " + nombreViejo + " a la cual se le desea cambiar nombre. \n";
-                verbose += "No fue posible cambiar el nombre de la tabla " + nombreViejo + " a " + nombreNuevo + " ya que no existe. \n";
+                mensajeError += "No existe la tabla " + nombreViejo + " a la cual se le desea cambiar nombre. \r\n";
+                verbose += "No fue posible cambiar el nombre de la tabla " + nombreViejo + " a " + nombreNuevo + " ya que no existe. \r\n";
                 return error;
             }
             existeTabla = miControl.existeTabla(nombreNuevo);
             if (existeTabla)
             {
-                mensajeError += "Ya existe una tabla con el nombre " + nombreNuevo + ".\n";
-                verbose += "No fue posible cambiar el nombre de la tabla " + nombreViejo + " a " + nombreNuevo + ". \n";
+                mensajeError += "Ya existe una tabla con el nombre " + nombreNuevo + ".\r\n";
+                verbose += "No fue posible cambiar el nombre de la tabla " + nombreViejo + " a " + nombreNuevo + ". \r\n";
                 return error;
             }
             miControl.cambiarNombreTabla(nombreViejo, nombreNuevo);
-            verbose += "Se cambio el nombre de la tabla " + nombreViejo + " a " + nombreNuevo + ". \n";
+            verbose += "Se cambio el nombre de la tabla " + nombreViejo + " a " + nombreNuevo + ". \r\n";
             return "void";
         }
 
@@ -1879,15 +1879,15 @@ namespace BasesDeDatos
             {
                 if (constraintTexto.Contains("PRIMARY KEY"))
                 {
-                    verbose += "No fue posible agregar la constraint PRIMARIA a la tabla" + refNombreTabla + ".\n ";
+                    verbose += "No fue posible agregar la constraint PRIMARIA a la tabla" + refNombreTabla + ".\r\n ";
                 }
                 else if (constraintTexto.Contains("FOREIGN KEY"))
                 {
-                    verbose += "No fue posible agregar la constraint FORANEA a la tabla" + refNombreTabla + ".\n ";
+                    verbose += "No fue posible agregar la constraint FORANEA a la tabla" + refNombreTabla + ".\r\n ";
                 }
                 else
                 {
-                    verbose += "No fue posible agregar el CHECK a la tabla" + refNombreTabla + ".\n ";
+                    verbose += "No fue posible agregar el CHECK a la tabla" + refNombreTabla + ".\r\n ";
                 }
                 
                 return error;
@@ -1895,15 +1895,15 @@ namespace BasesDeDatos
             constraintContenido = false;
             if (constraintTexto.Contains("PRIMARY KEY"))
             {
-                verbose += "Se agrego la constraint PRIMARIA a la tabla" + refNombreTabla + ".\n ";
+                verbose += "Se agrego la constraint PRIMARIA a la tabla" + refNombreTabla + ".\r\n ";
             }
             else if (constraintTexto.Contains("FOREIGN KEY"))
             {
-                verbose += "Se agrego la constraint FORANEA a la tabla" + refNombreTabla + ".\n ";
+                verbose += "Se agrego la constraint FORANEA a la tabla" + refNombreTabla + ".\r\n ";
             }
             else
             {
-                verbose += "Se agrego el CHECK a la tabla" + refNombreTabla + ".\n ";
+                verbose += "Se agrego el CHECK a la tabla" + refNombreTabla + ".\r\n ";
             }
             return "void"; 
 
@@ -1937,13 +1937,13 @@ namespace BasesDeDatos
             if (!existe)
             {
                 miControl.agregarDB(nombreDB);
-                verbose += "Se creo una base de datos con el nombre " + nombreDB+". \n";
+                verbose += "Se creo una base de datos con el nombre " + nombreDB+". \r\n";
                 return "void";
             }
             else
             {
-                mensajeError += "Ya existe la base de datos " + nombreDB + ".\n";
-                verbose += "No fue posible crear una base de datos con el nombre " + nombreDB + ". \n";
+                mensajeError += "Ya existe la base de datos " + nombreDB + ".\r\n";
+                verbose += "No fue posible crear una base de datos con el nombre " + nombreDB + ". \r\n";
                 return error;
             }
 
@@ -1960,7 +1960,7 @@ namespace BasesDeDatos
             Boolean existeCol = tablaNueva.existeColumna(nombreCol);
             if (existeCol)
             {
-                mensajeError += "La columna " + nombreCol + " ya ha sido especificada.\n";
+                mensajeError += "La columna " + nombreCol + " ya ha sido especificada.\r\n";
                 return error;
             }
 
@@ -2012,7 +2012,7 @@ namespace BasesDeDatos
             }
             catch (FormatException)
             {
-                mensajeError += "Error en la linea: " + context.Start + ", Error: La fecha: " + fecha + " no es valida.\n";
+                mensajeError += "Error en la linea: " + context.Start + ", Error: La fecha: " + fecha + " no es valida.\r\n";
                 return error;
             }
             return "date";
@@ -2035,7 +2035,7 @@ namespace BasesDeDatos
             Boolean existeColumna = miControl.existeColumna(refNombreTabla, nombreColumna);
             if (!existeColumna)
             {
-                mensajeError += "No existe una columna de nombre " + nombreColumna + ".\n";
+                mensajeError += "No existe una columna de nombre " + nombreColumna + ".\r\n";
                 return error;
             }
             nombresCol.Add(nombreColumna);
@@ -2127,14 +2127,14 @@ namespace BasesDeDatos
                     }
                     else
                     {
-                        mensajeError += "La columna " + idNombre + " no existe en la llave.\n";
+                        mensajeError += "La columna " + idNombre + " no existe en la llave.\r\n";
                         return error;
                     }
                     
                 }
                 else
                 {
-                    mensajeError += "El id " + idNombre + " se repite en la llave primaria.\n";
+                    mensajeError += "El id " + idNombre + " se repite en la llave primaria.\r\n";
                     return error;
                 }
 
@@ -2153,13 +2153,13 @@ namespace BasesDeDatos
                     }
                     else
                     {
-                        mensajeError += "La columna " + idNombre + " no existe en la tabla actual.\n";
+                        mensajeError += "La columna " + idNombre + " no existe en la tabla actual.\r\n";
                         return error;
                     }
                 }
                 else
                 {
-                    mensajeError += "El id " + idNombre + " se repite en la llave foranea.\n";
+                    mensajeError += "El id " + idNombre + " se repite en la llave foranea.\r\n";
                     return error;
                 }
 
@@ -2181,19 +2181,19 @@ namespace BasesDeDatos
                         }
                         else
                         {
-                            mensajeError += "La columna " + idNombre + " debe ser primaria.\n";
+                            mensajeError += "La columna " + idNombre + " debe ser primaria.\r\n";
                             return error;
                         }
                     }
                     else
                     {
-                        mensajeError += "La columna " + idNombre + " no existe en la tabla "+refNombreTabla+".\n";
+                        mensajeError += "La columna " + idNombre + " no existe en la tabla "+refNombreTabla+".\r\n";
                         return error;
                     }
                 }
                 else
                 {
-                    mensajeError += "El id " + idNombre + " se repite en las referencias.\n";
+                    mensajeError += "El id " + idNombre + " se repite en las referencias.\r\n";
                     return error;
                 }
 
@@ -2215,14 +2215,14 @@ namespace BasesDeDatos
 
             if (miControl.getDBActual().Equals(""))
             {
-                mensajeError += "No ha seleccionado una base de datos en la cual trabajar.\n";
+                mensajeError += "No ha seleccionado una base de datos en la cual trabajar.\r\n";
                 return error;
             }
             Boolean existeTabla = miControl.existeTabla(nombreTabla);
             if (!existeTabla)
             {
-                mensajeError += "No existe la tabla: " + nombreTabla + ".\n";
-                verbose += "No se elimino en la tabla " + nombreTabla + " ya que no existe la tabla en la base de datos " + miControl.getDBActual() + ". \n";
+                mensajeError += "No existe la tabla: " + nombreTabla + ".\r\n";
+                verbose += "No se elimino en la tabla " + nombreTabla + " ya que no existe la tabla en la base de datos " + miControl.getDBActual() + ". \r\n";
 
                 return error;
             }
@@ -2237,11 +2237,11 @@ namespace BasesDeDatos
                 {
                     mensajeError += miControl.mensajeFallo;
                     numeroDelete = numeroDelete + filasDelete;
-                    mensajeDelete = "Delete " + numeroDelete + " con exito. \n";
+                    mensajeDelete = "Delete " + numeroDelete + " con exito. \r\n";
                     return error;
                 }
                 numeroDelete = numeroDelete + filasDelete;
-                mensajeDelete = "Delete " + numeroDelete + " con exito. \n";
+                mensajeDelete = "Delete " + numeroDelete + " con exito. \r\n";
             }
             else
             {
@@ -2253,7 +2253,7 @@ namespace BasesDeDatos
                 expWhere = false;
                 if (retorno.Equals(error))
                 {
-                    verbose += "No se elimino en la tabla " + nombreTabla + " ya que hubo un error en la condicion. \n";
+                    verbose += "No se elimino en la tabla " + nombreTabla + " ya que hubo un error en la condicion. \r\n";
                     return error;
                 }
                 List<string> whereElements = retorno.Split(new char[] { ' ' }).ToList();
@@ -2261,14 +2261,14 @@ namespace BasesDeDatos
                 if(miControl.falloEliminacion){
                     mensajeError += miControl.mensajeFallo;
                     numeroDelete = numeroDelete + filasDelete;
-                    mensajeDelete = "Delete " + numeroDelete + " con exito. \n";
+                    mensajeDelete = "Delete " + numeroDelete + " con exito. \r\n";
                     return error;
                 }
                 numeroDelete = numeroDelete + filasDelete;
-                mensajeDelete = "Delete " + numeroDelete + " con exito. \n";
+                mensajeDelete = "Delete " + numeroDelete + " con exito. \r\n";
 
             }
-            verbose += "Se eliminaron "+numeroDelete+ " registros en la tabla " + nombreTabla + ". \n";
+            verbose += "Se eliminaron "+numeroDelete+ " registros en la tabla " + nombreTabla + ". \r\n";
             return "void";
 
         }
@@ -2297,13 +2297,13 @@ namespace BasesDeDatos
             refNombreTabla = nombreTabla;
             if (miControl.getDBActual().Equals(""))
             {
-                mensajeError += "No ha seleccionado una base de datos en la cual trabajar.\n";
+                mensajeError += "No ha seleccionado una base de datos en la cual trabajar.\r\n";
                 return error;
             }
             if (!existeTabla)
             {
-                mensajeError += "No existe la tabla " + nombreTabla + " a la cual se le desea realizar la accion. \n";
-                verbose += "No se realizo la accion, ya que la tabla " + nombreTabla + " no existe. \n";
+                mensajeError += "No existe la tabla " + nombreTabla + " a la cual se le desea realizar la accion. \r\n";
+                verbose += "No se realizo la accion, ya que la tabla " + nombreTabla + " no existe. \r\n";
                 return error;
             }
             tablaNueva = new Tabla();
@@ -2311,11 +2311,11 @@ namespace BasesDeDatos
             String retorno = Visit(context.GetChild(3));
             if (retorno.Equals(error))
             {
-                verbose += "No fue posible modificar la tabla " + nombreTabla + ". \n";
+                verbose += "No fue posible modificar la tabla " + nombreTabla + ". \r\n";
                 return error;
             }
             miControl.sustituirTabla(nombreTabla, tablaNueva);
-            verbose += "Se modifico la tabla " + nombreTabla + ". \n";
+            verbose += "Se modifico la tabla " + nombreTabla + ". \r\n";
             return "void";
         }
 

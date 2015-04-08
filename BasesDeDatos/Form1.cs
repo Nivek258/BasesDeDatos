@@ -102,6 +102,14 @@ namespace BasesDeDatos
                 textErrores.Text += miVisitor.mensajeSelect + " \n";
                 textErrores.Text += errores;
                 textoVerbose += miVisitor.verbose+" \r\n";
+                if (checkVerbose.Checked)
+                {
+                    textVerbose.Text = textoVerbose;
+                }
+                else
+                {
+                    textVerbose.Text = "";
+                }
                 
             }
             else
