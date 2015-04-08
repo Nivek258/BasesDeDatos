@@ -239,7 +239,7 @@ namespace BasesDeDatos
                 }
                 else
                 {
-                    mensajeError += "";
+                    mensajeError += "El check no se cumple con todos los elementos de la tabla. \n";
                     return error;
                 }
             }
@@ -361,6 +361,7 @@ namespace BasesDeDatos
             String idNombre = context.GetChild(0).GetText();
             Boolean idRepetido = false;
             Boolean columnaExiste = false;
+            Boolean esPrimary = false;
             if (TipoConstraint == 1)
             {
                 idRepetido = tempPC.existeIdCol(idNombre);
@@ -418,7 +419,16 @@ namespace BasesDeDatos
                     columnaExiste = miControl.existeColumna(refNombreTabla, idNombre);
                     if (columnaExiste)
                     {
-                        tempFC.agregarRefCol(idNombre);
+                        esPrimary = miControl.columnaEnPrimaryK(refNombreTabla, idNombre);
+                        if (esPrimary)
+                        {
+                            tempFC.agregarFK(idNombre);
+                        }
+                        else
+                        {
+                            mensajeError += "La columna " + idNombre + " debe ser primaria.\n";
+                            return error;
+                        }
                     }
                     else
                     {
@@ -934,13 +944,23 @@ namespace BasesDeDatos
 
         public override string VisitValores(gramSQLParser.ValoresContext context)
         {
-            String tipoLiteral = Visit(context.GetChild(0));
-            if (tipoLiteral.Equals(error))
+            if (context.GetChild(0).GetText().Equals("NULL") || context.GetChild(0).GetText().Equals("Null") || context.GetChild(0).GetText().Equals("null"))
             {
-                return error;
+                valuesTipo.Add("null");
+                return "null";
             }
-            valuesTipo.Add(tipoLiteral);
-            return tipoLiteral;
+            else
+            {
+                String tipoLiteral = Visit(context.GetChild(0));
+
+
+                if (tipoLiteral.Equals(error))
+                {
+                    return error;
+                }
+                valuesTipo.Add(tipoLiteral);
+                return tipoLiteral;
+            }
         }
 
         public override string VisitUpdateExpression(gramSQLParser.UpdateExpressionContext context)
@@ -1211,6 +1231,10 @@ namespace BasesDeDatos
                         int numero2 = (int)Math.Floor(numero);
                         filaObjetos[indiceColumna] = numero2;
                     }
+                    else if (tipoValues.Equals("null"))
+                    {
+                        filaObjetos[indiceColumna] = null;
+                    }
                     else
                     {
                         int indice = i + 1;
@@ -1231,6 +1255,10 @@ namespace BasesDeDatos
                         int numero = Convert.ToInt32(valuesCol[i]);
                         float numero2 = (float)numero;
                         filaObjetos[indiceColumna] = numero2;
+                    }
+                    else if (tipoValues.Equals("null"))
+                    {
+                        filaObjetos[indiceColumna] = null;
                     }
                     else
                     {
@@ -1264,6 +1292,10 @@ namespace BasesDeDatos
                         DateTime date = DateTime.ParseExact(Fecha, "yyyy-MM-dd", null);
                         filaObjetos[indiceColumna] = date;
                     }
+                    else if (tipoValues.Equals("null"))
+                    {
+                        filaObjetos[indiceColumna] = null;
+                    }
                     else
                     {
                         int indice = i + 1;
@@ -1293,6 +1325,10 @@ namespace BasesDeDatos
                             return error;
                         }
 
+                    }
+                    else if (tipoValues.Equals("null"))
+                    {
+                        filaObjetos[indiceColumna] = null;
                     }
                     else
                     {
@@ -1780,12 +1816,15 @@ namespace BasesDeDatos
 
         public override string VisitAccionTabla_AddConstraint(gramSQLParser.AccionTabla_AddConstraintContext context)
         {
+            constraintContenido = true;
             String retorno = Visit(context.GetChild(1));
             if (retorno.Equals(error))
             {
                 return error;
             }
+            constraintContenido = false;
             return "void"; 
+
         }
 
         public override string VisitExpresionOrden1(gramSQLParser.ExpresionOrden1Context context)

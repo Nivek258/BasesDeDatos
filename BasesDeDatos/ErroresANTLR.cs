@@ -37,7 +37,7 @@ namespace BasesDeDatos
         public void SyntaxError(IRecognizer recognizer, IToken offendingSymbol, int line, int charPositionInLine, string msg, RecognitionException e)
         {
             iError = true;
-            errores += "Error en la Linea: " + line + " En la posicion: " + charPositionInLine + " Error: " + msg + "\n";
+            errores += "Error en la Linea: " + line + " En la posicion: " + charPositionInLine + " Error: " + msg + "\n\r";
         }
     }
 }

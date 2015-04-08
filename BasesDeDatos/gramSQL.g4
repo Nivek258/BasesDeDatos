@@ -148,7 +148,7 @@ nombreColumna: ID;
 listaValores1: listaValores2;
 listaValores2: valores ',' listaValores2			 #listaValores2_comita
 				| valores                            #listaValores2_valores;
-valores: literal; 
+valores: literal | NULL; 
 updateExpression: UPDATE ID SET listaUpdate1 ( WHERE expBooleana)?;
 listaUpdate1: listaUpdate2;
 listaUpdate2: igualacion ',' listaUpdate2			#listaUpdate2_comita

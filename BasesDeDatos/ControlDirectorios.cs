@@ -871,7 +871,7 @@ namespace BasesDeDatos
                 //armar linea a comparar
                 for (int j = 0; j < indicesPConstraints.Count; j++)
                 {
-                    filaPrincipal += columnasPKey[indicesPConstraints[i]].ToString() + " ";
+                    filaPrincipal += miContenido.listObj[i][indicesPConstraints[j]].ToString() + " ";
                 }
 
                 //recorrer lineas posteriores
@@ -893,7 +893,7 @@ namespace BasesDeDatos
 
             }
 
-            return false;
+            return true;
 
         }
 
@@ -1233,7 +1233,7 @@ namespace BasesDeDatos
                 }
                 for (int i = 0; i < indicesPConstraints.Count; i++)
                 {
-                    if (fila[i] == null)
+                    if (fila[indicesPConstraints[i]] == null)
                     {
                         return true;
                     }
