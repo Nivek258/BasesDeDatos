@@ -401,7 +401,7 @@ namespace BasesDeDatos
             if (existeCol)
             {
                 mensajeError += "La columna: " + idCol + "ya existe en la tabla. \r\n";
-                verbose += "No fue posible agregar la columna " + idCol + " a la tabla"+ refNombreTabla + ".\r\n ";
+                verbose += "No fue posible agregar la columna " + idCol + " a la tabla "+ refNombreTabla + ".\r\n ";
                 return error;
             }
             Columna colTemp = new Columna();
@@ -415,13 +415,13 @@ namespace BasesDeDatos
                 String retorno = Visit(context.GetChild(4));
                 if (retorno.Equals(error))
                 {
-                    verbose += "No fue posible agregar la columna " + idCol + " a la tabla" + refNombreTabla + ".\r\n ";
+                    verbose += "No fue posible agregar la columna " + idCol + " a la tabla " + refNombreTabla + ".\r\n ";
                     return error;
                 }
                 constraintContenido = false;
             }
             miControl.agregarContenidoColumna(tablaNueva.getNombre()); //Se agrega un elemento a las listas que representan una fila
-            verbose += "Se agrego la columna " + idCol + " a la tabla" + refNombreTabla + ".\r\n ";
+            verbose += "Se agrego la columna " + idCol + " a la tabla " + refNombreTabla + ".\r\n ";
             return "void";
         }
 
@@ -803,7 +803,7 @@ namespace BasesDeDatos
             if (!existeTabla)
             {
                 mensajeError += "No existe la tabla " + nombreTabla + " en esta base de datos. \r\n";
-                verbose += "No se mostro la tabla" + nombreTabla + " ya que no existe en la base de datos "+miControl.getDBActual()+". \r\n";
+                verbose += "No se mostro la tabla " + nombreTabla + " ya que no existe en la base de datos "+miControl.getDBActual()+". \r\n";
             }
             aMostrar.ColumnCount = 2;
             aMostrar.RowCount = miControl.getTablasCreadas().getListaTB().Count + 1;
@@ -1271,7 +1271,7 @@ namespace BasesDeDatos
             if (!existeTabla)
             {
                 mensajeError += "No existe la tabla: " + nombreTabla + ".\r\n";
-                verbose += "No se inserto en  la tabla" + nombreTabla + " ya que no existe en la base de datos " + miControl.getDBActual() + ". \r\n";
+                verbose += "No se inserto en  la tabla " + nombreTabla + " ya que no existe en la base de datos " + miControl.getDBActual() + ". \r\n";
                 return error;
             }
             nombresCol = new List<String>();
@@ -1280,7 +1280,7 @@ namespace BasesDeDatos
             String retorno1 = Visit(context.GetChild(4));
             if (retorno1.Equals(error))
             {
-                verbose += "No se inserto en  la tabla" + nombreTabla + " ya que hubo un error en la declaracion de columnas. \r\n";
+                verbose += "No se inserto en  la tabla " + nombreTabla + " ya que hubo un error en la declaracion de columnas. \r\n";
                 return error;
             }
             //Recorrer values
@@ -1290,14 +1290,14 @@ namespace BasesDeDatos
             String retorno2 = Visit(context.GetChild(8));
             if (retorno2.Equals(error))
             {
-                verbose += "No se inserto en  la tabla" + nombreTabla + " ya que hubo un error en la declaracion de valores. \r\n";
+                verbose += "No se inserto en  la tabla " + nombreTabla + " ya que hubo un error en la declaracion de valores. \r\n";
                 return error;
             }
             //Error 1 listas tamaños diferentes
             if (valuesCol.Count != nombresCol.Count)
             {
                 mensajeError += "El numero de los valores a ingresar no coincide con las columnas especificadas. \r\n";
-                verbose += "No se inserto en  la tabla" + nombreTabla + " ya que no coincide la cantidad de argumentos. \r\n";
+                verbose += "No se inserto en  la tabla " + nombreTabla + " ya que no coincide la cantidad de argumentos. \r\n";
                 return error;
             }
             //Error 2 coincidencia de tipos
@@ -1930,15 +1930,15 @@ namespace BasesDeDatos
             {
                 if (constraintTexto.Contains("PRIMARY KEY"))
                 {
-                    verbose += "No fue posible agregar la constraint PRIMARIA a la tabla" + refNombreTabla + ".\r\n ";
+                    verbose += "No fue posible agregar la constraint PRIMARIA a la tabla " + refNombreTabla + ".\r\n ";
                 }
                 else if (constraintTexto.Contains("FOREIGN KEY"))
                 {
-                    verbose += "No fue posible agregar la constraint FORANEA a la tabla" + refNombreTabla + ".\r\n ";
+                    verbose += "No fue posible agregar la constraint FORANEA a la tabla " + refNombreTabla + ".\r\n ";
                 }
                 else
                 {
-                    verbose += "No fue posible agregar el CHECK a la tabla" + refNombreTabla + ".\r\n ";
+                    verbose += "No fue posible agregar el CHECK a la tabla " + refNombreTabla + ".\r\n ";
                 }
                 
                 return error;
@@ -1946,15 +1946,15 @@ namespace BasesDeDatos
             constraintContenido = false;
             if (constraintTexto.Contains("PRIMARY KEY"))
             {
-                verbose += "Se agrego la constraint PRIMARIA a la tabla" + refNombreTabla + ".\r\n ";
+                verbose += "Se agrego la constraint PRIMARIA a la tabla " + refNombreTabla + ".\r\n ";
             }
             else if (constraintTexto.Contains("FOREIGN KEY"))
             {
-                verbose += "Se agrego la constraint FORANEA a la tabla" + refNombreTabla + ".\r\n ";
+                verbose += "Se agrego la constraint FORANEA a la tabla " + refNombreTabla + ".\r\n ";
             }
             else
             {
-                verbose += "Se agrego el CHECK a la tabla" + refNombreTabla + ".\r\n ";
+                verbose += "Se agrego el CHECK a la tabla " + refNombreTabla + ".\r\n ";
             }
             return "void"; 
 
