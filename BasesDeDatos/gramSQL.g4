@@ -88,7 +88,7 @@ expression: createExpression
 		   | deleteExpression
 		   | selectExpression;
 createExpression: CREATE DATABASE ID #create_Database
-				| CREATE TABLE ID '('declaracionColumnas1  declaracionConstraint1? ')' #create_Table;
+				| CREATE TABLE ID '('declaracionColumnas1?   (',' declaracionConstraint1)? ')' #create_Table;
 declaracionColumnas1: declaracionColumnas2;
 declaracionColumnas2: declaracionColumnas ',' declaracionColumnas2 #declaracionColumnas2_comita
 					  | declaracionColumnas                        #declaracionColumnas2_declaracion;
@@ -129,7 +129,7 @@ float_literal: NUM'.'NUM;
 alterExpression: ALTER DATABASE ID	RENAME TO ID      #alterExpression_database
 				| ALTER TABLE ID RENAME TO ID         #alterExpression_table
 				| ALTER TABLE ID accionTabla             #alterExpression_accion;
-accionTabla: ADD COLUMN ID TIPO declaracionConstraint1?  #accionTabla_AddColumn
+accionTabla: ADD COLUMN ID tipo declaracionConstraint1?  #accionTabla_AddColumn
 			| ADD declaracionConstraint					#accionTabla_AddConstraint
 			| DROP COLUMN ID							#accionTabla_DropColumn
 			| DROP CONSTRAINT ID						#accionTabla_DropConstraint;

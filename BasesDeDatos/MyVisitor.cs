@@ -98,7 +98,7 @@ namespace BasesDeDatos
             String idCol = context.GetChild(2).GetText();
             String nombre = tablaNueva.getNombre();
             Boolean existeCol = tablaNueva.existeColumna(idCol);
-            if (existeCol)
+            if (!existeCol)
             {
                 mensajeError += "No se puede borrar la columna: "+idCol+ " ya que no existe en la tabla. \r\n";
                 verbose += "No se pudo eliminar la columna " + idCol + " ya que la tabla " + refNombreTabla + " no existe. \r\n";
@@ -270,7 +270,46 @@ namespace BasesDeDatos
 
         public override string VisitCreate_Table(gramSQLParser.Create_TableContext context)
         {
-            if (context.ChildCount == 7)
+            if (context.ChildCount == 5)
+            {
+                if (miControl.getDBActual().Equals(""))
+                {
+                    mensajeError += "No se ha especificado la base de datos a usar. \r\n";
+                    return error;
+                }
+                String nombreTabla = context.GetChild(2).GetText();
+                Boolean existeTabla = miControl.existeTabla(nombreTabla);
+                if (existeTabla)
+                {
+                    mensajeError += "Ya existe la tabla " + nombreTabla + " en la base de datos actual.\r\n";
+                    verbose += "No fue posible crear una tabla con el nombre " + nombreTabla + ". \r\n";
+                    return error;
+                }
+                tablaNueva = new Tabla();
+                tablaNueva.setNombre(nombreTabla);
+                miControl.agregarTabla(tablaNueva);
+                verbose += "Se creo una tabla con el nombre " + nombreTabla + ". \r\n";
+                return "";
+            }
+            else if (context.ChildCount == 7)
+            {
+                if (miControl.getDBActual().Equals(""))
+                {
+                    mensajeError += "No se ha especificado la base de datos a usar. \r\n";
+                    return error;
+                }
+                String nombreTabla = context.GetChild(2).GetText();
+                Boolean existeTabla = miControl.existeTabla(nombreTabla);
+                if (existeTabla)
+                {
+                    mensajeError += "Ya existe la tabla " + nombreTabla + " en la base de datos actual.\r\n";
+                    verbose += "No fue posible crear una tabla con el nombre " + nombreTabla + ". \r\n";
+                    return error;
+                }
+                verbose += "No fue posible crear una tabla con el nombre " + nombreTabla + " ya que hay constraints pero no columnas. \r\n";
+                return error;
+            }
+            else if (context.ChildCount == 8)
             {
                 if (miControl.getDBActual().Equals(""))
                 {
@@ -288,7 +327,7 @@ namespace BasesDeDatos
                 tablaNueva = new Tabla();
                 tablaNueva.setNombre(nombreTabla);
                 String retorno = Visit(context.GetChild(4));
-                String retorno2 = Visit(context.GetChild(5));
+                String retorno2 = Visit(context.GetChild(6));
                 if (retorno.Equals(error) || retorno2.Equals(error))
                 {
                     verbose += "No fue posible crear una tabla con el nombre " + nombreTabla + ". \r\n";
@@ -898,7 +937,7 @@ namespace BasesDeDatos
 
         public override string VisitExpBooleana3_not(gramSQLParser.ExpBooleana3_notContext context)
         {
-            String retorno = Visit(context.GetChild(0));
+            String retorno = Visit(context.GetChild(1));
             if (retorno.Equals(error))
             {
                 return error;
