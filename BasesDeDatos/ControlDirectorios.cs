@@ -297,6 +297,81 @@ namespace BasesDeDatos
             ControlContenido miControlTemp = (ControlContenido)x.Deserialize(new StringReader(XmlText));
             return miControlTemp;
         }
+        //Metodo para agregar una columna de nulls en la tabla
+        public void agregarContenidoColumna(String nombreTabla)
+        {
+            String contenido;
+            if (!(contenidoBase.Equals(DBactual) && contenidoTabla.Equals(nombreTabla)))
+            {
+                try
+                {
+                    contenido = SerializarContenido(miContenido);
+                    if (!contenidoTabla.Equals(""))
+                    {
+                        File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                    }
+                }
+                catch (Exception e)
+                {
+
+                }
+                try
+                {
+                    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
+                    miContenido = DeSerializarContenido(contenido);
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+            contenidoTabla = nombreTabla;
+
+            for (int i = 0; i < miContenido.listObj.Count; i++)
+            {
+                miContenido.listObj[i].Add(null);
+            }
+
+
+        }
+        //Metodo para eliminar el contenido de una columna en la tabla
+        public void eliminarContenidoColumna(String nombreTabla, String nombreColumna)
+        {
+            String contenido;
+            if (!(contenidoBase.Equals(DBactual) && contenidoTabla.Equals(nombreTabla)))
+            {
+                try
+                {
+                    contenido = SerializarContenido(miContenido);
+                    if (!contenidoTabla.Equals(""))
+                    {
+                        File.WriteAllText("DataDB\\" + contenidoBase + "\\" + contenidoTabla + ".dat", contenido);
+                    }
+                }
+                catch (Exception e)
+                {
+
+                }
+                try
+                {
+                    contenido = File.ReadAllText("DataDB\\" + DBactual + "\\" + nombreTabla + ".dat");
+                    miContenido = DeSerializarContenido(contenido);
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+            contenidoTabla = nombreTabla;
+            
+            int indiceBorrar = obtenerIndiceCol(nombreTabla, nombreColumna);
+            for (int i = 0; i < miContenido.listObj.Count; i++)
+            {
+                miContenido.listObj[i].RemoveAt(indiceBorrar);
+            }
+
+        }
+
         //Metodo que revisa las constraints de una tabla.
         public Boolean revisarConstraint(List<Object> elementosIngreso, String nombreTabla, Boolean check1)
         {            
@@ -383,27 +458,44 @@ namespace BasesDeDatos
                     int indice = nombresColumna.IndexOf(elementosCheck[i]);
                     if (elem1)
                     {
-                        elemento1 = elementosIngreso[indice];
-                        if (elemento1 == null)
+                        if (indice >= elementosIngreso.Count)
                         {
+                            elemento1 = null;
                             tipoElemento1 = "null";
                         }
                         else
                         {
-                            tipoElemento1 = tiposColumna[indice];
+                            elemento1 = elementosIngreso[indice];
+                            if (elemento1 == null)
+                            {
+                                tipoElemento1 = "null";
+                            }
+                            else
+                            {
+                                tipoElemento1 = tiposColumna[indice];
+                            }
                         }
+                        
                         elem1 = false;
                     }
                     else
                     {
-                        elemento2 = elementosIngreso[indice];
-                        if (elemento2 == null)
+                        if (indice >= elementosIngreso.Count)
                         {
+                            elemento2 = null;
                             tipoElemento2 = "null";
                         }
                         else
                         {
-                            tipoElemento2 = tiposColumna[indice];
+                            elemento2 = elementosIngreso[indice];
+                            if (elemento2 == null)
+                            {
+                                tipoElemento2 = "null";
+                            }
+                            else
+                            {
+                                tipoElemento2 = tiposColumna[indice];
+                            }
                         }
                         elem1 = true;
                     }

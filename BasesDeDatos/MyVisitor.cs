@@ -104,12 +104,23 @@ namespace BasesDeDatos
                 verbose += "No se pudo eliminar la columna " + idCol + " ya que la tabla " + refNombreTabla + " no existe. \r\n";
                 return error;
             }
+
+            Boolean ColEsPrimary = tablaNueva.pConstraint[0].existeIdCol(idCol);
+            if (ColEsPrimary)
+            {
+                mensajeError += "No se puede borrar la columna: " + idCol + " ya que es parte de la llave primaria.\r\n";
+                verbose += "No se pudo eliminar la columna " + idCol + " en la tabla " + refNombreTabla + " ya que es parte de la llave primaria. \r\n";
+                return error;
+            }
+
             Boolean existeColEnConstraint = miControl.columnaEnConstraint(nombre, idCol);
             if (existeColEnConstraint)
             {
                 mensajeError += "No se puede borrar la columna: " + idCol + " ya que esta siendo referenciada en otra tabla.\r\n";
                 verbose += "No se pudo eliminar la columna " + idCol + " en la tabla " + refNombreTabla + " ya que esta siendo referenciada en otra tabla. \r\n";
+                return error;
             }
+            miControl.eliminarContenidoColumna(nombre, idCol);//metodo para eliminar los elementos de la tabla
             tablaNueva.removerColumna(idCol);
             verbose += "Se elimino la columna " + idCol + " en la tabla " + refNombreTabla + ". \r\n";
             return "void";
@@ -409,6 +420,7 @@ namespace BasesDeDatos
                 }
                 constraintContenido = false;
             }
+            miControl.agregarContenidoColumna(tablaNueva.getNombre()); //Se agrega un elemento a las listas que representan una fila
             verbose += "Se agrego la columna " + idCol + " a la tabla" + refNombreTabla + ".\r\n ";
             return "void";
         }
