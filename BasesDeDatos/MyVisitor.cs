@@ -241,7 +241,7 @@ namespace BasesDeDatos
             else
             {
                 List<string> whereElements = retorno.Split(new char[] { ' ' }).ToList();
-                Boolean cumplenCheck = miControl.tablaCumpleCheck(tablaNueva.getNombre(), whereElements);
+                Boolean cumplenCheck = miControl.tablaCumpleCheck(tablaNueva.getNombre(), whereElements, true);
                 if (cumplenCheck)
                 {
                     tempCC.setRestriccionExp(retorno);
@@ -1177,7 +1177,7 @@ namespace BasesDeDatos
                     return error;
                 }
                 List<string> whereElements = retorno.Split(new char[] { ' ' }).ToList();
-                filasUpdate = miControl.UpdateColumnas(filaObjetos, nombreTabla, whereElements);
+                filasUpdate = miControl.UpdateColumnas(filaObjetos, nombreTabla, whereElements, false);
                 numeroUpdate = numeroUpdate + filasUpdate;
                 mensajeUpdate = "Update " + numeroUpdate + " con exito. \r\n";
                 if (miControl.falloUpdate)
@@ -1387,7 +1387,7 @@ namespace BasesDeDatos
             }
             //Revisar el check para poder adjuntar la fila
             //Aqui va el check :D
-            Boolean cumplen = miControl.revisarConstraint(filaObjetos, nombreTabla);
+            Boolean cumplen = miControl.revisarConstraint(filaObjetos, nombreTabla, true);
             if (cumplen)
             {
                 Boolean pKeyNulo = miControl.primaryNull(nombreTabla, filaObjetos);
@@ -2257,7 +2257,7 @@ namespace BasesDeDatos
                     return error;
                 }
                 List<string> whereElements = retorno.Split(new char[] { ' ' }).ToList();
-                filasDelete = miControl.DeleteFilas(nombreTabla, whereElements);
+                filasDelete = miControl.DeleteFilas(nombreTabla, whereElements, false);
                 if(miControl.falloEliminacion){
                     mensajeError += miControl.mensajeFallo;
                     numeroDelete = numeroDelete + filasDelete;

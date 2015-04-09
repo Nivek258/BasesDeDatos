@@ -298,13 +298,13 @@ namespace BasesDeDatos
             return miControlTemp;
         }
         //Metodo que revisa las constraints de una tabla.
-        public Boolean revisarConstraint(List<Object> elementosIngreso, String nombreTabla)
+        public Boolean revisarConstraint(List<Object> elementosIngreso, String nombreTabla, Boolean check1)
         {            
             for (int i = 0; i < tablasCreadas.obtenerTabla(nombreTabla).chConstraint.Count; i++)
             {
                 String check = tablasCreadas.obtenerTabla(nombreTabla).chConstraint[i].restriccionExp;
                 List<string> checkElements = check.Split(new char[] { ' ' }).ToList();
-                Boolean cumple = cumpleConstraint(elementosIngreso, checkElements, nombreTabla);
+                Boolean cumple = cumpleConstraint(elementosIngreso, checkElements, nombreTabla, check1);
                 if (!cumple)
                 {
                     return false;
@@ -315,7 +315,7 @@ namespace BasesDeDatos
         }
 
         //Metodo que determina si todos los elementos de la tabla cumplen con el check
-        public Boolean tablaCumpleCheck(String nombreTabla, List<String> elementosCheck)
+        public Boolean tablaCumpleCheck(String nombreTabla, List<String> elementosCheck, Boolean check)
         {
             String contenido;
             if (!(contenidoBase.Equals(DBactual) && contenidoTabla.Equals(nombreTabla)))
@@ -347,7 +347,7 @@ namespace BasesDeDatos
             for (int i = 0; i < miContenido.listObj.Count; i++)
             {
                 List<Object> filaTemp = miContenido.listObj[i];
-                Boolean cumple = cumpleConstraint(filaTemp, elementosCheck, nombreTabla);
+                Boolean cumple = cumpleConstraint(filaTemp, elementosCheck, nombreTabla, check);
                 if (!cumple)
                 {
                     return false;
@@ -359,17 +359,17 @@ namespace BasesDeDatos
         }
 
         //Metodo que verifica que los datos que se ingresen cumplan con las constraint especificadas en una tabla.
-        public Boolean cumpleConstraint(List<Object> elementosIngreso, List<String> elementosCheck, String nombreTabla)
+        public Boolean cumpleConstraint(List<Object> elementosIngreso, List<String> elementosCheck, String nombreTabla, Boolean check)
         {
-            Stack<Boolean> stack = new Stack<Boolean>();
+            Stack<Object> stack = new Stack<Object>();
             List<String> nombresColumna= new List<String>();
             List<String> tiposColumna= new List<String>();
             Object elemento1 = null;
             Object elemento2 = null;
             String tipoElemento1 = "";
             String tipoElemento2 = "";
-            Boolean op1 = false;
-            Boolean op2 = false;
+            Object op1 = null;
+            Object op2 = null;
             Boolean elem1 = true;
             for (int i = 0; i < tablasCreadas.obtenerTabla(nombreTabla).columnasTB.Count; i++)
             {
@@ -512,7 +512,7 @@ namespace BasesDeDatos
                     {
                         if (tipoElemento1.Equals("null") || tipoElemento2.Equals("null"))
                         {
-                            op1 = false;
+                            op1 = null;
                         }
                         else if (tipoElemento1.Equals("int") && tipoElemento2.Equals("int"))
                         {
@@ -548,7 +548,7 @@ namespace BasesDeDatos
                     {
                         if (tipoElemento1.Equals("null") || tipoElemento2.Equals("null"))
                         {
-                            op1 = false;
+                            op1 = null;
                         } 
                         else if (tipoElemento1.Equals("int") && tipoElemento2.Equals("int"))
                         {
@@ -585,18 +585,78 @@ namespace BasesDeDatos
                 {
                     op1 = stack.Pop();
                     op2 = stack.Pop();
-                    stack.Push(op1 && op2);
+                    if (op1 == null)
+                    {
+                        if(check)
+                        {
+                            op1 = true;
+                        }
+                        else
+                        {
+                            op1 = false;
+                        }
+                    }
+                    if (op2 == null)
+                    {
+                        if (check)
+                        {
+                            op2 = true;
+                        }
+                        else
+                        {
+                            op2 = false;
+                        }
+                    }
+                    stack.Push((Boolean)op1 && (Boolean)op2);
+                    
                 }
                 else if (elementosCheck[i].ToLower().Equals("or"))
                 {
                     op1 = stack.Pop();
                     op2 = stack.Pop();
-                    stack.Push(op1 || op2);
+                    if (op1 == null)
+                    {
+                        if (check)
+                        {
+                            op1 = true;
+                        }
+                        else
+                        {
+                            op1 = false;
+                        }
+                    }
+                    if (op2 == null)
+                    {
+                        if (check)
+                        {
+                            op2 = true;
+                        }
+                        else
+                        {
+                            op2 = false;
+                        }
+                    }
+                    stack.Push((Boolean)op1 || (Boolean)op2);
                 }
                 else if (elementosCheck[i].ToLower().Equals("not"))
                 {
                     op1 = stack.Pop();
-                    stack.Push(!op1);
+                    if (op1 == null)
+                    {
+                        if (check)
+                        {
+                            stack.Push(true);
+                        }
+                        else
+                        {
+                            stack.Push(false);
+                        }
+                    }
+                    else
+                    {
+                        stack.Push(!((Boolean)op1));
+                    }
+                    
                 }
                 else
                 {
@@ -693,7 +753,22 @@ namespace BasesDeDatos
                 }
                 
             }
-            return stack.Pop();
+            Object devolucion = stack.Pop();
+            if (devolucion == null)
+            {
+                if (check)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return (Boolean)devolucion;
+            }
         }
         //Metodo que obtiene el tipo de un elemento a ingresar (e.g:  5 es int)
         public String tipoElemento(String elemento)
@@ -1279,7 +1354,7 @@ namespace BasesDeDatos
 
         }
         //Metodo que updatea la informacion de una columna cuando se utiliza una condicion.
-        public int UpdateColumnas(List<Object> elementosIngreso, String nombreTabla, List<String> condicionWhere)
+        public int UpdateColumnas(List<Object> elementosIngreso, String nombreTabla, List<String> condicionWhere, Boolean check1)
         {
             String contenido;
             int columnasUpdate = 0;
@@ -1335,7 +1410,7 @@ namespace BasesDeDatos
                 {
                     filaTemp.Add(contenidoFilas[i][j]);
                 }
-                Boolean cumple = cumpleConstraint(filaTemp, condicionWhere, nombreTabla);
+                Boolean cumple = cumpleConstraint(filaTemp, condicionWhere, nombreTabla, check1);
                 if (cumple)
                 {
                     noesFKey = permitirUpdate(nombreTabla, filaTemp, columnasAUpdatear);
@@ -1498,7 +1573,7 @@ namespace BasesDeDatos
             return columnasUpdate;
         }
         //Metodo que elimina filas de una tabla cuando cumplen la condicion.
-        public int DeleteFilas(String nombreTabla, List<String> condicionWhere)
+        public int DeleteFilas(String nombreTabla, List<String> condicionWhere, Boolean check1)
         {
             String contenido;
             int columnasDelete = 0;
@@ -1536,7 +1611,7 @@ namespace BasesDeDatos
             for (int i = 0; i < contenidoFilas.Count; i++)
             {
                 List<Object> filaTemp = contenidoFilas[i];
-                Boolean cumple = cumpleConstraint(filaTemp, condicionWhere, nombreTabla);
+                Boolean cumple = cumpleConstraint(filaTemp, condicionWhere, nombreTabla, check1);
                 
                 if (cumple)
                 {
@@ -3011,13 +3086,13 @@ namespace BasesDeDatos
 
         //Metodo que verifica que se cumplan las condiciones del where.
         public Boolean verificarWhere(List<Object> elementosFila, List<String> expresionWhere, List<String> nombresCol, List<String> tipoCol, List<String>TablaCol){
-            Stack<Boolean> stack = new Stack<Boolean>();
+            Stack<Object> stack = new Stack<Object>();
             Object elemento1 = null;
             Object elemento2 = null;
             String tipoElemento1 = "";
             String tipoElemento2 = "";
-            Boolean op1 = false;
-            Boolean op2 = false;
+            Object op1 = false;
+            Object op2 = false;
             Boolean elem1 = true;
             Boolean esfloat = false;
             float numeroF;
@@ -3227,7 +3302,7 @@ namespace BasesDeDatos
                     {
                         if (tipoElemento1.Equals("null") || tipoElemento2.Equals("null"))
                         {
-                            op1 = false;
+                            op1 = null;
                         }
                         else if (tipoElemento1.Equals("int") && tipoElemento2.Equals("int"))
                         {
@@ -3263,7 +3338,7 @@ namespace BasesDeDatos
                     {
                         if (tipoElemento1.Equals("null") || tipoElemento2.Equals("null"))
                         {
-                            op1 = false;
+                            op1 = null;
                         }
                         else if (tipoElemento1.Equals("int") && tipoElemento2.Equals("int"))
                         {
@@ -3299,19 +3374,42 @@ namespace BasesDeDatos
                 else if (expresionWhere[i].ToLower().Equals("and"))
                 {
                     op1 = stack.Pop();
-                    op2 = stack.Pop();
-                    stack.Push(op1 && op2);
+                    op2 = stack.Pop(); 
+                    if (op1 == null)
+                    {
+                        op1 = false;
+                    }
+                    if (op2 == null)
+                    {
+                        op2 = false;
+                    }
+                    stack.Push((Boolean)op1 && (Boolean)op2);
                 }
                 else if (expresionWhere[i].ToLower().Equals("or"))
                 {
                     op1 = stack.Pop();
                     op2 = stack.Pop();
-                    stack.Push(op1 || op2);
+                    if (op1 == null)
+                    {
+                        op1 = false;
+                    }
+                    if (op2 == null)
+                    {
+                        op2 = false;
+                    }
+                    stack.Push((Boolean)op1 || (Boolean)op2);
                 }
                 else if (expresionWhere[i].ToLower().Equals("not"))
                 {
                     op1 = stack.Pop();
-                    stack.Push(!op1);
+                    if (op1 == null)
+                    {
+                        stack.Push(false);
+                    }
+                    else
+                    {
+                        stack.Push(!((Boolean)op1));
+                    }
                 }
                 else
                 {
@@ -3400,7 +3498,15 @@ namespace BasesDeDatos
 
                 }
             }
-            return stack.Pop();
+            Object devolver = stack.Pop();
+            if (devolver == null)
+            {
+                return false;
+            }
+            else
+            {
+                return (Boolean)devolver;
+            }
         }
 
     }
