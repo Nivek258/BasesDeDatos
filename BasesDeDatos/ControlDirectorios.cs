@@ -32,6 +32,10 @@ namespace BasesDeDatos
         //Metodo que revisa si existe el archivo maestro de bases de datos, si no existe lo crea, de lo contrario lee la informacion del archivo maestro.
         public void inicializar()
         {
+            if (!Directory.Exists("DataBD"))
+            {
+                Directory.CreateDirectory("DataDB");
+            }
             if (File.Exists("DataDB\\archivoM.dat") == false)
             {
                 File.Create("DataDB\\archivoM.dat").Dispose();

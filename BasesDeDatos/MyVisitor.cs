@@ -805,19 +805,34 @@ namespace BasesDeDatos
                 mensajeError += "No existe la tabla " + nombreTabla + " en esta base de datos. \r\n";
                 verbose += "No se mostro la tabla " + nombreTabla + " ya que no existe en la base de datos "+miControl.getDBActual()+". \r\n";
             }
-            aMostrar.ColumnCount = 2;
-            aMostrar.RowCount = miControl.getTablasCreadas().getListaTB().Count + 1;
-
-            aMostrar.Rows[0].Cells[0].Value = "Nombre Columna";
-            aMostrar.Rows[0].Cells[1].Value = "Tipo Columna";
-            for (int i = 1; i < aMostrar.RowCount; i++)
+            int numCol = miControl.getTablasCreadas().obtenerTabla(nombreTabla).columnasTB.Count;
+            if (numCol > 0)
             {
-                aMostrar.Rows[i].Cells[0].Value = miControl.getTablasCreadas().obtenerTabla(nombreTabla).columnasTB[i-1].getNombre();
-                aMostrar.Rows[i].Cells[1].Value = miControl.getTablasCreadas().obtenerTabla(nombreTabla).columnasTB[i - 1].getTipo() + "";
+                aMostrar.ColumnCount = 2;
+                aMostrar.RowCount = miControl.getTablasCreadas().obtenerTabla(nombreTabla).columnasTB.Count + 1;
+
+                aMostrar.Rows[0].Cells[0].Value = "Nombre Columna";
+                aMostrar.Rows[0].Cells[1].Value = "Tipo Columna";
+                for (int i = 1; i < aMostrar.RowCount; i++)
+                {
+                    aMostrar.Rows[i].Cells[0].Value = miControl.getTablasCreadas().obtenerTabla(nombreTabla).columnasTB[i - 1].getNombre();
+                    aMostrar.Rows[i].Cells[1].Value = miControl.getTablasCreadas().obtenerTabla(nombreTabla).columnasTB[i - 1].getTipo() + "";
+                }
+                //mostrarDB = miControl.getBasesCreadas().listaDB;
+                verbose += "Se mostraron las columnas de la tabla " + nombreTabla + ". \r\n";
+                return "void";
             }
-            //mostrarDB = miControl.getBasesCreadas().listaDB;
-            verbose += "Se mostraron las columnas de la tabla " + nombreTabla + ". \r\n";
-            return "void";
+            else
+            {
+                aMostrar.ColumnCount = 2;
+                //aMostrar.RowCount = miControl.getTablasCreadas().getListaTB().Count + 1;
+
+                aMostrar.Rows[0].Cells[0].Value = "Nombre Columna";
+                aMostrar.Rows[0].Cells[1].Value = "Tipo Columna";
+                verbose += "Se mostraron las columnas de la tabla " + nombreTabla + ". \r\n";
+                return "void";
+            }
+
         }
 
         public override string VisitCConstraint_primary(gramSQLParser.CConstraint_primaryContext context)
@@ -939,7 +954,36 @@ namespace BasesDeDatos
 
         public override string VisitVarchar_literal(gramSQLParser.Varchar_literalContext context)
         {
-            return "char";
+            String texto = context.GetText().Replace("\'", "");
+            List<String> splitTexto = texto.Split(new char[] { '-' }).ToList();
+            if (splitTexto.Count == 3)
+            {
+                String año = splitTexto[0];
+                String mes = splitTexto[1];
+                String dia = splitTexto[2];
+                if (dia.Length == 1)
+                {
+                    dia = 0 + dia;
+                }
+                if (mes.Length == 1)
+                {
+                    mes = 0 + mes;
+                }
+                String fecha = dia + '-' + mes + '-' + año;
+                try
+                {
+                    DateTime date = DateTime.ParseExact(fecha, "dd-MM-yyyy", null);
+                    return "date";
+                }
+                catch (FormatException)
+                {
+                    return "char";
+                }
+            }
+            else
+            {
+                return "char";
+            }
         }
 
         public override string VisitListaValores1(gramSQLParser.ListaValores1Context context)
