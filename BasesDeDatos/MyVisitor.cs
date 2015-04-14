@@ -491,7 +491,7 @@ namespace BasesDeDatos
                         esPrimary = miControl.columnaEnPrimaryK(refNombreTabla, idNombre);
                         if (esPrimary)
                         {
-                            tempFC.agregarFK(idNombre);
+                            tempFC.agregarRefCol(idNombre);
                         }
                         else
                         {
@@ -1524,7 +1524,7 @@ namespace BasesDeDatos
                 mensajeError += "No se pudo agregar la fila en "+nombreTabla+". \r\n";
                 return error;
             }
-            verbose += "Se inserto correctamente en  la tabla" + nombreTabla + ". \r\n";
+            verbose += "Se inserto correctamente en  la tabla " + nombreTabla + ". \r\n";
             return "void";
         }
 
@@ -1972,11 +1972,11 @@ namespace BasesDeDatos
             String constraintTexto = context.GetChild(1).GetText();
             if (retorno.Equals(error))
             {
-                if (constraintTexto.Contains("PRIMARY KEY"))
+                if (constraintTexto.Contains("PRIMARYKEY"))
                 {
                     verbose += "No fue posible agregar la constraint PRIMARIA a la tabla " + refNombreTabla + ".\r\n ";
                 }
-                else if (constraintTexto.Contains("FOREIGN KEY"))
+                else if (constraintTexto.Contains("FOREIGNKEY"))
                 {
                     verbose += "No fue posible agregar la constraint FORANEA a la tabla " + refNombreTabla + ".\r\n ";
                 }
@@ -1988,11 +1988,11 @@ namespace BasesDeDatos
                 return error;
             }
             constraintContenido = false;
-            if (constraintTexto.Contains("PRIMARY KEY"))
+            if (constraintTexto.Contains("PRIMARYKEY"))
             {
                 verbose += "Se agrego la constraint PRIMARIA a la tabla " + refNombreTabla + ".\r\n ";
             }
-            else if (constraintTexto.Contains("FOREIGN KEY"))
+            else if (constraintTexto.Contains("FOREIGNKEY"))
             {
                 verbose += "Se agrego la constraint FORANEA a la tabla " + refNombreTabla + ".\r\n ";
             }
@@ -2272,7 +2272,7 @@ namespace BasesDeDatos
                         esPrimary = miControl.columnaEnPrimaryK(refNombreTabla,idNombre);
                         if (esPrimary)
                         {
-                            tempFC.agregarFK(idNombre);
+                            tempFC.agregarRefCol(idNombre);
                         }
                         else
                         {

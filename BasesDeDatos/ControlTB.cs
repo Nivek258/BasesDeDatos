@@ -93,7 +93,7 @@ namespace BasesDeDatos
             }
             return false;
         }
-
+        //Metodo que verifica que la columna este delacara en las primary keys.
         public Boolean columnaEnPrimary(String nombreTabla, String nombreColumna)
         {
             for (int i = 0; i < listaTB.Count; i++)
@@ -110,7 +110,7 @@ namespace BasesDeDatos
             }
             return false;
         }
-
+        //Metdo que verifica que una tabla exista.
         public Boolean existeTabla(String nombreTabla)
         {
             for (int i = 0; i < listaTB.Count; i++)

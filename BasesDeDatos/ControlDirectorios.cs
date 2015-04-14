@@ -1170,7 +1170,7 @@ namespace BasesDeDatos
                         String FilaComparar = "";
                         for (int j = 0; j < indicesKConstraints.Count; j++)
                         {
-                            FilaComparar += filaTemp[indicesTablaC[j]].ToString() + " ";
+                            FilaComparar += filaTemp[indicesKConstraints[j]].ToString() + " ";
                         }
                         if (filaEntrante.Equals(FilaComparar))
                         {
@@ -3197,7 +3197,7 @@ namespace BasesDeDatos
                 if (expresionWhere[i].Contains("."))
                 {
                     if(elem1){
-                        esfloat = Single.TryParse(expresionWhere[i], System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.CreateSpecificCulture("es-ES"),out numeroF);
+                        esfloat = Single.TryParse(expresionWhere[i], System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.CreateSpecificCulture("en-GB"), out numeroF);
                         if (esfloat)
                         {
                             elemento1 = numeroF;
@@ -3227,7 +3227,7 @@ namespace BasesDeDatos
                         
                     }
                     else{
-                        esfloat = Single.TryParse(expresionWhere[i], System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.CreateSpecificCulture("es-ES"), out numeroF);
+                        esfloat = Single.TryParse(expresionWhere[i], System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.CreateSpecificCulture("en-GB"), out numeroF);
                         if (esfloat)
                         {
                             elemento2 = numeroF;

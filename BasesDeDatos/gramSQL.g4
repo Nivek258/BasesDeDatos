@@ -63,7 +63,6 @@ fragment DIGIT: [0-9];
 
 ID : LETTER (LETTER | DIGIT| '_')*;
 NUM: DIGIT (DIGIT)*;
-CHARACTER: '\'' ('\\\''|[ -~]|'\\"'|'\\t'|'\\n'|'\t'|'\\\\') '\'';
 CHARACTER2:   '\'' ('\\\''|[ -&]|[(-~]|'\\"'|'\\t'|'\\n'|'\t'|'\\\\')* '\'';
 
 
